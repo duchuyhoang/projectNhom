@@ -1,14 +1,16 @@
 import React from "react";
 import Logo from "@Assets/svg/logo.svg"
 import Envelope from "@Assets/svg/envelop.svg"
-import User from "@Assets/svg/user.svg" 
+import User from "@Assets/svg/user.svg"
+import Password from "@Assets/svg/Password.svg"
 // import Logo from "../../../assets/svg/logo.svg";
 
 
 const IconMap={
 logo:Logo,
 envelope:Envelope,
-user:User
+user:User,
+password: Password
 }
 
 
