@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => {
     return {
         root: (props) => {
             return {
-               ...theme.typography.header 
+               ...theme.typography.header
             }
         }
     }
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => {
  const Message = ({ message }) => {
     const styles = useStyles();
     const [isOpen, setIsOpen] = useState(true);
-   const [selectValue,setSelecteValue]=useState(null);
+    const [selectValue,setSelecteValue]=useState(null);
 
     const handleChange = e => {
       if(e===null)
@@ -33,10 +33,19 @@ const useStyles = makeStyles(theme => {
 
     return (
         <>
-            <Buttons></Buttons>
             
-            {/* <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <CNSelect options={
+            <div style={{
+                display: "flex",
+                justifyContent:"center",
+                right:"0",
+                top:"0",
+                bottom:"0",
+                left:"0",
+                position: "fixed", 
+                alignItems: "center",
+            }}>
+                <Buttons></Buttons>
+                {/* <CNSelect options={
                     [
                         { value: 'chocolate', label: 'Chocolate' },
                         { value: 'strawberry', label: 'Strawberry' },
@@ -46,8 +55,8 @@ const useStyles = makeStyles(theme => {
                 onChange={handleChange}
                 placeholder={"Select..."}
                 />
-                {selectValue===null ? "Chưa chọn" : selectValue}
-            </div> */}
+                {selectValue===null ? "Chưa chọn" : selectValue} */}
+            </div>
 
         </>
     )
