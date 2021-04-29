@@ -5,7 +5,7 @@ import { CNSnackBar } from "./shared/CNSnackBar/CNSnackBar";
 import FixedContainer from "@Components/shared/Layout/FixedContainer"
 import { CNNotifications } from "@Components/shared/CNNotifications/CNNotifications";
 import { CNSelect } from "@Components/shared/CNSelect/CNSelect";
-import {Inputs} from "@Components/shared/CNTextField/CNTextField";
+import { CNTextField } from "@Components/shared/CNTextField/CNTextField";
 
 
 const useStyles = makeStyles(theme => {
@@ -22,21 +22,23 @@ const useStyles = makeStyles(theme => {
 
 const Message = ({ message }) => {
     const styles = useStyles();
-   //const [selectValue,setSelecteValue]=useState(null);
- 
-   const inputChange = () => {
-  
-       console.log('ok')
-  };
+    //const [selectValue,setSelecteValue]=useState(null);
+    const [inputValue, setInputValue] = useState(null);
+    console.log(inputValue);
+    const inputChange = (e) => {
+        setInputValue(e.target.value)
+
+    };
+
 
     return (
         <>
 
-            <Inputs
-               onKeyDown={inputChange}
+            <CNTextField
+                inputChange={inputChange}
             />
 
-        
+
         </>
     )
 
