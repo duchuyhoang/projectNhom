@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { CNSnackBar } from "./shared/CNSnackBar/CNSnackBar";
-import FixedContainer from "@Components/shared/Layout/FixedContainer"
-import { CNNotifications } from "@Components/shared/CNNotifications/CNNotifications";
-import { CNSelect } from "@Components/shared/CNSelect/CNSelect";
-import { CNTextField } from "@Components/shared/CNTextField/CNTextField";
+import { Stretcher } from "@Components/Stretcher/Stretcher";
 
 
 const useStyles = makeStyles((theme) => {
@@ -36,31 +32,9 @@ const Message = ({ message }) => {
 
     return (
         <>
+            <Stretcher>
 
-            <CNTextField
-                inputChange={inputChange}
-                type="largeBorderRadius"
-                placeholder="ABCn"
-            />
-               <CNTextField
-                inputChange={inputChange}
-            
-                placeholder="ABCn"
-            />
-            <br></br>
-               <CNTextField
-                fullWidth={true}
-                inputChange={inputChange}
-                placeholder="ABCn"
-            />
-               <CNTextField
-                fullWidth={true}
-                inputChange={inputChange}
-                placeholder="ABCn"
-                type="largeBorderRadius"
-            />
-
-
+            </Stretcher>
         </>
     )
 
