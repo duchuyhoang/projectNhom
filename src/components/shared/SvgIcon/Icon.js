@@ -27,7 +27,8 @@ import Plus from "@Assets/svg/Plus.svg"
 import Search from "@Assets/svg/search.svg"
 import ArrowRight from "@Assets/svg/arrowright.svg"
 import ArrowLeft from "@Assets/svg/arrowleft.svg"
-
+import homeHeart from "@Assets/svg/homeHeart.svg"
+import profitCalculator from "@Assets/svg/profitCalculator.svg"
 const IconMap={
 logo:Logo,
 envelope:Envelope,
@@ -57,6 +58,8 @@ plus:Plus,
 search:Search,
 arrowright:ArrowRight,
 arrowleft:ArrowLeft,
+homeheart: homeHeart,
+profitcalculator: profitCalculator
 }
 
 

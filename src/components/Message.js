@@ -4,10 +4,11 @@ import { CNSnackBar } from "./shared/CNSnackBar/CNSnackBar";
 import FixedContainer from "@Components/shared/Layout/FixedContainer"
 import { CNNotifications } from "@Components/shared/CNNotifications/CNNotifications";
 import { CNSelect } from "@Components/shared/CNSelect/CNSelect";
-import {CNCheckBox} from '@Components/shared/CNCheckBox/CNCheckBox';
+import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
 
-import {CNPagination} from '@Components/shared/CNPagination/CNPagination'
-import {uuid} from '../utils/uuid'
+import { CNPagination } from '@Components/shared/CNPagination/CNPagination'
+import { uuid } from '../utils/uuid'
+import { ServiceComponent } from './components/ServiceComponent/ServiceComponent'
 const useStyles = makeStyles(theme => {
     return {
         style: {
@@ -26,25 +27,35 @@ const useStyles = makeStyles(theme => {
 
 
 const Message = ({ message }) => {
-    const styles = useStyles();
-    const [paginationState,setPaginationState]=useState({
-        
-        total: 20,
-        currentValue: 5
-        
-    })
-    console.log(paginationState)
+
+    const [cardList, setCardList] = useState([{
+        SVGIcon: "highFive",
+        title: "Trusted By Thousands",
+        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
+    },
+    {
+        SVGIcon: "home",
+        title: "Wide Renge Of Properties",
+        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
+    },
+    {
+        SVGIcon: "profitcalculator",
+        title: "Financing Made Easy",
+        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
+    }, {
+        SVGIcon: "home",
+        title: "Wide Renge Of Properties",
+        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
+    },
+    {
+        SVGIcon: "profitcalculator",
+        title: "Financing Made Easy",
+        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
+    }])
     return (
         <>
 
-            <CNPagination
-                count = {paginationState.total}
-                page = {paginationState.currentValue}
-                siblingCount={paginationState.total/12}
-                paginationState={paginationState}
-                setPaginationState={setPaginationState}
-            />
-           
+            <ServiceComponent cardList={cardList} setCardList={setCardList} />
 
 
         </>
