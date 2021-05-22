@@ -8,6 +8,7 @@ import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import { CooperateForm } from './components/CooperateForm/CooperateForm';
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect';
 import { components } from 'react-select';
+import CNStar from './shared/CNStar/CNStar';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -35,30 +36,33 @@ const DropdownIndicator = (props) => {
 };
 
 const Message = ({ message }) => {
-const dispatch=useDispatch()
-   
-    return (
-        <>
-            {/* <CooperateForm></CooperateForm> */}
-            {/* <CNSelect customComponents={{DropdownIndicator}}/> */}
-            {/* <Stretcher>
+  const dispatch = useDispatch();
+
+  return (
+    <>
+      {/* <CooperateForm></CooperateForm> */}
+      {/* <CNSelect customComponents={{DropdownIndicator}}/> */}
+      {/* <Stretcher>
 
             </Stretcher> */}
-            {/* <Footer>
+      {/* <Footer>
 
             </Footer> */}
-            <button style={{marginTop:300}} onClick={() => {
-                dispatch(authActions.userLogin({
-                    email: "huyhoang10032000@gmail.com",
-                    password: "12345"
-                }))
+      <button
+        style={{ marginTop: 300 }}
+        onClick={() => {
+          dispatch(
+            authActions.userLogin({
+              email: 'huyhoang10032000@gmail.com',
+              password: '12345',
+            })
+          );
+        }}
+      >
+        Login
+      </button>
+    </>
+  );
+};
 
-            }}>Login</button>
-
-        </>
-    )
-
-}
-
-export default Message
-
+export default Message;
