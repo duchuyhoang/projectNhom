@@ -88,7 +88,7 @@ if(response.config.url==="/signup"){
 )
 
 
-const setNewHeader = (responseData) => {
+export const setNewHeader = (responseData) => {
     axiosApi.defaults.headers["Authorization"] = "Bearer " + responseData.accessToken
     setCookie("cn11_refresh_token", responseData.refreshToken || getCookie("cn11_refresh_token"), 100);
     setCookie("cn11_access_token", responseData.accessToken, 100);
