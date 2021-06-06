@@ -13,7 +13,7 @@ import { CNPropertyLabel } from './shared/CNPropertyLabel/CNPropertyLabel';
 import { CNTab } from './shared/CNTab/CNTab'
 import { roomSelectors, roomActions } from '@Core/redux/room'
 import { createSelector } from "reselect";
-
+import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 const useStyles = makeStyles((theme) => {
   return {
     style: {
@@ -89,6 +89,10 @@ const Message = ({ message }) => {
   ];
   return (
     <>
+     <div style={{height: "100vh",width:"100vw", backgroundImage: "url('https://www.demoapus-wp1.com/homeo/wp-content/uploads/2020/03/slider1.jpg')"}}>
+       <div style={{height: "300px"}}></div>
+      <SearchRoom/>
+    </div>
       <CooperateForm></CooperateForm>
       <CNSelect customComponents={{ DropdownIndicator }} />
       <CNStar values="2.5" size="medium" />
@@ -111,7 +115,7 @@ const Message = ({ message }) => {
       <CNPropertyLabel >For Sale</CNPropertyLabel>
       <CNPropertyLabel >For Rent</CNPropertyLabel>
       <CNTab tabList={tabList} />
-
+       
     </>
   );
 };
