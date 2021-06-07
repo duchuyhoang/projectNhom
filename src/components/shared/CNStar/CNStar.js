@@ -14,23 +14,18 @@ const useStyleStar = makeStyles((theme) => ({
   iconFilled: { color: '#bcc52a' },
 }));
 
-function CNStar({ values, size, ...rest }) {
-  const [value, setValue] = useState(values);
+function CNStar({ value, size, onChange, ...rest }) {
   const stylesStar = useStyleStar();
   return (
-    <div>
-      <Rating
-        name="half-rating"
-        value={value}
-        classes={stylesStar}
-        precision={0.5}
-        size={size}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        {...rest}
-      />
-    </div>
+    <Rating
+      name="half-rating"
+      value={value}
+      classes={stylesStar}
+      precision={0.5}
+      size={size}
+      onChange={onChange}
+      {...rest}
+    />
   );
 }
 
