@@ -3,6 +3,7 @@ import RoomCard from '@Components/components/RoomCard/RoomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { roomActions, roomSelectors } from "@Core/redux/room";
 import Slider from 'react-slick';
+import {uuid} from '@Ultis/uuid'
 import "./HomeListRoom.css"
 
 
@@ -39,6 +40,7 @@ export const HomeListRoom = () => {
                 <Slider {...settings}>
                     {listRoom.map((room) => {
                         return (<RoomCard
+                            key={uuid()}
                             name={room.name}
                             city={room.cityName}
                             district={room.districtName}

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import RoomCardIcon from './RoomCardIcon';
 import Moment from 'react-moment';
 import noImage from "@Assets/background/noImage.jpg"
-
+import {uuid} from '@Ultis/uuid'
 import './styles.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -196,7 +196,7 @@ function RoomCard({ name, city, district, ward, list_images, price, capacity, ac
 
               {list_images && list_images?.length !== 0 ? list_images.map((image) => {
                 return (
-                  <div className={classes.imageContainer}>
+                  <div className={classes.imageContainer} key={uuid()}>
                     <img
                       style={{ objectFit: "cover", height: "100%" }}
                       key={image.imagesIds}

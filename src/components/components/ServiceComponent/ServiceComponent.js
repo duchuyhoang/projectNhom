@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core"
 import { CNCard } from '@Components/shared/CNCard/CNCard'
 import useIsMobile from "@Core/hooks/useIsMobile"
 import { SVGIcon } from "@Components/shared/SvgIcon/Icon";
-
+import {uuid} from '@Ultis/uuid'
 const useServiceComponentStyles = makeStyles((theme) => ({
     cardContainer: {
         display: "block",
@@ -81,6 +81,7 @@ display: ${props => props.isMobile ? "block" : "flex"};
 flex-wrap: wrap;
 justify-content:center;
 align-items:stretch;
+
 `
 const CardWrapper = styled.div`
     width: ${props => props.isMobile ? "100%" : "31%"};
@@ -91,12 +92,14 @@ const CardWrapper = styled.div`
     box-sizing: border-box;
 `
 const SVGContainer = styled.div`
-    
     border-radius:100%;
     height: 160px;
     width:160px;
     background-color:#FFE8E9;
     ${alignCenter};
+`
+const CardInfoWrapper = styled.div`
+    padding-bottom: ${props => props.isMobile? "30px" :"0"};
 `
 const CardTitle = styled.h3`
     font-size:24px;
@@ -126,15 +129,6 @@ export const ServiceComponent = (props) => {
         SVGIcon: "profitcalculator",
         title: "Financing Made Easy",
         description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
-    }, {
-        SVGIcon: "home",
-        title: "Wide Renge Of Properties",
-        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
-    },
-    {
-        SVGIcon: "profitcalculator",
-        title: "Financing Made Easy",
-        description: "Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis."
     }])
 
     return (
@@ -145,7 +139,7 @@ export const ServiceComponent = (props) => {
                 <ContainerCardList isMobile={isMobile}>
 
                     {cardList.map((item) => {
-                        return <CardWrapper isMobile={isMobile}>
+                        return <CardWrapper isMobile={isMobile} key={uuid()}>
                             <CNCard
                                 className={serviceComponentStyles.cardContainer}
                                 headerComponent={
@@ -153,10 +147,10 @@ export const ServiceComponent = (props) => {
                                         <SVGIcon className={serviceComponentStyles.SVGStyles} name={item.SVGIcon} width="80px" height="80px" /></SVGContainer>
                                 }
                                 bodyComponent={
-                                    <>
+                                    <CardInfoWrapper isMobile={isMobile}>
                                         <CardTitle className={serviceComponentStyles.CardTitle}>{item.title}</CardTitle>
                                         <CardInfo className={serviceComponentStyles.CardInfo}>{item.description}</CardInfo>
-                                    </>
+                                        </CardInfoWrapper>
                                 }
                                 footerComponent={false} />
                         </CardWrapper>
