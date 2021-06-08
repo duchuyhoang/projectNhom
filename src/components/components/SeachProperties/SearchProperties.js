@@ -11,41 +11,25 @@ import { CNSelect } from '@Components/shared/CNSelect/CNSelect'
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox'
 import { CNSlider } from '@Components/shared/CNSlider/CNSlider'
 
-const useSearchRoomStyles = makeStyles((theme) => ({
-    main: {
-        "& *": {
-            margin: "0 5px",
-            fontWeight: 500
+const useSearchPropertiesStyles = makeStyles((theme) => ({
+    input: {
+        width: "100% !important",
+        marginBottom: 30,
+        fontSize: 18,
+        transition: "all .3s",
+        "&:hover":{
+            "& > svg":{
+                fill: theme.palette.primary.main
+            }
         }
+        
     },
-    mainInput: {
-        width: 280,
-        fontSize: 18
-    },
-    selectInput: {
-        width: "280px !important",
-        fontSize: 18
-    },
-    "@keyframes fadeIn": {
-        "0%": {
-
-            transform: "translateY(-30px)",
-            opacity: 0
-
-        },
-        "100%": {
-            transform: "translateY(0)",
-            opacity: 1
-
-
-        }
-    }
-    ,
     fadeIn: {
-        display: "block",
-        transition: ".3s all",
-        animation: "$fadeIn .3s linear",
-
+       
+        transition: ".5s all ease-in-out",
+        maxHeight: " 500px !important",
+        opacity: 1,
+        visibility: "visible"
     },
     active: {
         color: theme.palette.primary.main,
@@ -53,44 +37,40 @@ const useSearchRoomStyles = makeStyles((theme) => ({
             fill: theme.palette.primary.main
         }
     },
-    searchButton: {
-        fontSize: 18,
-        fontWeight: 900
-    },
     checkBox: {
+        width: "50%",
+        boxSizing: "border-box",
+        margin: 0,
         "& span": {
             fontSize: 18
-        }
+        },
+        justifyContent: "flex-start",
     }
+
 }))
 const Container = styled.div`
     font-family: ${props => props.theme.typography.fontFamily};
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    align-items: center;
-    margin: 0 auto;
-   box-sizing: border-box;
-`
-const Title = styled.h1`
-    font-size: 55px;
-    color: ${props => props.theme.palette.text.secondary}
-`
-const Description = styled.p`
-    font-size:18px;
-    color: ${props => props.theme.palette.text.secondary};
-    margin-bottom:30px;
-    font-weight:bold;
-`
-const SearchFormMain = styled.div`
-    background-color:${props => props.theme.palette.background.secondary};
-    display: flex;
-    padding: 20px;
+    padding:30px;
     background-color: ${props => props.theme.palette.background.secondary};
     border-radius: 6px;
-    border: 1px solid   ${props => props.theme.palette.background.secondary};
-    align-items:center;
-    box-shadow: 
+    border: 1px solid ${props => props.theme.palette.border}
+`
+const Title = styled.div`
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 30px;
+`
+const SearchFormMain = styled.div`
+
+`
+const SliderItem = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom:30px;
+`
+const SliderTitle = styled.h3`
+
 `
 const AdvancedOptions = styled.div`
     display: flex;
@@ -106,39 +86,24 @@ const AdvancedOptions = styled.div`
         } 
     }
 `
-
 const SearchAdvanced = styled.div`
     background-color:${props => props.theme.palette.background.secondary};
     border-radius:6px;
     margin-top: 30px;
     box-sizing: border-box;
-    display: none;
+    max-height: 0px;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height .5s all ease-in-out;
 `
 const UtilitiesWrapper = styled.div`
-    border-bottom: 1px solid ${props => props.theme.border.main};
-    padding: 20px;
     display: flex;
-    justify-content:space-around;
-
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+   
 `
-
-const SliderOptionsWrapper = styled.div`
-    display: flex;
-    justify-content:center;
-    margin: 30px 0 30px;
-`
-const SliderItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 30px;
-`
-const SliderTitle = styled.h3`
-
-`
-
-export const SearchRoom = () => {
-
+export const SearchProperties = () => {
+    const searchPropertiesStyles = useSearchPropertiesStyles();
     const {
         listProvince,
         listDistrict,
@@ -196,35 +161,34 @@ export const SearchRoom = () => {
     const showAdvancedOptionsHandler = () => {
         setIsAdvancedOptionsOpen(preStatus => !preStatus)
     }
-    const searchFromStyles = useSearchRoomStyles();
     return (
-
         <Container>
-            <Title>Find Your Dream Home</Title>
-            <Description>
-                From as low as $10 per day with limited time offer discounts</Description>
-
-            <SearchFormMain className={searchFromStyles.main}  >
-                <CNTextField className={searchFromStyles.mainInput}
-                    placeholder="Enter keyword..."
+            <Title>Advanced Search</Title>
+            <SearchFormMain>
+                <CNTextField className={searchPropertiesStyles.input}
+                    placeholder="Keyword" fullWidth
+                    endAdornment={<SVGIcon name="search" width="20px" height="20px" />}
                 />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedProvince} onChange={changeProvinceHandler} options={listProvince} placeholder="Select Province" />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedDistrict} onChange={changeDistrictHandler} options={listDistrict} placeholder="Select District" />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedWard} onChange={changeWardHandler} options={listWard} placeholder="Select Ward" />
-                <AdvancedOptions className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
+                <CNSelect className={searchPropertiesStyles.input} value={selectedProvince} onChange={changeProvinceHandler} options={listProvince} placeholder="Select Province" />
+                <CNSelect className={searchPropertiesStyles.input} value={selectedDistrict} onChange={changeDistrictHandler} options={listDistrict} placeholder="Select District" />
+                <CNSelect className={searchPropertiesStyles.input} value={selectedWard} onChange={changeWardHandler} options={listWard} placeholder="Select Ward" />
+                <SliderItem>
+                    <SliderTitle> From ${priceRange[0]} to ${priceRange[1]} </SliderTitle>
+                    <CNSlider value={priceRange} handleChange={priceChangeHandler} />
+                </SliderItem>
+                <AdvancedOptions className={isAdvancedOptionsOpen ? searchPropertiesStyles.active : ""} onClick={showAdvancedOptionsHandler}
                 >
                     Advanced
                 <SVGIcon name="more" />
                 </AdvancedOptions>
-                <CNButton className={searchFromStyles.searchButton} buttonType="main">Search</CNButton>
             </SearchFormMain>
-            <SearchAdvanced className={isAdvancedOptionsOpen ? searchFromStyles.fadeIn : ""}>
+            <SearchAdvanced className={isAdvancedOptionsOpen ? searchPropertiesStyles.fadeIn : ""}>
                 <UtilitiesWrapper>
 
                     {uitilitiesList && uitilitiesList.map((utility) => {
                         return (
                             <CNCheckBox
-                                className={searchFromStyles.checkBox}
+                                className={searchPropertiesStyles.checkBox}
                                 key={utility.id}
                                 label={utility.label}
                                 data={utility}
@@ -234,19 +198,16 @@ export const SearchRoom = () => {
                         )
                     })}
                 </UtilitiesWrapper>
-                <SliderOptionsWrapper>
-                    <SliderItem>
-                        <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle>
-                        <CNSlider value={squareRange} handleChange={squareChangeHandler} />
-                    </SliderItem>
-                    <SliderItem>
-                        <SliderTitle> From {priceRange[0]} to {priceRange[1]} </SliderTitle>
-                        <CNSlider value={priceRange} handleChange={priceChangeHandler} />
-                    </SliderItem>
 
-                </SliderOptionsWrapper>
+                <SliderItem>
+                    <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle>
+                    <CNSlider value={squareRange} handleChange={squareChangeHandler} />
+                </SliderItem>
+
+
+
             </SearchAdvanced>
+            <CNButton fullWidth buttonType="main" >Find Property</CNButton>
         </Container>
-
     )
 }

@@ -14,6 +14,7 @@ import { CNTab } from './shared/CNTab/CNTab'
 import { roomSelectors, roomActions } from '@Core/redux/room'
 import { createSelector } from "reselect";
 import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
+import {SearchProperties} from '@Components/components/SeachProperties/SearchProperties'
 const useStyles = makeStyles((theme) => {
   return {
     style: {
@@ -90,8 +91,15 @@ const Message = ({ message }) => {
   return (
     <>
      <div style={{height: "100vh",width:"100vw", backgroundImage: "url('https://www.demoapus-wp1.com/homeo/wp-content/uploads/2020/03/slider1.jpg')"}}>
-       <div style={{height: "300px"}}></div>
-      <SearchRoom/>
+       <div style={{maxWidth: 1200,margin: "0 auto"}}>
+       <div style={{height: "100px"}}></div>
+       <div style={{width: "33.33%"}}>
+      <SearchProperties/>
+          </div>
+       </div>
+       
+       
+      
     </div>
       <CooperateForm></CooperateForm>
       <CNSelect customComponents={{ DropdownIndicator }} />
