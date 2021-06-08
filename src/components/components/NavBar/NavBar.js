@@ -1,38 +1,43 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import { HomeModal } from '@Components/components/Modals/HomeModal';
+import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import useMediaQuery from '@Core/hooks/useMediaQuery';
-import { SmallScreenNavBar } from './SmallScreenNavBar';
-import { CNButton } from '@Components/shared/CNButton/CNButton';
-import { HomeModal } from '@Components/components/Modals/HomeModal';
-import { UserInfo } from './UserInfo';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import './NavBar.css';
+import { SmallScreenNavBar } from './SmallScreenNavBar';
+import { UserInfo } from './UserInfo';
 
 const NavBarContainer = styled.section`
-display:flex;
-width:100%;
-justify-content:space-between;
-background-color:transparent;
-align-items:center;
-position:absolute;
-top:0;
-border-bottom:1px solid ${props => {
-        return props.isSmallVer ? props.theme.border.main : "transparent"
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  background-color: transparent;
+  align-items: center;
+  position: absolute;
+  top: 0;
 
+  border-bottom: 1px solid
+    ${(props) => {
+      return props.isSmallVer ? props.theme.border.main : 'transparent';
     }};
   padding: 15px 0px;
-  z-index: 1000;
+  z-index: 1484848;
 `;
 
 const Logo = styled.div`
   width: 15%;
   margin-right: 80px;
+  svg > path:last-child {
+    fill: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
+  }
 `;
 
 const ListContainer = styled.ul`
   list-style-type: none;
   display: flex;
   align-items: center;
+
   margin-right: 15px;
   padding-inline-start: 0px;
 `;
@@ -140,10 +145,13 @@ const RootItem = styled.li`
   cursor: pointer;
   font-size: 23px;
   position: relative;
+
   color: ${(props) => {
     return props.active
       ? props.theme.palette.primary.main
-      : props.theme.palette.text.secondary;
+      : props.currentTab === 'home'
+      ? '#fff'
+      : '#484848';
   }};
 
   &:hover {
@@ -160,8 +168,14 @@ const RootItem = styled.li`
 `;
 
 const ModifiedButton = styled(CNButton)`
-  background-color: ${(props) => props.theme.palette.text.secondary}!important;
-  color: ${(props) => props.theme.palette.primary.main}!important;
+  background-color: ${(props) =>
+    props.current === 'home'
+      ? props.theme.palette.text.secondary
+      : '#24334A'}!important;
+  color: ${(props) =>
+    props.current === 'home'
+      ? props.theme.palette.primary.main
+      : '#fff'}!important;
   border-radius: 50px 50px 50px 50px !important;
   padding: 11px 30px 11px 30px !important;
   height: 65px !important;
@@ -170,8 +184,12 @@ const ModifiedButton = styled(CNButton)`
   border: none;
   font-size: 19px !important;
   &:hover {
-    background-color: ${(props) => props.theme.palette.primary.main}!important;
-    color: #fff !important;
+    background-color: ${(props) =>
+      props.current === 'home'
+        ? props.theme.palette.primary.main
+        : '#fff'}!important;
+    color: ${(props) =>
+      props.current === 'home' ? '#fff' : '#24334A'}!important;
   }
 `;
 
@@ -203,7 +221,7 @@ const RecursiveNav = ({ data, index }) => {
                 ) : (
                   <Item>
                     {item.title}
-                    <SVGIcon name='arrowright' width='12' height='12' />
+                    <SVGIcon name="arrowright" width="12" height="12" />
                     <RecursiveNav data={item.children} index={index + 1} />
                   </Item>
                 )}
@@ -224,7 +242,7 @@ const RecursiveNav = ({ data, index }) => {
               ) : (
                 <Item>
                   {item.title}
-                  <SVGIcon name='arrowright' width='12' height='12' />
+                  <SVGIcon name="arrowright" width="12" height="12" />
                   <RecursiveNav data={item.children} index={index + 1} />
                 </Item>
               )}
@@ -242,7 +260,6 @@ export const NavBar = (props) => {
   const [selectedTab, setSelectedTab] = useState(currentTab);
   const [homeModalOpen, setHomeModalOpen] = useState(false);
   const [selectedHomeModal, setSelectedHomeModal] = useState('login');
-
   const handleOver = (selectTab) => (event) => {
     setSelectedTab(selectTab);
   };
@@ -314,7 +331,7 @@ export const NavBar = (props) => {
       },
       { type: 'link', title: 'Link1' },
     ],
-    pages : [
+    pages: [
       {
         type: 'parent',
         title: 'Blog',
@@ -326,86 +343,89 @@ export const NavBar = (props) => {
         ],
       },
       { type: 'link', title: 'Shop' },
-
     ],
-    contact:[],
+    contact: [],
   };
 
   const rootItemData = [
-    {id:"home", content:"Home" },
-    {id:"properties", content:"Properties"},
-    {id:"members", content:"Members" },
-    {id:"pages", content:"Pages" },
-    {id:"contact", content:"Contact" },   
-]
+    { id: 'home', content: 'Home' },
+    { id: 'properties', content: 'Properties' },
+    { id: 'members', content: 'Members' },
+    { id: 'pages', content: 'Pages' },
+    { id: 'contact', content: 'Contact' },
+  ];
 
   return (
     <>
-     {!mediaScreenTrue ? (
-            <>
-              <SmallScreenNavBar data={mockData}></SmallScreenNavBar>
-            </>
-          ) : (
-            <>
-            <NavBarContainer isSmall={mediaScreenTrue}>
-              <Logo>
-                <SVGIcon name='logo' width='200' height='60' />
-              </Logo>
+      {!mediaScreenTrue ? (
+        <>
+          <SmallScreenNavBar data={mockData}></SmallScreenNavBar>
+        </>
+      ) : (
+        <>
+          <NavBarContainer isSmall={mediaScreenTrue}>
+            <Logo currentTab={currentTab}>
+              <SVGIcon name="logo" width="200" height="60" />
+            </Logo>
 
-              <ListContainer>
-                {rootItemData.map((item, index) => {
-                  return(
-                    <RootItem
-                        active={currentTab === item.id}
-                        onClick={handleOver(item.id)}
-                        onMouseOver={handleOver(0)}
-                        key={index}
-                      >
-                        {item.content}
-                        {mockData[item.id].length >0 && <ArrowDown
-                              name='arrowDown'
-                              width='10'
-                              height='10'
-                              style={{ marginTop: 3, marginLeft: 5 }}
-                        />}
-                        {mockData[item.id].length >0 &&                   
-                          <DropDown className={selectedTab == 0 ? 'active' : ''}>
-                            <RecursiveNav data={mockData[item.id]} index={0} />
-                          </DropDown>
-                        }
-                      </RootItem>
-                  )
-                })}
-                
-                <RegisterTextContainer style={{ color: '#fff' }}>
-                  <UserInfo
-                    setSelectedHomeModal={setSelectedHomeModal}
-                    setHomeModalOpen={setHomeModalOpen}
+            <ListContainer>
+              {rootItemData.map((item, index) => {
+                return (
+                  <RootItem
+                    currentTab={currentTab}
+                    active={currentTab === item.id}
+                    onClick={handleOver(item.id)}
+                    onMouseOver={handleOver(0)}
+                    key={index}
+                  >
+                    {item.content}
+                    {mockData[item.id].length > 0 && (
+                      <ArrowDown
+                        name="arrowDown"
+                        width="10"
+                        height="10"
+                        style={{ marginTop: 3, marginLeft: 5 }}
+                      />
+                    )}
+                    {mockData[item.id].length > 0 && (
+                      <DropDown className={selectedTab == 0 ? 'active' : ''}>
+                        <RecursiveNav data={mockData[item.id]} index={0} />
+                      </DropDown>
+                    )}
+                  </RootItem>
+                );
+              })}
+
+              <RegisterTextContainer style={{ color: '#fff' }}>
+                <UserInfo
+                  currentTab={currentTab}
+                  setSelectedHomeModal={setSelectedHomeModal}
+                  setHomeModalOpen={setHomeModalOpen}
+                />
+              </RegisterTextContainer>
+
+              <ModifiedButton
+                current={currentTab}
+                startIcon={
+                  <SVGIcon
+                    name="plus"
+                    style={{ fill: 'currentColor', maxWidth: '100%' }}
                   />
-                </RegisterTextContainer>
+                }
+              >
+                Submit Property
+              </ModifiedButton>
+            </ListContainer>
+          </NavBarContainer>
 
-                <ModifiedButton
-                  startIcon={
-                    <SVGIcon
-                      name='plus'
-                      style={{ fill: 'currentColor', maxWidth: '100%' }}
-                    />
-                  }
-                >
-                  Submit Property
-                </ModifiedButton>
-              </ListContainer>
-            </NavBarContainer>
-
-            <HomeModal
+          <HomeModal
             selectedModal={selectedHomeModal}
             showModal={homeModalOpen}
             setShowModal={setHomeModalOpen}
             setSelectedHomeModal={setSelectedHomeModal}
           />
         </>
-          )
-          }
-          </>
+      )}
+    </>
   );
 };

@@ -24,8 +24,8 @@ const ItemValue = styled.div`
 function ListDetail({ data }) {
   return (
     <List>
-      {data.map((item) => (
-        <ListItem>
+      {data.map((item, index) => (
+        <ListItem key={index}>
           <ItemText>{item.text}:</ItemText>
           <ItemValue>{item.value}</ItemValue>
         </ListItem>

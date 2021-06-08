@@ -24,8 +24,8 @@ const ItemValue = styled.div``;
 function ListChecked({ data }) {
   return (
     <List>
-      {data.map((item) => (
-        <ListItem>
+      {data.map((item, index) => (
+        <ListItem key={index}>
           <SVGIcon name={'tick'} width={'14px'} fill={'#ff5a5f'} />
           <ItemValue>{item}</ItemValue>
         </ListItem>

@@ -1,18 +1,20 @@
+import { Footer } from '@Components/components/Footer/Footer';
+import { CNModal } from '@Components/shared/CNModal/CNModal';
+import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
+import CNStar from '@Components/shared/CNStar/CNStar';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import { makeStyles } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import CommentItem from './CommentItem';
+import FormAddReview from './FormAddReview';
 import LabelInfo from './LabelInfo';
 import ListChecked from './ListChecked';
 import ListDetail from './ListDetail';
+import RoomInfoIcon from './RoomInfoIcon';
 import RoomSlide from './RoomSlide';
-import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
 import './styles.css';
-import { Footer } from '@Components/components/Footer/Footer';
-import CNStar from '@Components/shared/CNStar/CNStar';
-import CommentItem from './CommentItem';
-import FormAddReview from './FormAddReview';
-import { useForm } from 'react-hook-form';
+import ViewAllPhoto from './ViewAllPhoto';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Wrapper = styled.div`
   max-width: 1920px;
   margin: 0 auto;
-  margin-top: 120px;
+  margin-top: 116px;
   font-family: 'Nunito', Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -30,7 +32,44 @@ const Wrapper = styled.div`
   background-color: #f7f7f7;
   box-sizing: border-box;
 `;
-const SlideWrapper = styled.div``;
+const SlideWrapper = styled.div`
+  position: relative;
+`;
+const Gallery = styled.div`
+  position: absolute;
+  width: 100%;
+  bottom: 30px;
+`;
+const BoxView = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const ViewPhoto = styled.div`
+  display: flex;
+  width: 170px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  :hover {
+    color: #ff5a5f;
+  }
+  :hover > svg {
+    fill: #ff5a5f;
+  }
+  > svg {
+    margin-right: 12px;
+    transform: translateY(-1px);
+  }
+`;
+const RowIcon = styled.div`
+  flex: 1 1 auto;
+  display: flex;
+`;
 const Container = styled.div`
   max-width: 1170px;
   margin: 0 auto;
@@ -168,6 +207,22 @@ function RoomInfo(props) {
       image:
         'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
     },
+    {
+      image:
+        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
+    },
+    {
+      image:
+        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
+    },
+    {
+      image:
+        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
+    },
+    {
+      image:
+        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
+    },
   ];
   const listData = [
     {
@@ -240,10 +295,42 @@ function RoomInfo(props) {
   const handleSubmit = (values) => {
     console.log(values);
   };
+  const [showModal, setShowModal] = useState(false);
+  const handleShowPhoto = () => {
+    setShowModal(!showModal);
+  };
   return (
     <Wrapper className={classes.root}>
+      <CNModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        children={<ViewAllPhoto data={dataImg} onClick={handleShowPhoto} />}
+      />
       <SlideWrapper>
         <RoomSlide data={dataImg} />
+        <Gallery>
+          <Container>
+            <BoxView>
+              <ViewPhoto onClick={handleShowPhoto}>
+                <SVGIcon name={'camera'} />
+                <span>View Photos</span>
+              </ViewPhoto>
+              <RowIcon>
+                <div style={{ marginLeft: 'auto', display: 'flex' }}>
+                  <RoomInfoIcon
+                    selected={false}
+                    icon={<SVGIcon name="compare" />}
+                    style={{ marginRight: '12px' }}
+                  />
+                  <RoomInfoIcon
+                    selected={false}
+                    icon={<SVGIcon name="favourite" />}
+                  />
+                </div>
+              </RowIcon>
+            </BoxView>
+          </Container>
+        </Gallery>
       </SlideWrapper>
       <Container>
         <ContentWrapper>
@@ -341,8 +428,8 @@ function RoomInfo(props) {
           </WrapperInfo>
           <WrapperInfo>
             <Title>Amenities</Title>
-            {valuation.map((item) => (
-              <div className={'mgb'}>
+            {valuation.map((item, index) => (
+              <div className={'mgb'} key={index}>
                 <CNProgressBar label={item.label} value={item.value} />
               </div>
             ))}
@@ -357,8 +444,8 @@ function RoomInfo(props) {
                 <span>(2 comment)</span>
               </RightTitle>
             </TitleWrapper>
-            {listComment.map((item) => (
-              <BoxItem>
+            {listComment.map((item, index) => (
+              <BoxItem key={index}>
                 <CommentItem data={item} />
               </BoxItem>
             ))}
