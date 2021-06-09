@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocationSearch } from '@Core/hooks/useLocationSearch'
 import { useListUltilities } from '@Core/hooks/useListUltilities'
-import {useGetSquareAndPrice } from '@Core/hooks/useGetSquareAndPrice'
 import styled from "styled-components"
 import { makeStyles, FormControl, FormHelperText } from "@material-ui/core"
 import { SVGIcon } from "@Components/shared/SvgIcon/Icon";
@@ -51,25 +50,22 @@ const useSearchRoomStyles = makeStyles((theme) => ({
             fill: theme.palette.primary.main
         }
     },
-    searchButton:(props) =>( {
+    searchButton: {
         fontSize: 18,
         fontWeight: 900,
-        marginLeft: 20,
-        width: props.type === 'properties' ? '100%' : '',
-        marginLeft: props.type === 'properties' ? '0' : '20px'
-    }),
+        marginLeft: 20
+    },
     checkBox: {
         "& span": {
             fontSize: 18
         }
     },
     // validate
-    formControl: (props) => ({
+    formControl: {
         position: "relative",
-        marginRight: props.type === 'properties' ? '0px' : '20px', 
-        marginBottom: props.type === 'properties' ? '30px' : '0px' 
+        marginRight: 20
 
-    }),
+    },
     helperText: {
         color: theme.palette.primary.main,
         fontSize: 14,
@@ -88,22 +84,13 @@ const Container = styled.div`
 `
 const Title = styled.h1`
     font-size: 55px;
-    color: ${props => props.theme.palette.text.secondary};
-    display: ${props => props.type === 'properties' ? 'none' : ''};
-`
-const AdvancedTitle = styled.h3`
-    font-size: 18px;
-    font-weight: bold;
-    align-self: flex-start;
-    margin-bottom: 30px;
-    display: ${props => props.type === 'properties' ? 'block' : 'none'};
+    color: ${props => props.theme.palette.text.secondary}
 `
 const Description = styled.p`
     font-size:18px;
     color: ${props => props.theme.palette.text.secondary};
     margin-bottom:30px;
     font-weight:bold;
-    display: ${props => props.type === 'properties' ? 'none' : ''};
 `
 const SearchFormMain = styled.div`
     background-color:${props => props.theme.palette.background.secondary};
@@ -114,7 +101,6 @@ const SearchFormMain = styled.div`
     border: 1px solid   ${props => props.theme.palette.background.secondary};
     align-items:center;
     /* box-shadow:  */
-    flex-direction: ${props => props.type === 'properties' ? 'column' : 'row'};
 `
 const AdvancedOptions = styled.div`
     display: flex;
@@ -123,7 +109,6 @@ const AdvancedOptions = styled.div`
     font-size: 18px;
     transition: all .2s;
     font-weight: bold;
-    align-self: ${props => props.type === 'properties' ? 'flex-start': 'center'};
     &:hover {
         color: ${props => props.theme.palette.primary.main};
         & > svg {
@@ -162,7 +147,7 @@ const SliderTitle = styled.h3`
 
 `
 
-export const SearchRoom = ({type}) => {
+export const SearchRoom = () => {
 
     const {
         listProvince,
@@ -175,9 +160,6 @@ export const SearchRoom = ({type}) => {
         setSelectedDistrict,
         setSelectedWard } =
         useLocationSearch();
-    const {squareRange,priceRange,setSquareRange,setPriceRange} = useGetSquareAndPrice();   
-    console.log(squareRange)
-    console.log(priceRange)
     const { listUltility } = useListUltilities();
     const modifiedListUltility = listUltility.map((utility) => {
         return {
@@ -188,8 +170,8 @@ export const SearchRoom = ({type}) => {
         }
     })
     const [uitilitiesList, setUitilitiesList] = useState(null);
-    // const [squareRange, setSquareRange] = useState([0, 800])
-    // const [priceRange, setPriceRange] = useState([0, 800])
+    const [squareRange, setSquareRange] = useState([0, 800])
+    const [priceRange, setPriceRange] = useState([0, 800])
     const [isAdvancedOptionsOpen, setIsAdvancedOptionsOpen] = useState(false);
     useEffect(() => {
         setUitilitiesList(modifiedListUltility)
@@ -203,7 +185,7 @@ export const SearchRoom = ({type}) => {
     const showAdvancedOptionsHandler = () => {
         setIsAdvancedOptionsOpen(preStatus => !preStatus)
     }
-    const searchFromStyles = useSearchRoomStyles({type});
+    const searchFromStyles = useSearchRoomStyles();
     const defaultValues = {
         keyword: '',
         province: null,
@@ -225,18 +207,16 @@ export const SearchRoom = ({type}) => {
     return (
 
         <Container>
-            <Title type={type}>Find Your Dream Home</Title>
-            <Description type ={type}>
+            <Title>Find Your Dream Home</Title>
+            <Description>
                 From as low as $10 per day with limited time offer discounts</Description>
             <form onSubmit={handleSubmit(handleSearchSubmit)}>
-              
-                <SearchFormMain type={type} className={searchFromStyles.main}>
-                <AdvancedTitle type={type}>Advanced Search</AdvancedTitle>
+                <SearchFormMain className={searchFromStyles.main}  >
                     <Controller
                         name="keyword"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                            <FormControl  className={searchFromStyles.formControl}>
+                            <FormControl className={searchFromStyles.formControl}>
                                 <CNTextField className={searchFromStyles.mainInput}
                                     placeholder="Enter keyword..."
                                     error={!!formState.errors['keyword']}
@@ -304,7 +284,10 @@ export const SearchRoom = ({type}) => {
                             </FormControl>
                         )}
                     />
-                    <AdvancedOptions type = {type} className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
+
+
+
+                    <AdvancedOptions className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
                     >
                         Advanced
                 <SVGIcon name="more" />
@@ -330,11 +313,11 @@ export const SearchRoom = ({type}) => {
                 </UtilitiesWrapper>
                 <SliderOptionsWrapper>
                     <SliderItem>
-                        {/* <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle> */}
+                        <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle>
                         <CNSlider value={squareRange} handleChange={squareChangeHandler} />
                     </SliderItem>
                     <SliderItem>
-                        {/* <SliderTitle> From {priceRange[0]} to {priceRange[1]} </SliderTitle> */}
+                        <SliderTitle> From {priceRange[0]} to {priceRange[1]} </SliderTitle>
                         <CNSlider value={priceRange} handleChange={priceChangeHandler} />
                     </SliderItem>
 

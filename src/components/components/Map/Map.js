@@ -105,7 +105,7 @@ export const Map = ({ isRoute = true,
 const [distance,setDistance]=useState(null);
 
 
-    const defaultTargetName = useLocationNameByCoordinate({ ...defaultTarget, open: !isRoute });
+    const defaultTargetName = useLocationNameByCoordinate({ ...currentTarget, open: !isRoute });
 
     const setTargetLocation = ({ latitude = null, longtitude = null }) => {
         setCurrentTarget({ latitude, longtitude })
