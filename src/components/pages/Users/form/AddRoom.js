@@ -3,12 +3,11 @@ import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
-import { useLocationSearch } from "@Core/hooks/useLocationSearch";
-import { useListUltilities } from "@Core/hooks/useListUltilities";
-import { useListImages } from "@Core/hooks/useListImages";
-import { useAuth } from "@Core/hooks/useAuth";
-import { axiosApi } from "@Core/api/axiosApi";
-
+import { useLocationSearch } from '@Core/hooks/useLocationSearch';
+import { useListUltilities } from '@Core/hooks/useListUltilities';
+import { useListImages } from '@Core/hooks/useListImages';
+import { useAuth } from '@Core/hooks/useAuth';
+import { axiosApi } from '@Core/api/axiosApi';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -111,8 +110,9 @@ const Linear = styled.div`
 function AddRoom(props) {
   const classes = useStyled();
 
-const {userId}=useAuth();
-  const { listProvince,
+  const { userId } = useAuth();
+  const {
+    listProvince,
     listDistrict,
     listWard,
     selectedProvince,
@@ -120,23 +120,25 @@ const {userId}=useAuth();
     selectedWard,
     setSelectedProvince,
     setSelectedDistrict,
-    setSelectedWard } = useLocationSearch();
+    setSelectedWard,
+  } = useLocationSearch();
 
   const { listUltility } = useListUltilities();
 
   const { listImages, setAddListImages, deleteAnImage } = useListImages();
-  const [checkboxData, setCheckboxState] = useState([])
-  console.log("list", listImages);
+  const [checkboxData, setCheckboxState] = useState([]);
+  console.log('list', listImages);
   useEffect(() => {
     if (listUltility)
-      setCheckboxState(listUltility.map(ultility => ({
-        label: ultility.label,
-        value: ultility.value,
-        id: ultility.value,
-        isChecked: false,
-      })))
-
-  }, [listUltility])
+      setCheckboxState(
+        listUltility.map((ultility) => ({
+          label: ultility.label,
+          value: ultility.value,
+          id: ultility.value,
+          isChecked: false,
+        }))
+      );
+  }, [listUltility]);
 
   const defaultValues = {
     name: '',
@@ -206,61 +208,56 @@ const {userId}=useAuth();
     resolver: yupResolver(schema),
   });
 
-console.log(formState.errors);
+  console.log(formState.errors);
 
   const handleAddSubmit = (values) => {
-console.log("submit");
+    console.log('submit');
     var roomForm = new FormData();
 
-roomForm.append("belongTo",userId)
+    roomForm.append('belongTo', userId);
 
     // For data
     for (let key in values) {
-      if (key == "overview") {
-        roomForm.append(key, values[key].replace(/\n/g, "<br />"));
-      }
-      else if (key !== "image") {
+      if (key == 'overview') {
+        roomForm.append(key, values[key].replace(/\n/g, '<br />'));
+      } else if (key !== 'image') {
         roomForm.append(key, values[key]);
       }
-
     }
 
     // For images
 
     if (listImages.length === 1) {
-      roomForm.append("singleImage", listImages[0].toUpload);
-    }
-    else if (listImages.length > 1) {
+      roomForm.append('singleImage', listImages[0].toUpload);
+    } else if (listImages.length > 1) {
       listImages.forEach((image, index) => {
-        roomForm.append("multipleRoomImage",image.toUpload)
-      })
+        roomForm.append('multipleRoomImage', image.toUpload);
+      });
     }
 
     for (var value of roomForm.values()) {
       console.log(value);
-   }
+    }
 
-// For ultility
-checkboxData.forEach((ultility,index)=>{
-  console.log(ultility);
-if(ultility.isChecked){
-  roomForm.append("ultilities",JSON.stringify({id:ultility.value}))
-}
-});
+    // For ultility
+    checkboxData.forEach((ultility, index) => {
+      console.log(ultility);
+      if (ultility.isChecked) {
+        roomForm.append('ultilities', JSON.stringify({ id: ultility.value }));
+      }
+    });
 
-axiosApi.post("/room/uploadARoom",roomForm
-).then(value=>{
-  console.log("ok");
-}).catch(err=>{
-  console.log(err);
-})
-
-
-
-  }
+    axiosApi
+      .post('/room/uploadARoom', roomForm)
+      .then((value) => {
+        console.log('ok');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
-
     <Wrapper>
       <Container>
         <Title>Add Room</Title>
@@ -353,9 +350,9 @@ axiosApi.post("/room/uploadARoom",roomForm
                     <input
                       id="dd"
                       type="file"
-                      accept="image/png, image/jpeg image/jpg"
+                      accept="image/png, image/jpeg, image/jpg"
                       onChange={(e) => {
-                        setAddListImages(e.target.files)
+                        setAddListImages(e.target.files);
                         onChange(e);
                       }}
                       multiple
@@ -365,10 +362,13 @@ axiosApi.post("/room/uploadARoom",roomForm
                 )}
               />
               <section>
-                {listImages.map(image => (
-                  <img src={image.previewSrc} style={{ height: 100, width: 100 }} key={image.id} />
-                ))
-                }
+                {listImages.map((image) => (
+                  <img
+                    src={image.previewSrc}
+                    style={{ height: 100, width: 100 }}
+                    key={image.id}
+                  />
+                ))}
               </section>
               <Controller
                 name="overview"
@@ -464,31 +464,32 @@ axiosApi.post("/room/uploadARoom",roomForm
                   )}
                 />
                 <Controller
-                  name="ward"
+                  name="city"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
                     <FormControl className={classes.formControl}>
-                      <Label htmlFor="form-add-ward">
-                        Phường<span> *</span>
+                      <Label htmlFor="form-add-acreage">
+                        Thành phố<span> *</span>
                       </Label>
                       <CNSelect
                         name={name}
+                        options={listProvince}
                         fullWidth
-                        value={selectedWard}
-                        options={listWard}
-                        placeholder="Chọn phường"
+                        placeholder="Chọn thành phố"
                         width={'100%'}
+                        value={selectedProvince}
                         onChange={(e) => {
-                          setSelectedWard(e);
+                          setSelectedProvince(e === null ? e : e);
                           onChange(e ? e.value : null);
                         }}
                       />
                       <FormHelperText className={classes.helperTextStyles}>
-                        {formState.errors['ward']?.message}
+                        {formState.errors['city']?.message}
                       </FormHelperText>
                     </FormControl>
                   )}
                 />
+
                 <Controller
                   name="district"
                   control={control}
@@ -516,27 +517,27 @@ axiosApi.post("/room/uploadARoom",roomForm
                   )}
                 />
                 <Controller
-                  name="city"
+                  name="ward"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
                     <FormControl className={classes.formControl}>
-                      <Label htmlFor="form-add-acreage">
-                        Thành phố<span> *</span>
+                      <Label htmlFor="form-add-ward">
+                        Phường<span> *</span>
                       </Label>
                       <CNSelect
                         name={name}
-                        options={listProvince}
                         fullWidth
-                        placeholder="Chọn thành phố"
+                        value={selectedWard}
+                        options={listWard}
+                        placeholder="Chọn phường"
                         width={'100%'}
-                        value={selectedProvince}
                         onChange={(e) => {
-                          setSelectedProvince(e === null ? e : e)
+                          setSelectedWard(e);
                           onChange(e ? e.value : null);
                         }}
                       />
                       <FormHelperText className={classes.helperTextStyles}>
-                        {formState.errors['city']?.message}
+                        {formState.errors['ward']?.message}
                       </FormHelperText>
                     </FormControl>
                   )}

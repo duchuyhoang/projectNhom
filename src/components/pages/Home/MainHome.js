@@ -6,6 +6,7 @@ import { FindHomeComponent } from '@Components/components/FindHomeComponent/Find
 import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
 import RoomCard from '@Components/components/RoomCard/RoomCard';
 import { HomeListRoom } from './HomeListRoom';
+import FeaturedRoom from './FeaturedRoom';
 
 const MainHome = (props) => {
   return (
@@ -13,7 +14,7 @@ const MainHome = (props) => {
       <FindHomeComponent />
       <ServiceComponent />
       {/* <RoomCard /> */}
-      <HomeListRoom />
+      <FeaturedRoom />
       <Stretcher />
       <Footer />
     </>

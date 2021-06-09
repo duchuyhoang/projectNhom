@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#fff',
     boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
     '&:hover': {
-      boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
+      boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
     },
     '&:hover .slick-arrow': {
       transition: 'all 0.3s ease-in-out',
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   imageContainer: {
     display: 'block!important',
     width: '100%',
-    height: '270px',
+    height: '220px',
   },
   icon: {
     position: 'absolute',
@@ -142,9 +142,6 @@ const PropertyLocation = styled.div`
   align-items: center;
 `;
 const PropertyMetas = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
   padding-top: 8px;
 `;
 const MetaItem = styled.div`
