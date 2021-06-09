@@ -20,12 +20,12 @@ import {Map} from "@Components/components/Map/Map";
 
 const Message = ({ message }) => {
 
-const [selectLocation,setSelectLocation]=useState({latitude:null,longitude:null})
+const [selectLocation,setSelectLocation]=useState({latitude:null,longtitude:null})
 
   return (
   <>
   <div style={{marginTop:300,display: 'flex',justifyContent: 'center'}}>
-  <Map isRoute={false}/>   
+  <Map isRoute={true} currentTarget={selectLocation} setCurrentTarget={setSelectLocation}/>   
   </div>
     
     </>

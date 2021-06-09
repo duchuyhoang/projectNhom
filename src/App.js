@@ -22,7 +22,7 @@ export const App = ({ title }) => {
   return (
     <>
       <Router>
-        {/* <NavBar currentTab={'properties'}></NavBar> */}
+        <NavBar currentTab={'properties'}></NavBar>
         <Suspense fallback={<CNLoading />}>
           <Switch>
             <Route path="/test" component={Message}>

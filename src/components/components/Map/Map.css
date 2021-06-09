@@ -1,6 +1,7 @@
 .leaflet-container{
     width:50vw;
     height:50vh;
+    border-radius:5px;
 }
 .leaflet-top{
     width:100%;
@@ -18,7 +19,7 @@
 
 .formSearch{
     position: relative;
-    width:40%;
+    width:50%;
 }
 
 .resetButton{
@@ -27,8 +28,8 @@
     position: absolute;
     line-height: 26px;
     padding: 0 8px;
-    right: 0;
-    top: 4px;
+    right: 10px  ;
+    top: 1px;
     cursor: pointer;
     border: none;
     text-decoration: none;
@@ -40,7 +41,7 @@
     width:95%;
     border:1px solid gray;
     outline: none !important;
-    padding:7px;
+    padding:5px;
     border-radius: 5px;
 }
 .results div{
@@ -52,4 +53,30 @@
 
 .results div:hover{
     background:#f8f8f8;
+}
+.currentLocationIcon{
+    position:absolute;
+     z-index: 1000;
+     bottom:20px;
+     padding:7px 7px 4px 7px;
+     border-radius: 5px;
+     background:#fff;
+     cursor: pointer;
+     right:10px;
+}
+
+.distanceModal{
+    position:absolute;
+    right:0px;
+    top:-50px;
+    visibility:hidden;
+    transition:top 0.5s;
+    z-index: 1000;
+    padding:10px;
+    background:#fff;
+}
+
+.distanceModalActive{
+    top:0px;
+    visibility:visible;
 }
