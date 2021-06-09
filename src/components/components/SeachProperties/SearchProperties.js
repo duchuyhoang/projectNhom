@@ -2,30 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { useLocationSearch } from '@Core/hooks/useLocationSearch'
 import { useListUltilities } from '@Core/hooks/useListUltilities'
 import styled from "styled-components"
-import { makeStyles } from "@material-ui/core"
-import clsx from 'clsx'
 import { SVGIcon } from "@Components/shared/SvgIcon/Icon";
 import { CNButton } from '@Components/shared/CNButton/CNButton'
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField'
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect'
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox'
 import { CNSlider } from '@Components/shared/CNSlider/CNSlider'
-
+// Validate
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+    FormControl,
+    FormHelperText,
+    makeStyles,
+    TextareaAutosize,
+} from '@material-ui/core';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 const useSearchPropertiesStyles = makeStyles((theme) => ({
+    mainForm: {
+        "& > div": {
+            width: '100%'
+        }
+    },
     input: {
         width: "100% !important",
         marginBottom: 30,
         fontSize: 18,
         transition: "all .3s",
-        "&:hover":{
-            "& > svg":{
+        "&:hover": {
+            "& > svg": {
                 fill: theme.palette.primary.main
             }
         }
-        
+
     },
     fadeIn: {
-       
+
         transition: ".5s all ease-in-out",
         maxHeight: " 500px !important",
         opacity: 1,
@@ -45,6 +57,16 @@ const useSearchPropertiesStyles = makeStyles((theme) => ({
             fontSize: 18
         },
         justifyContent: "flex-start",
+    },
+    // validates
+    helperText: {
+        color: theme.palette.primary.main,
+        position: "absolute",
+        bottom: 10,
+        fontSize: 14
+    },
+    controller: {
+        position: "relative",
     }
 
 }))
@@ -132,26 +154,7 @@ export const SearchProperties = () => {
         setUitilitiesList(modifiedListUltility)
     }, [listUltility])
 
-    const changeProvinceHandler = (e) => {
-        console.log(e)
-        if (e === null) {
-            setSelectedProvince(null)
-            setSelectedDistrict(null)
-            setSelectedWard(null)
-        } else
-            setSelectedProvince(e)
 
-    }
-    const changeDistrictHandler = (e) => {
-        if (e === null) {
-            setSelectedDistrict(null)
-            setSelectedWard(null)
-        } else
-            setSelectedDistrict(e)
-    }
-    const changeWardHandler = (e) => {
-        setSelectedWard(e);
-    }
     const squareChangeHandler = (event, newValue) => {
         setSquareRange(newValue);
     }
@@ -161,53 +164,145 @@ export const SearchProperties = () => {
     const showAdvancedOptionsHandler = () => {
         setIsAdvancedOptionsOpen(preStatus => !preStatus)
     }
+    // validate 
+    const defaultValues = {
+        keyword: '',
+        province: null,
+        district: null,
+        ward: null,
+    }
+    const schema = yup.object().shape({
+        keyword: yup.string().required('Vui lòng nhập tên từ khóa'),
+        province: yup
+            .string()
+            .required('Vui lòng chọn tỉnh/thành phố')
+            .nullable('Vui lòng chọn tỉnh/thành phố'),
+    })
+    const { control, handleSubmit, formState } = useForm({
+        mode: 'onSubmit',
+        defaultValues,
+        resolver: yupResolver(schema),
+    })
+    const handleSearchProperties = (values) => {
+        console.log(values)
+    }
     return (
         <Container>
             <Title>Advanced Search</Title>
-            <SearchFormMain>
-                <CNTextField className={searchPropertiesStyles.input}
-                    placeholder="Keyword" fullWidth
-                    endAdornment={<SVGIcon name="search" width="20px" height="20px" />}
-                />
-                <CNSelect className={searchPropertiesStyles.input} value={selectedProvince} onChange={changeProvinceHandler} options={listProvince} placeholder="Select Province" />
-                <CNSelect className={searchPropertiesStyles.input} value={selectedDistrict} onChange={changeDistrictHandler} options={listDistrict} placeholder="Select District" />
-                <CNSelect className={searchPropertiesStyles.input} value={selectedWard} onChange={changeWardHandler} options={listWard} placeholder="Select Ward" />
-                <SliderItem>
-                    <SliderTitle> From ${priceRange[0]} to ${priceRange[1]} </SliderTitle>
-                    <CNSlider value={priceRange} handleChange={priceChangeHandler} />
-                </SliderItem>
-                <AdvancedOptions className={isAdvancedOptionsOpen ? searchPropertiesStyles.active : ""} onClick={showAdvancedOptionsHandler}
-                >
-                    Advanced
+            <form onSubmit={handleSubmit(handleSearchProperties)}>
+                <SearchFormMain className={searchPropertiesStyles.mainForm}>
+                    <Controller fullWidth className={searchPropertiesStyles.controller}
+                        name="keyword"
+                        control={control}
+                        render={
+                            ({ field: { value, onChange } }) => (
+                                <FormControl>
+                                    <CNTextField className={searchPropertiesStyles.input}
+                                        placeholder="Keyword"
+                                        fullWidth
+                                        endAdornment={<SVGIcon name="search" width="20px" height="20px" />}
+                                        errors={!!formState.errors['keyword']}
+                                        value={value ? value : ''}
+                                        inputChange={(e) => {
+                                            onChange(e);
+                                        }}
+                                    />
+                                    <FormHelperText className={searchPropertiesStyles.helperText}>
+                                        {formState.errors['keyword']?.message}
+                                    </FormHelperText>
+                                </FormControl>
+                            )
+                        }
+                    />
+
+                    <Controller
+                        name="province"
+                        control={control}
+                        render={
+                            ({ field: { onChange, value } }) => (
+                                <FormControl>
+                                    <CNSelect className={searchPropertiesStyles.input}
+                                        value={selectedProvince}
+                                        onChange={(e) => {
+                                            setSelectedProvince(e);
+                                            onChange(e ? e.value : null)
+                                        }} options={listProvince} placeholder="Select Province" />
+                                    <FormHelperText className={searchPropertiesStyles.helperText}>
+                                        {formState.errors['province']?.message}
+                                    </FormHelperText>
+                                </FormControl>
+                            )
+                        }
+                    />
+                    <Controller
+                        name="district"
+                        control={control}
+                        render={
+                            ({ field: { onChange, value } }) => (
+                                <FormControl>
+                                    <CNSelect className={searchPropertiesStyles.input}
+                                        value={selectedDistrict}
+                                        onChange={(e) => {
+                                            setSelectedDistrict(e);
+                                            onChange(e ? e.value : null)
+                                        }} options={listDistrict} placeholder="Select District" />
+                                </FormControl>
+                            )
+                        }
+                    />
+                    <Controller
+                        name="ward"
+                        control={control}
+                        render={
+                            ({ field: { onChange, value } }) => (
+                                <FormControl>
+                                    <CNSelect className={searchPropertiesStyles.input}
+                                        value={selectedWard} onChange={(e) => {
+                                            setSelectedWard(e);
+                                            onChange(e ? e.value : null)
+                                        }} options={listWard} placeholder="Select Ward" />
+                                </FormControl>
+                            )
+                        }
+                    />
+                    <SliderItem>
+                        <SliderTitle> From ${priceRange[0]} to ${priceRange[1]} </SliderTitle>
+                        <CNSlider value={priceRange} handleChange={priceChangeHandler} />
+                    </SliderItem>
+                    <AdvancedOptions className={isAdvancedOptionsOpen ? searchPropertiesStyles.active : ""} onClick={showAdvancedOptionsHandler}
+                    >
+                        Advanced
                 <SVGIcon name="more" />
-                </AdvancedOptions>
-            </SearchFormMain>
-            <SearchAdvanced className={isAdvancedOptionsOpen ? searchPropertiesStyles.fadeIn : ""}>
-                <UtilitiesWrapper>
+                    </AdvancedOptions>
+                </SearchFormMain>
+                <SearchAdvanced className={isAdvancedOptionsOpen ? searchPropertiesStyles.fadeIn : ""}>
+                    <UtilitiesWrapper>
 
-                    {uitilitiesList && uitilitiesList.map((utility) => {
-                        return (
-                            <CNCheckBox
-                                className={searchPropertiesStyles.checkBox}
-                                key={utility.id}
-                                label={utility.label}
-                                data={utility}
-                                checkBoxState={uitilitiesList}
-                                setCheckBoxState={setUitilitiesList}
-                            />
-                        )
-                    })}
-                </UtilitiesWrapper>
+                        {uitilitiesList && uitilitiesList.map((utility) => {
+                            return (
+                                <CNCheckBox
+                                    className={searchPropertiesStyles.checkBox}
+                                    key={utility.id}
+                                    label={utility.label}
+                                    data={utility}
+                                    checkBoxState={uitilitiesList}
+                                    setCheckBoxState={setUitilitiesList}
+                                />
+                            )
+                        })}
+                    </UtilitiesWrapper>
 
-                <SliderItem>
-                    <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle>
-                    <CNSlider value={squareRange} handleChange={squareChangeHandler} />
-                </SliderItem>
+                    <SliderItem>
+                        <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle>
+                        <CNSlider value={squareRange} handleChange={squareChangeHandler} />
+                    </SliderItem>
 
 
 
-            </SearchAdvanced>
-            <CNButton fullWidth buttonType="main" >Find Property</CNButton>
+                </SearchAdvanced>
+                <CNButton type="submit" fullWidth buttonType="main" >Find Property</CNButton>
+            </form>
+
         </Container>
     )
 }
