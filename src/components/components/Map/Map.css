@@ -1,0 +1,55 @@
+.leaflet-container{
+    width:50vw;
+    height:50vh;
+}
+.leaflet-top{
+    width:100%;
+    display:flex;
+}
+.leaflet-bar{
+ border: none !important;   
+}
+
+.searchContainer{
+    width:90%;
+    display:flex;
+    justify-content:center;
+}
+
+.formSearch{
+    position: relative;
+    width:40%;
+}
+
+.resetButton{
+    color: #000!important;
+    font-weight: 700;
+    position: absolute;
+    line-height: 26px;
+    padding: 0 8px;
+    right: 0;
+    top: 4px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    background-color: #fff;
+    border-radius: 0 4px 4px 0;
+}
+
+.inputSearch{
+    width:95%;
+    border:1px solid gray;
+    outline: none !important;
+    padding:7px;
+    border-radius: 5px;
+}
+.results div{
+    padding:5px;
+    cursor: pointer;
+    background-color:#fff;
+}
+/* .results div */
+
+.results div:hover{
+    background:#f8f8f8;
+}
