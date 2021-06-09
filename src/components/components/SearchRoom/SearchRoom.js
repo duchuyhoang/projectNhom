@@ -2,25 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useLocationSearch } from '@Core/hooks/useLocationSearch'
 import { useListUltilities } from '@Core/hooks/useListUltilities'
 import styled from "styled-components"
-import { makeStyles } from "@material-ui/core"
-import clsx from 'clsx'
+import { makeStyles, FormControl, FormHelperText } from "@material-ui/core"
 import { SVGIcon } from "@Components/shared/SvgIcon/Icon";
 import { CNButton } from '@Components/shared/CNButton/CNButton'
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField'
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect'
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox'
 import { CNSlider } from '@Components/shared/CNSlider/CNSlider'
-
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 const useSearchRoomStyles = makeStyles((theme) => ({
-    main: {
-        "& *": {
-            margin: "0 5px",
-            fontWeight: 500
-        }
-    },
+
     mainInput: {
         width: 280,
-        fontSize: 18
+        fontSize: 18,
+
     },
     selectInput: {
         width: "280px !important",
@@ -55,12 +52,25 @@ const useSearchRoomStyles = makeStyles((theme) => ({
     },
     searchButton: {
         fontSize: 18,
-        fontWeight: 900
+        fontWeight: 900,
+        marginLeft: 20
     },
     checkBox: {
         "& span": {
             fontSize: 18
         }
+    },
+    // validate
+    formControl: {
+        position: "relative",
+        marginRight: 20
+
+    },
+    helperText: {
+        color: theme.palette.primary.main,
+        fontSize: 14,
+        position: "absolute",
+        bottom: -22
     }
 }))
 const Container = styled.div`
@@ -85,7 +95,7 @@ const Description = styled.p`
 const SearchFormMain = styled.div`
     background-color:${props => props.theme.palette.background.secondary};
     display: flex;
-    padding: 20px;
+    padding: 30px;
     background-color: ${props => props.theme.palette.background.secondary};
     border-radius: 6px;
     border: 1px solid   ${props => props.theme.palette.background.secondary};
@@ -166,27 +176,6 @@ export const SearchRoom = () => {
     useEffect(() => {
         setUitilitiesList(modifiedListUltility)
     }, [listUltility])
-
-    const changeProvinceHandler = (e) => {
-        console.log(e)
-        if (e === null) {
-            setSelectedProvince(null)
-            setSelectedDistrict(null)
-            setSelectedWard(null)
-        } else
-            setSelectedProvince(e)
-
-    }
-    const changeDistrictHandler = (e) => {
-        if (e === null) {
-            setSelectedDistrict(null)
-            setSelectedWard(null)
-        } else
-            setSelectedDistrict(e)
-    }
-    const changeWardHandler = (e) => {
-        setSelectedWard(e);
-    }
     const squareChangeHandler = (event, newValue) => {
         setSquareRange(newValue);
     }
@@ -197,27 +186,115 @@ export const SearchRoom = () => {
         setIsAdvancedOptionsOpen(preStatus => !preStatus)
     }
     const searchFromStyles = useSearchRoomStyles();
+    const defaultValues = {
+        keyword: '',
+        province: null,
+        district: null,
+        ward: null
+    }
+    const schema = yup.object().shape({
+        keyword: yup.string().required('Vui lòng nhập từ khóa'),
+        province: yup.number().required('Vui lòng chọn tỉnh/thành phố').nullable('Vui lòng chọn tỉnh/thành phố')
+    })
+    const { control, handleSubmit, formState } = useForm({
+        mode: 'onSubmit',
+        defaultValues,
+        resolver: yupResolver(schema),
+    });
+    const handleSearchSubmit = (values) => {
+        console.log(values)
+    }
     return (
 
         <Container>
             <Title>Find Your Dream Home</Title>
             <Description>
                 From as low as $10 per day with limited time offer discounts</Description>
+            <form onSubmit={handleSubmit(handleSearchSubmit)}>
+                <SearchFormMain className={searchFromStyles.main}  >
+                    <Controller
+                        name="keyword"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <FormControl className={searchFromStyles.formControl}>
+                                <CNTextField className={searchFromStyles.mainInput}
+                                    placeholder="Enter keyword..."
+                                    error={!!formState.errors['keyword']}
+                                    values={value ? value : ''}
+                                    inputChange={e => {
+                                        onChange(e)
+                                    }}
+                                />
+                                <FormHelperText className={searchFromStyles.helperText}>
+                                    {formState.errors['keyword']?.message}
+                                </FormHelperText>
+                            </FormControl>
+                        )}
+                    />
+                    <Controller
+                        name="province"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <FormControl className={searchFromStyles.formControl}>
+                                <CNSelect className={searchFromStyles.selectInput} value={selectedProvince}
+                                    onChange={e => {
+                                        setSelectedProvince(e)
+                                        onChange(e ? e.value : null)
 
-            <SearchFormMain className={searchFromStyles.main}  >
-                <CNTextField className={searchFromStyles.mainInput}
-                    placeholder="Enter keyword..."
-                />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedProvince} onChange={changeProvinceHandler} options={listProvince} placeholder="Select Province" />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedDistrict} onChange={changeDistrictHandler} options={listDistrict} placeholder="Select District" />
-                <CNSelect className={searchFromStyles.selectInput} value={selectedWard} onChange={changeWardHandler} options={listWard} placeholder="Select Ward" />
-                <AdvancedOptions className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
-                >
-                    Advanced
+                                    }}
+                                    options={listProvince}
+                                    placeholder="Select Province" />
+                                <FormHelperText className={searchFromStyles.helperText}>
+                                    {formState.errors['province']?.message}
+                                </FormHelperText>
+                            </FormControl>
+                        )}
+                    />
+                    <Controller
+                        name="district"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <FormControl className={searchFromStyles.formControl}>
+                                <CNSelect className={searchFromStyles.selectInput} value={selectedDistrict}
+                                    onChange={e => {
+                                        setSelectedDistrict(e)
+                                        onChange(e ? e.value : null)
+
+                                    }}
+                                    options={listDistrict}
+                                    placeholder="Select District" />
+
+                            </FormControl>
+                        )}
+                    />
+                    <Controller
+                        name="ward"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <FormControl className={searchFromStyles.formControl}>
+                                <CNSelect className={searchFromStyles.selectInput} value={selectedWard}
+                                    onChange={e => {
+                                        setSelectedWard(e)
+                                        onChange(e ? e.value : null)
+
+                                    }}
+                                    options={listWard}
+                                    placeholder="Select Ward" />
+
+                            </FormControl>
+                        )}
+                    />
+
+
+
+                    <AdvancedOptions className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
+                    >
+                        Advanced
                 <SVGIcon name="more" />
-                </AdvancedOptions>
-                <CNButton className={searchFromStyles.searchButton} buttonType="main">Search</CNButton>
-            </SearchFormMain>
+                    </AdvancedOptions>
+                    <CNButton type="submit" className={searchFromStyles.searchButton} buttonType="main">Search</CNButton>
+                </SearchFormMain>
+            </form>
             <SearchAdvanced className={isAdvancedOptionsOpen ? searchFromStyles.fadeIn : ""}>
                 <UtilitiesWrapper>
 
