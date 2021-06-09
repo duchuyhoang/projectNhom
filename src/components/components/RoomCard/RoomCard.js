@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import RoomCardIcon from './RoomCardIcon';
 import Moment from 'react-moment';
 import noImage from '@Assets/background/noImage.jpg';
-
+import { uuid } from '@Ultis/uuid';
 import './styles.css';
 
 const useStyles = makeStyles((theme) => ({

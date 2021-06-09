@@ -48,7 +48,7 @@ export const DropDownUserInfo = ({ signOutHandle }) => {
           />
           Profile
         </DropDownItem>
-        <DropDownItem>
+       <Link style={{textDecoration: 'none'}} to="/users/add-room"><DropDownItem>
           <ModifiedIcon
             name="plus"
             width="18"
@@ -57,6 +57,7 @@ export const DropDownUserInfo = ({ signOutHandle }) => {
           />
           Add Room
         </DropDownItem>
+        </Link> 
 
         <DropDownItem>
           <ModifiedIcon
