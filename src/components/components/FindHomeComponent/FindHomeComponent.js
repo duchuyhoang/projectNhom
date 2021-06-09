@@ -14,7 +14,6 @@ background-position:center center;
 
 
 export const FindHomeComponent=(props)=>{
-console.log(homeBackground);
 return (
 <>
 <Container>
