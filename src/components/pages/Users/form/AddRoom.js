@@ -3,6 +3,7 @@ import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
+import {Map} from "@Components/components/Map/Map";
 import { useLocationSearch } from '@Core/hooks/useLocationSearch';
 import { useListUltilities } from '@Core/hooks/useListUltilities';
 import { useListImages } from '@Core/hooks/useListImages';
@@ -123,11 +124,13 @@ function AddRoom(props) {
     setSelectedWard,
   } = useLocationSearch();
 
+  const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
   const { listUltility } = useListUltilities();
 
   const { listImages, setAddListImages, deleteAnImage } = useListImages();
   const [checkboxData, setCheckboxState] = useState([]);
-  console.log('list', listImages);
+
+  
   useEffect(() => {
     if (listUltility)
       setCheckboxState(
@@ -208,8 +211,6 @@ function AddRoom(props) {
     resolver: yupResolver(schema),
   });
 
-  console.log(formState.errors);
-
   const handleAddSubmit = (values) => {
     console.log('submit');
     var roomForm = new FormData();
@@ -225,6 +226,9 @@ function AddRoom(props) {
       }
     }
 
+    roomForm.append("latitude",selectLocation.latitude);
+    roomForm.append("longtitude",selectLocation.longtitude);
+    
     // For images
 
     if (listImages.length === 1) {
@@ -235,9 +239,7 @@ function AddRoom(props) {
       });
     }
 
-    for (var value of roomForm.values()) {
-      console.log(value);
-    }
+   
 
     // For ultility
     checkboxData.forEach((ultility, index) => {
@@ -545,6 +547,10 @@ function AddRoom(props) {
               </BoxRow>
             </Box>
             <Box>
+              <Box>
+              <TitleBox>Chọn vị trí qua bản đồ</TitleBox>
+              <Map isRoute={false} currentTarget={selectLocation} setCurrentTarget={setSelectLocation}/>   
+              </Box>
               <TitleBox>Giá</TitleBox>
               <BoxRow className={classes.boxRow}>
                 <Controller

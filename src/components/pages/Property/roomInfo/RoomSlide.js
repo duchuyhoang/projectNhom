@@ -13,14 +13,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateAreas:
       props.length === 5
         ? "'i1 i1 i2 i3' 'i1 i1 i4 i5'"
-        : props.length === 4
-        ? "'i1 i1 i2 i3' 'i1 i1 i4 i4'"
-        : props.length === 3
-        ? "'i1 i1 i2 i2' 'i1 i1 i3 i3'"
-        : props.length === 2
-        ? "'i1 i1 i2 i2' 'i1 i1 i2 i2'"
-        : props.length === 2
-        ? "'i1 i1 i1 i1' 'i1 i1 i1 i1'"
+       
         : "'i1 i1 i2 i3' 'i1 i1 i4 i5'",
   }),
   imageItem: {

@@ -22,6 +22,11 @@ const styles = {
     cursor: 'pointer',
     height: '50px',
   }),
+  menu:(provided) =>({
+    ...provided,
+    position: 'absolute',
+    zIndex: '1001'
+  }),
   container: (provided, state) => {
     return {
       ...provided,
