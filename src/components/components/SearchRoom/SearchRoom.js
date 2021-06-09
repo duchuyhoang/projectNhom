@@ -90,7 +90,7 @@ const SearchFormMain = styled.div`
     border-radius: 6px;
     border: 1px solid   ${props => props.theme.palette.background.secondary};
     align-items:center;
-    box-shadow: 
+    /* box-shadow:  */
 `
 const AdvancedOptions = styled.div`
     display: flex;

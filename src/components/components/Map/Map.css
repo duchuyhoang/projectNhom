@@ -1,0 +1,82 @@
+.leaflet-container{
+    width:50vw;
+    height:50vh;
+    border-radius:5px;
+}
+.leaflet-top{
+    width:100%;
+    display:flex;
+}
+.leaflet-bar{
+ border: none !important;   
+}
+
+.searchContainer{
+    width:90%;
+    display:flex;
+    justify-content:center;
+}
+
+.formSearch{
+    position: relative;
+    width:50%;
+}
+
+.resetButton{
+    color: #000!important;
+    font-weight: 700;
+    position: absolute;
+    line-height: 26px;
+    padding: 0 8px;
+    right: 10px  ;
+    top: 1px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    background-color: #fff;
+    border-radius: 0 4px 4px 0;
+}
+
+.inputSearch{
+    width:95%;
+    border:1px solid gray;
+    outline: none !important;
+    padding:5px;
+    border-radius: 5px;
+}
+.results div{
+    padding:5px;
+    cursor: pointer;
+    background-color:#fff;
+}
+/* .results div */
+
+.results div:hover{
+    background:#f8f8f8;
+}
+.currentLocationIcon{
+    position:absolute;
+     z-index: 1000;
+     bottom:20px;
+     padding:7px 7px 4px 7px;
+     border-radius: 5px;
+     background:#fff;
+     cursor: pointer;
+     right:10px;
+}
+
+.distanceModal{
+    position:absolute;
+    right:0px;
+    top:-50px;
+    visibility:hidden;
+    transition:top 0.5s;
+    z-index: 1000;
+    padding:10px;
+    background:#fff;
+}
+
+.distanceModalActive{
+    top:0px;
+    visibility:visible;
+}
