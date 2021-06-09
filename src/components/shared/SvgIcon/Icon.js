@@ -31,6 +31,7 @@ import homeHeart from '@Assets/svg/homeHeart.svg';
 import profitCalculator from '@Assets/svg/profitCalculator.svg';
 import Star from '@Assets/svg/star.svg';
 import LinkedIn from '@Assets/svg/linkedin.svg';
+import Camera from '@Assets/svg/camera.svg';
 import CurrentLocation from '@Assets/svg/currentLocation.svg';
 const IconMap = {
   logo: Logo,
@@ -65,7 +66,8 @@ const IconMap = {
   profitcalculator: profitCalculator,
   star: Star,
   linkedin: LinkedIn,
-  currentLocation:CurrentLocation
+  camera: Camera,
+  currentLocation: CurrentLocation,
 };
 
 export const SVGIcon = ({ name, width = 16, height = 16, ...rest }) => {

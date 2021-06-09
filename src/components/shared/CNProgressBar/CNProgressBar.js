@@ -9,7 +9,6 @@ const useBoxContainer = makeStyles((theme) => ({
 }));
 const useBoxTypoStyled = makeStyles((theme) => ({
   root: {
-    color: '#fff',
     display: 'flex',
     justifyContent: 'space-between',
   },

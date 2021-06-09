@@ -5,17 +5,16 @@ import { ServiceComponent } from '@Components/components/ServiceComponent/Servic
 import { FindHomeComponent } from '@Components/components/FindHomeComponent/FindHomeComponent';
 import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
 import RoomCard from '@Components/components/RoomCard/RoomCard';
-import {HomeListRoom} from "./HomeListRoom";
-
+import { HomeListRoom } from './HomeListRoom';
+import FeaturedRoom from './FeaturedRoom';
 
 const MainHome = (props) => {
   return (
     <>
       <FindHomeComponent />
-      <CNProgressBar value={50} label={'HoaYeuChang'} />
       <ServiceComponent />
       {/* <RoomCard /> */}
-      <HomeListRoom />
+      <FeaturedRoom />
       <Stretcher />
       <Footer />
     </>

@@ -7,8 +7,8 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 import RoomCardIcon from './RoomCardIcon';
 import Moment from 'react-moment';
-import noImage from "@Assets/background/noImage.jpg"
-import {uuid} from '@Ultis/uuid'
+import noImage from '@Assets/background/noImage.jpg';
+import { uuid } from '@Ultis/uuid';
 import './styles.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#fff',
     boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
     '&:hover': {
-      boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
+      boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
     },
     '&:hover .slick-arrow': {
       transition: 'all 0.3s ease-in-out',
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   imageContainer: {
     display: 'block!important',
     width: '100%',
-    height: "270px"
+    height: '220px',
   },
   icon: {
     position: 'absolute',
@@ -142,9 +142,6 @@ const PropertyLocation = styled.div`
   align-items: center;
 `;
 const PropertyMetas = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content:space-around;
   padding-top: 8px;
 `;
 const MetaItem = styled.div`
@@ -176,7 +173,20 @@ const AvatarAuthor = styled.div`
   }
 `;
 
-function RoomCard({ name, city, district, ward, list_images, price, capacity, acreage, user_name, user_avatar, list_utilities,createTime }) {
+function RoomCard({
+  name,
+  city,
+  district,
+  ward,
+  list_images,
+  price,
+  capacity,
+  acreage,
+  user_name,
+  user_avatar,
+  list_utilities,
+  createTime,
+}) {
   const classes = useStyles();
   const settings = {
     accessibility: true,
@@ -192,27 +202,28 @@ function RoomCard({ name, city, district, ward, list_images, price, capacity, ac
       <Top>
         <ItemSlide>
           <ImgWrapper>
-            <Slider {...settings} className={classes.slickSlide} >
-
-              {list_images && list_images?.length !== 0 ? list_images.map((image) => {
-                return (
-                  <div className={classes.imageContainer} key={uuid()}>
-                    <img
-                      style={{ objectFit: "cover", height: "100%" }}
-                      key={image.imagesIds}
-                      className={classes.image}
-                      src={
-                        image.imagesLinks
-                      }
-                    />
-                  </div>
-                )
-              }) :
+            <Slider {...settings} className={classes.slickSlide}>
+              {list_images && list_images?.length !== 0 ? (
+                list_images.map((image, index) => {
+                  return (
+                    <div className={classes.imageContainer} key={index}>
+                      <img
+                        style={{ objectFit: 'cover', height: '100%' }}
+                        key={image.imagesIds}
+                        className={classes.image}
+                        src={image.imagesLinks}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
                 <div className={classes.imageContainer}>
-                  <img src={noImage} style={{ objectFit: "cover", height: "100%" }} />
+                  <img
+                    src={noImage}
+                    style={{ objectFit: 'cover', height: '100%' }}
+                  />
                 </div>
-              }
-
+              )}
             </Slider>
           </ImgWrapper>
           <CNPropertyLabel
@@ -238,13 +249,13 @@ function RoomCard({ name, city, district, ward, list_images, price, capacity, ac
           <PropertyTitle>
             <Typography component="h2" className={classes.h2Type}>
               <a className={classes.h2Title} href="#">
-               {name}
+                {name}
               </a>
             </Typography>
           </PropertyTitle>
           <PropertyLocation>
             <SVGIcon name="location" className={classes.mgr} />
-            <span>{ward +" , " + district +" , " + city}</span>
+            <span>{ward + ' , ' + district + ' , ' + city}</span>
           </PropertyLocation>
           <PropertyMetas>
             <MetaItem>
@@ -274,7 +285,7 @@ function RoomCard({ name, city, district, ward, list_images, price, capacity, ac
           </AvatarAuthor>
         </AvatarWrapper>
         <TimeRight>
-         <Moment toNow>{createTime}</Moment>
+          <Moment toNow>{createTime}</Moment>
         </TimeRight>
       </Bottom>
     </Paper>

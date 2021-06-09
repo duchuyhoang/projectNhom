@@ -1,3 +1,41 @@
-.slick-cloned{
-    /* display:none */
+.slick-cloned {
+  /* display:none */
+}
+
+.slick-dots li.slick-active {
+  background: #dedede;
+}
+.slick-dots li {
+  transition: all 0.3s ease-in-out 0s;
+  position: relative;
+  display: inline-block;
+  margin: 0 4px;
+  border: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  text-align: center;
+  padding: 5px;
+  background: transparent;
+}
+.slick-dots li.slick-active button {
+  background: #24324a;
+}
+.slick-dots li button {
+  border: none;
+  display: block;
+  text-indent: -9999em;
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  background: #dedede;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out 0s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.slick-dots li button::before {
+  display: none;
 }

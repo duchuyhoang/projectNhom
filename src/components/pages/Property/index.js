@@ -12,6 +12,9 @@ import loadable from '@loadable/component';
 const HomeListPage = loadable(() => import('./list/index'), {
   fallback: <CNLoading />,
 });
+const RoomInfo = loadable(() => import('./roomInfo/index'), {
+  fallback: <CNLoading />,
+});
 
 const Property = (props) => {
   const { path } = useRouteMatch();
@@ -20,7 +23,8 @@ const Property = (props) => {
     <>
       <Suspense fallback={<CNLoading />}>
         <Switch>
-          <Route path={`${path}`} component={HomeListPage} />
+          <Route path={`${path}/room-info`} exact component={RoomInfo} />
+          <Route path={`${path}`} exact component={HomeListPage} />
           {/* <Route path="/" /> */}
         </Switch>
       </Suspense>
