@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocationSearch } from '@Core/hooks/useLocationSearch'
 import { useListUltilities } from '@Core/hooks/useListUltilities'
-import {useGetSquareAndPrice } from '@Core/hooks/useGetSquareAndPrice'
+import { useGetAreaAndPriceRange } from '@Core/hooks/useGetAreaAndPriceRange'
 import styled from "styled-components"
 import { makeStyles, FormControl, FormHelperText } from "@material-ui/core"
 import { SVGIcon } from "@Components/shared/SvgIcon/Icon";
@@ -13,17 +13,20 @@ import { CNSlider } from '@Components/shared/CNSlider/CNSlider'
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-const useSearchRoomStyles = makeStyles((theme) => ({
 
-    mainInput: {
-        width: 280,
+const useSearchRoomStyles = makeStyles((theme) => ({
+    mainForm: (props) => ({
+        width: props.type === 'properties' ? '100%' : '',
+    }),
+    mainInput: (props) => ({
+        width: props.type === 'properties' ? '100%' : '280px',
         fontSize: 18,
 
-    },
-    selectInput: {
-        width: "280px !important",
+    }),
+    selectInput: (props) => ({
+        width: props.type === 'properties' ? '100%' : '280px',
         fontSize: 18
-    },
+    }),
     "@keyframes fadeIn": {
         "0%": {
 
@@ -43,6 +46,12 @@ const useSearchRoomStyles = makeStyles((theme) => ({
         display: "block",
         transition: ".3s all",
         animation: "$fadeIn .3s linear",
+    },
+    fadeInNested: {
+        transition: ".5s all ease-in-out",
+        maxHeight: " 500px !important",
+        opacity: 1,
+        visibility: 'visible',
 
     },
     active: {
@@ -51,24 +60,31 @@ const useSearchRoomStyles = makeStyles((theme) => ({
             fill: theme.palette.primary.main
         }
     },
-    searchButton:(props) =>( {
+    searchButton: (props) => ({
         fontSize: 18,
         fontWeight: 900,
         marginLeft: 20,
         width: props.type === 'properties' ? '100%' : '',
         marginLeft: props.type === 'properties' ? '0' : '20px'
     }),
-    checkBox: {
+    checkBox: (props) => ({
         "& span": {
             fontSize: 18
-        }
-    },
+        },
+        width: props.type === 'properties' ? '50%' : '',
+        margin: props.type === 'properties' ? '0' : '',
+        justifyContent: props.type === 'properties' ? 'flex-start' : '',
+
+    }),
     // validate
     formControl: (props) => ({
         position: "relative",
-        marginRight: props.type === 'properties' ? '0px' : '20px', 
-        marginBottom: props.type === 'properties' ? '30px' : '0px' 
-
+        marginRight: props.type === 'properties' ? '0px' : '20px',
+        marginBottom: props.type === 'properties' ? '30px' : '0px',
+        width: props.type === 'properties' ? '100%' : '280px',
+        "& > div": {
+            width: props.type === 'properties' ? '100%' : '280px',
+        }
     }),
     helperText: {
         color: theme.palette.primary.main,
@@ -84,7 +100,8 @@ const Container = styled.div`
     justify-content:center;
     align-items: center;
     margin: 0 auto;
-   box-sizing: border-box;
+    box-sizing: border-box;
+   
 `
 const Title = styled.h1`
     font-size: 55px;
@@ -123,7 +140,7 @@ const AdvancedOptions = styled.div`
     font-size: 18px;
     transition: all .2s;
     font-weight: bold;
-    align-self: ${props => props.type === 'properties' ? 'flex-start': 'center'};
+    align-self: ${props => props.type === 'properties' ? 'flex-start' : 'center'};
     &:hover {
         color: ${props => props.theme.palette.primary.main};
         & > svg {
@@ -137,16 +154,29 @@ const SearchAdvanced = styled.div`
     border-radius:6px;
     margin-top: 30px;
     box-sizing: border-box;
-    display: none;
+    display: none;   
+`
+const SearchAdvancedNested = styled.div`
+    visibility: hidden;
+    opacity:0;
+    max-height:0;
+    display: ${props => props.type === 'properties' ? '' : 'none'};
+    transition: min-height .5s all;
+
 `
 const UtilitiesWrapper = styled.div`
     border-bottom: 1px solid ${props => props.theme.border.main};
     padding: 20px;
     display: flex;
     justify-content:space-around;
-
 `
-
+const UtilitiesWrapperNested = styled.div`
+   display: flex;
+   justify-content:flex-start;
+   flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 20px;
+`
 const SliderOptionsWrapper = styled.div`
     display: flex;
     justify-content:center;
@@ -158,11 +188,18 @@ const SliderItem = styled.div`
     align-items: center;
     margin: 0 30px;
 `
-const SliderTitle = styled.h3`
-
+const SliderItemNested = styled.div`
+   display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 `
-
-export const SearchRoom = ({type}) => {
+const SliderTitle = styled.h3`
+    font-size:16px;
+    text-align:center;
+`
+var maxArea, maxPrice, first = true;
+export const SearchRoom = ({ type }) => {
 
     const {
         listProvince,
@@ -175,9 +212,17 @@ export const SearchRoom = ({type}) => {
         setSelectedDistrict,
         setSelectedWard } =
         useLocationSearch();
-    const {squareRange,priceRange,setSquareRange,setPriceRange} = useGetSquareAndPrice();   
-    console.log(squareRange)
-    console.log(priceRange)
+    const {
+        areaRange,
+        priceRange,
+        setAreaRange,
+        setPriceRange } = useGetAreaAndPriceRange();
+    if (areaRange && priceRange && first) {
+        maxArea = areaRange[1];
+        maxPrice = priceRange[1];
+        first = false;
+    }
+
     const { listUltility } = useListUltilities();
     const modifiedListUltility = listUltility.map((utility) => {
         return {
@@ -188,31 +233,35 @@ export const SearchRoom = ({type}) => {
         }
     })
     const [uitilitiesList, setUitilitiesList] = useState(null);
-    // const [squareRange, setSquareRange] = useState([0, 800])
-    // const [priceRange, setPriceRange] = useState([0, 800])
+
     const [isAdvancedOptionsOpen, setIsAdvancedOptionsOpen] = useState(false);
+    const [areaSliderValue, setAreaSliderValue] = useState([0, 100])
+    const [priceSliderValue, setPriceSliderValue] = useState([0, 100])
     useEffect(() => {
         setUitilitiesList(modifiedListUltility)
     }, [listUltility])
-    const squareChangeHandler = (event, newValue) => {
-        setSquareRange(newValue);
+    const areaChangeHandler = (event, newValue) => {
+        setAreaSliderValue(newValue);
+        setAreaRange([Math.floor(newValue[0] / 100) * maxArea, Math.floor(newValue[1] / 100 * maxArea)])
+
     }
     const priceChangeHandler = (event, newValue) => {
-        setPriceRange(newValue);
+        setPriceSliderValue(newValue);
+        setPriceRange([Math.floor((newValue[0] / 100) * maxPrice), Math.floor((newValue[1] / 100) * maxPrice)])
     }
     const showAdvancedOptionsHandler = () => {
         setIsAdvancedOptionsOpen(preStatus => !preStatus)
     }
-    const searchFromStyles = useSearchRoomStyles({type});
+    const searchFromStyles = useSearchRoomStyles({ type });
     const defaultValues = {
-        keyword: '',
-        province: null,
+        name: '',
+        city: null,
         district: null,
         ward: null
     }
     const schema = yup.object().shape({
-        keyword: yup.string().required('Vui lòng nhập từ khóa'),
-        province: yup.number().required('Vui lòng chọn tỉnh/thành phố').nullable('Vui lòng chọn tỉnh/thành phố')
+        name: yup.string().required('Vui lòng nhập từ khóa'),
+        city: yup.number().required('Vui lòng chọn tỉnh/thành phố').nullable('Vui lòng chọn tỉnh/thành phố')
     })
     const { control, handleSubmit, formState } = useForm({
         mode: 'onSubmit',
@@ -220,39 +269,61 @@ export const SearchRoom = ({type}) => {
         resolver: yupResolver(schema),
     });
     const handleSearchSubmit = (values) => {
-        console.log(values)
+        console.log(values);
+        let uitilitiesArray = [];
+
+        uitilitiesList.forEach(utility => {
+            if (utility.isChecked)
+                uitilitiesArray.push(utility.value)
+        });
+
+        const resObject = {
+            name: values.name,
+            city: values.city,
+            min_acreage: areaRange[0],
+            max_acreage: areaRange[1],
+            min_price: priceRange[0],
+            max_price: priceRange[1]
+        }
+        if (values.district)
+            resObject['district'] = values.district
+        if (values.ward)
+            resObject['ward'] = values.ward
+        if (uitilitiesArray.length > 0)
+            resObject['utilities'] = uitilitiesArray.join(',')
+        console.log(resObject)
+
     }
     return (
 
         <Container>
             <Title type={type}>Find Your Dream Home</Title>
-            <Description type ={type}>
+            <Description type={type}>
                 From as low as $10 per day with limited time offer discounts</Description>
-            <form onSubmit={handleSubmit(handleSearchSubmit)}>
-              
+            <form className={searchFromStyles.mainForm} onSubmit={handleSubmit(handleSearchSubmit)}>
                 <SearchFormMain type={type} className={searchFromStyles.main}>
-                <AdvancedTitle type={type}>Advanced Search</AdvancedTitle>
+                    <AdvancedTitle type={type}>Advanced Search</AdvancedTitle>
                     <Controller
-                        name="keyword"
+                        name="name"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                            <FormControl  className={searchFromStyles.formControl}>
+                            <FormControl className={searchFromStyles.formControl}>
                                 <CNTextField className={searchFromStyles.mainInput}
                                     placeholder="Enter keyword..."
-                                    error={!!formState.errors['keyword']}
+                                    error={!!formState.errors['name']}
                                     values={value ? value : ''}
                                     inputChange={e => {
                                         onChange(e)
                                     }}
                                 />
                                 <FormHelperText className={searchFromStyles.helperText}>
-                                    {formState.errors['keyword']?.message}
+                                    {formState.errors['name']?.message}
                                 </FormHelperText>
                             </FormControl>
                         )}
                     />
                     <Controller
-                        name="province"
+                        name="city"
                         control={control}
                         render={({ field: { onChange, value } }) => (
                             <FormControl className={searchFromStyles.formControl}>
@@ -265,7 +336,7 @@ export const SearchRoom = ({type}) => {
                                     options={listProvince}
                                     placeholder="Select Province" />
                                 <FormHelperText className={searchFromStyles.helperText}>
-                                    {formState.errors['province']?.message}
+                                    {formState.errors['city']?.message}
                                 </FormHelperText>
                             </FormControl>
                         )}
@@ -304,21 +375,50 @@ export const SearchRoom = ({type}) => {
                             </FormControl>
                         )}
                     />
-                    <AdvancedOptions type = {type} className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
+                    <AdvancedOptions type={type} className={isAdvancedOptionsOpen ? searchFromStyles.active : ""} onClick={showAdvancedOptionsHandler}
                     >
                         Advanced
                 <SVGIcon name="more" />
                     </AdvancedOptions>
+                    <SearchAdvancedNested type={type} className={isAdvancedOptionsOpen && type === 'properties' ? searchFromStyles.fadeInNested : ""}>
+                        <UtilitiesWrapperNested>
+
+                            {uitilitiesList && uitilitiesList.map((utility) => {
+                                return (
+                                    <CNCheckBox
+                                        className={searchFromStyles.checkBox}
+                                        key={utility.id}
+                                        label={utility.label}
+                                        data={utility}
+                                        checkBoxState={uitilitiesList}
+                                        setCheckBoxState={setUitilitiesList}
+                                    />
+                                )
+                            })}
+                        </UtilitiesWrapperNested>
+
+                        <SliderItemNested>
+                        {areaRange && <SliderTitle> Home Area (Sqft) {new Intl.NumberFormat('ve-VE', {style: 'decimal'}).format(areaRange[0])} - {new Intl.NumberFormat('ve-VE', {style: 'decimal'}).format(areaRange[1])} </SliderTitle>}
+                            <CNSlider value={areaSliderValue} handleChange={areaChangeHandler} />
+                        </SliderItemNested>
+                        <SliderItemNested>
+                            {priceRange && <SliderTitle> From {new Intl.NumberFormat('ve-VE', { style: 'currency', currency: 'VND' }).format(priceRange[0])} to {new Intl.NumberFormat('ve-VE', { style: 'currency', currency: 'VND' }).format(priceRange[1])} </SliderTitle>}
+                            <CNSlider value={priceSliderValue} handleChange={priceChangeHandler} />
+                        </SliderItemNested>
+                    </SearchAdvancedNested>
                     <CNButton type="submit" className={searchFromStyles.searchButton} buttonType="main">Search</CNButton>
                 </SearchFormMain>
+
             </form>
-            <SearchAdvanced className={isAdvancedOptionsOpen ? searchFromStyles.fadeIn : ""}>
+            <SearchAdvanced
+                className={isAdvancedOptionsOpen && type !== 'properties' ? searchFromStyles.fadeIn : ""}
+            >
                 <UtilitiesWrapper>
 
                     {uitilitiesList && uitilitiesList.map((utility) => {
                         return (
                             <CNCheckBox
-                                className={searchFromStyles.checkBox}
+                                // className={searchPropertiesStyles.checkBox}
                                 key={utility.id}
                                 label={utility.label}
                                 data={utility}
@@ -330,14 +430,13 @@ export const SearchRoom = ({type}) => {
                 </UtilitiesWrapper>
                 <SliderOptionsWrapper>
                     <SliderItem>
-                        {/* <SliderTitle> Home Area (Sqft) {squareRange[0]} - {squareRange[1]} </SliderTitle> */}
-                        <CNSlider value={squareRange} handleChange={squareChangeHandler} />
+                        {areaRange && <SliderTitle> Home Area (Sqft) {new Intl.NumberFormat('ve-VE', {style: 'decimal'}).format(areaRange[0])} - {new Intl.NumberFormat('ve-VE', {style: 'decimal'}).format(areaRange[1])} </SliderTitle>}
+                        <CNSlider value={areaSliderValue} handleChange={areaChangeHandler} />
                     </SliderItem>
                     <SliderItem>
-                        {/* <SliderTitle> From {priceRange[0]} to {priceRange[1]} </SliderTitle> */}
-                        <CNSlider value={priceRange} handleChange={priceChangeHandler} />
+                    {priceRange && <SliderTitle> From {new Intl.NumberFormat('ve-VE', { style: 'currency', currency: 'VND' }).format(priceRange[0])} to {new Intl.NumberFormat('ve-VE', { style: 'currency', currency: 'VND' }).format(priceRange[1])} </SliderTitle>}
+                            <CNSlider value={priceSliderValue} handleChange={priceChangeHandler} />
                     </SliderItem>
-
                 </SliderOptionsWrapper>
             </SearchAdvanced>
         </Container>
