@@ -22,12 +22,21 @@ const Message = ({ message }) => {
 const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
 
   return (
-  <>
-  <div style={{marginTop:300,display: 'flex',justifyContent: 'center'}}>
-  <Map isRoute={false} currentTarget={selectLocation} setCurrentTarget={setSelectLocation}/>   
-  </div>
+
+    <div style={{backgroundColor: 'red', width: '100vw'}}>
+    <div style={{height: '200px'}}></div>
+   <SearchRoom />
+   <div style={{height: '200px'}}></div>
+   <div style={{maxWidth: '1200px',margin: '0 auto'}}>
+     <div style={{width: '33.33%'}}>
+     <SearchRoom  type="properties"/>
+     </div>
+ 
+   </div>
+ 
+   </div>
     
-   </>
+
   );
 };
 
