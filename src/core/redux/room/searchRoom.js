@@ -2,9 +2,11 @@ import { createAsyncThunk, createSlice, createEntityAdapter } from "@reduxjs/too
 import { axiosApi } from "@Core/api/axiosApi";
 import { homeRoomAdapter } from "./homeRoom";
 
-export const searchRoomAdapter = createEntityAdapter({})
+export const searchRoomAdapter = createEntityAdapter({
+    selectId: (room) => room.id
+})
 
-export const getRoomSearched = createAsyncThunk(
+export const getRoomsSearched = createAsyncThunk(
     '/room/searchRoom',
     async () => {
         try {
@@ -25,15 +27,17 @@ const searchRoom = createSlice({
     }),
     reducers:{},
     extraReducers:(builder)=>{
-        builder.addCase(getRoomSearched.pending, (state, action)=>{
+        builder.addCase(getRoomsSearched.pending, (state, action)=>{
             state.loading = "pending";
         })
-            .addCase(getRoomSearched.fulfilled, (state, action)=>{
+            .addCase(getRoomsSearched.fulfilled, (state, action)=>{
                 state.loading = "fulfilled";
                 searchRoomAdapter.setAll(state, action.payload.data)
             })
-            .addCase(getRoomSearched.rejected, (state, action)=>{
+            .addCase(getRoomsSearched.rejected, (state, action)=>{
                 state.loading = "error";
             })
     }
 })
+
+export default searchRoom.reducer

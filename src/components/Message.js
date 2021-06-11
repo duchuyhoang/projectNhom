@@ -20,7 +20,11 @@ import {Map} from "@Components/components/Map/Map";
 const Message = ({ message }) => {
 
 const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
-
+const dispatch = useDispatch(roomSelectors.searchRoomSelectorAll);
+const x = useSelector(roomSelectors.searchRoomSelectorAll);
+useEffect(()=>{
+  dispatch(roomActions.getRoomsSearched());
+},[])
   return (
 
     <div style={{backgroundColor: 'red', width: '100vw'}}>
