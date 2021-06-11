@@ -328,6 +328,7 @@ export const SearchRoom = ({ type }) => {
     defaultValues,
     resolver: yupResolver(schema),
   });
+
   const handleSearchSubmit = (values) => {
     let uitilitiesArray = [];
 
@@ -347,7 +348,7 @@ export const SearchRoom = ({ type }) => {
       max_price: priceRange[1],
     };
     for (const key in resObject) {
-      if (!resObject[key] || resObject[key] === '') {
+      if ((!resObject[key] && resObject[key] !== 0) || resObject[key] === '') {
         delete resObject[key];
       }
     }
@@ -438,6 +439,7 @@ export const SearchRoom = ({ type }) => {
               </FormControl>
             )}
           />
+
           <AdvancedOptions
             type={type}
             className={isAdvancedOptionsOpen ? searchFromStyles.active : ''}
@@ -454,7 +456,11 @@ export const SearchRoom = ({ type }) => {
                 : ''
             }
           >
-            <UtilitiesWrapperNested>
+            <UtilitiesWrapperNested
+              style={{
+                display: uitilitiesList !== null && uitilitiesList.length > 0,
+              }}
+            >
               {uitilitiesList &&
                 uitilitiesList.map((utility) => {
                   return (
@@ -475,19 +481,18 @@ export const SearchRoom = ({ type }) => {
                 <SliderTitle>
                   {' '}
                   Home Area (Sqft){' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'decimal',
-                  }).format(areaRange[0])}{' '}
+                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
+                    areaRange[0]
+                  )}{' '}
                   -{' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'decimal',
-                  }).format(areaRange[1])}{' '}
+                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
+                    areaRange[1]
+                  )}{' '}
                 </SliderTitle>
               )}
               <CNSlider
                 value={areaSliderValue}
                 handleChange={areaChangeHandler}
-                className={searchFromStyles.slider}
               />
             </SliderItemNested>
             <SliderItemNested>
@@ -509,7 +514,6 @@ export const SearchRoom = ({ type }) => {
               <CNSlider
                 value={priceSliderValue}
                 handleChange={priceChangeHandler}
-                className={searchFromStyles.slider}
               />
             </SliderItemNested>
           </SearchAdvancedNested>
@@ -521,16 +525,22 @@ export const SearchRoom = ({ type }) => {
             Search
           </CNButton>
         </SearchFormMain>
-        {/* </form> */}
+
         <SearchAdvanced
-          type={type}
           className={
             isAdvancedOptionsOpen && type !== 'properties'
               ? searchFromStyles.fadeIn
               : ''
           }
         >
-          <UtilitiesWrapper>
+          <UtilitiesWrapper
+            style={{
+              display:
+                uitilitiesList !== null && uitilitiesList.length > 0
+                  ? 'flex'
+                  : 'none',
+            }}
+          >
             {uitilitiesList &&
               uitilitiesList.map((utility) => {
                 return (
