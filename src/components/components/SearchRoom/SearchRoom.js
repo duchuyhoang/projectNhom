@@ -382,7 +382,7 @@ export const SearchRoom = ({ type }) => {
                 <SVGIcon name="more" />
                     </AdvancedOptions>
                     <SearchAdvancedNested type={type} className={isAdvancedOptionsOpen && type === 'properties' ? searchFromStyles.fadeInNested : ""}>
-                        <UtilitiesWrapperNested style={{display: uitilitiesList ? 'none' : 'flex'}}>
+                        <UtilitiesWrapperNested style={{display: uitilitiesList !== null && uitilitiesList.length > 0}}>
                             {uitilitiesList && uitilitiesList.map((utility) => {
                                 return (
                                     <CNCheckBox
@@ -413,7 +413,7 @@ export const SearchRoom = ({ type }) => {
             <SearchAdvanced
                 className={isAdvancedOptionsOpen && type !== 'properties' ? searchFromStyles.fadeIn : ""}
             >
-                <UtilitiesWrapper style={{display: uitilitiesList ? 'none' : 'flex'}}>
+                <UtilitiesWrapper style={{display: uitilitiesList !== null && uitilitiesList.length > 0 ? 'flex' : 'none'}}>
 
                     {uitilitiesList  &&  uitilitiesList.map((utility) => {
                         return (
