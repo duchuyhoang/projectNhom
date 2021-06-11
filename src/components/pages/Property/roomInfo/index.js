@@ -1,4 +1,5 @@
 import { Footer } from '@Components/components/Footer/Footer';
+import { SearchRoom } from '@Components/components/SearchRoom/SearchRoom';
 import { CNModal } from '@Components/shared/CNModal/CNModal';
 import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
 import CNStar from '@Components/shared/CNStar/CNStar';
@@ -76,8 +77,14 @@ const Container = styled.div`
   padding-left: 15px;
   padding-right: 15px;
 `;
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 const ContentWrapper = styled.div`
-  width: calc(2 * 100% / 3);
+  width: calc(2 * 100% / 3 + 20px);
+  padding: 0 15px;
+  box-sizing: border-box;
 `;
 const BasicInfo = styled.div`
   background-color: #fff;
@@ -119,7 +126,12 @@ const ContentOverView = styled.div`
   padding: 25px 30px 20px 30px;
   border-bottom: 1px solid #ebebeb;
 `;
-const SideBar = styled.div``;
+const SideBar = styled.div`
+  width: calc(100% / 3);
+  padding: 0 15px;
+  box-sizing: border-box;
+  margin: 60px 0 30px;
+`;
 const LabelWrapper = styled.div`
   margin-bottom: 25px;
 `;
@@ -333,130 +345,135 @@ function RoomInfo(props) {
         </Gallery>
       </SlideWrapper>
       <Container>
-        <ContentWrapper>
-          <BasicInfo>
-            <ContentTop>
-              <TopLeft>
-                <RoomName>
-                  <h1>{'Eaton Garth Penthouse'}</h1>
-                </RoomName>
-                <RoomAddress>
-                  <a href="#">25-25 Broadway, Astoria</a>
-                </RoomAddress>
-              </TopLeft>
-              <TopRight>
-                <RoomPrice>
-                  <span>$7500</span>
-                </RoomPrice>
-              </TopRight>
-            </ContentTop>
-            <ContentOverView>
-              <LabelWrapper>
-                <LabelInfo
-                  child={<span style={{ color: '#FF5A5F' }}>Phòng trọ</span>}
-                />
-                <LabelInfo child={<span>{`Bed: 4`}</span>} />
-                <LabelInfo child={<span>{`Baths: 1`}</span>} />
-                <LabelInfo
-                  child={
-                    <span>
-                      Diện tích: {`20`}
-                      {'\u33A1'}
-                    </span>
-                  }
-                />
-              </LabelWrapper>
-              <Title>Over view</Title>
-              <Description>
-                <p>
-                  Evans Tower very high demand corner junior one bedroom plus a
-                  large balcony boasting full open NYC views. You need to see
-                  the views to believe them. Mint condition with new hardwood
-                  floors. Lots of closets plus washer and dryer.
-                </p>
-                <p>
-                  Fully furnished. Elegantly appointed condominium unit situated
-                  on premier location. PS6. The wide entry hall leads to a large
-                  living room with dining area. This expansive 2 bedroom and 2
-                  renovated marble bathroom apartment has great windows. Despite
-                  the interior views, the apartments Southern and Eastern
-                  exposures allow for lovely natural light to fill every room.
-                  The master suite is surrounded by handcrafted milkwork and
-                  features incredible walk-in closet and storage space.
-                </p>
-                <p>
-                  The second bedroom is a corner room with double windows. The
-                  kitchen has fabulous space, new appliances, and a laundry
-                  area. Other features include rich herringbone floors, crown
-                  moldings and coffered ceilings throughout the apartment. 1049
-                  5th Avenue is a classic pre-war building located across from
-                  Central Park, the reservoir and The Metropolitan Museum.
-                  Elegant lobby and 24 hours doorman. This is a pet-friendly
-                  building.
-                </p>
-              </Description>
-            </ContentOverView>
-            <ContentDetail>
-              <Title>Detail</Title>
-              <ListDetail data={listData} />
-            </ContentDetail>
-          </BasicInfo>
-          <WrapperInfo>
-            <Title>Amenities</Title>
-            <ListChecked data={listAmenities} />
-          </WrapperInfo>
-          <WrapperInfo>
-            <TitleWrapper>
-              <Title>Location</Title>
-              <RightTitle>
-                <Icon>
-                  <SVGIcon name="location" />
-                </Icon>
-                <RoomAddress>
-                  <a
-                    href="https://www.google.com/maps/place/H%E1%BB%8Dc+Vi%E1%BB%87n+C%C3%B4ng+Ngh%E1%BB%87+B%C6%B0u+Ch%C3%ADnh+Vi%E1%BB%85n+Th%C3%B4ng/@21.0466287,105.7914947,17.75z/data=!4m5!3m4!1s0x3135ab306caa83a7:0xbfe4b316823e38f7!8m2!3d21.0466267!4d105.7921393?hl=vi-VN"
-                    target="_blank"
-                  >
-                    {`25-25 Broadway, Astoria`}
-                  </a>
-                </RoomAddress>
-              </RightTitle>
-            </TitleWrapper>
-            <ImgMap>
-              <img src="../../../../assets/images/mapPTIT.JPG" />
-            </ImgMap>
-          </WrapperInfo>
-          <WrapperInfo>
-            <Title>Amenities</Title>
-            {valuation.map((item, index) => (
-              <div className={'mgb'} key={index}>
-                <CNProgressBar label={item.label} value={item.value} />
-              </div>
-            ))}
-          </WrapperInfo>
-          <WrapperInfo>
-            <TitleWrapper>
-              <Title>{'2'} Comment</Title>
-              <RightTitle>
-                <Icon>
-                  <CNStar value={2.5} readOnly size="small" />
-                </Icon>
-                <span>(2 comment)</span>
-              </RightTitle>
-            </TitleWrapper>
-            {listComment.map((item, index) => (
-              <BoxItem key={index}>
-                <CommentItem data={item} />
-              </BoxItem>
-            ))}
-          </WrapperInfo>
-          <WrapperInfo>
-            <Title>Add a review</Title>
+        <Flex>
+          <ContentWrapper>
+            <BasicInfo>
+              <ContentTop>
+                <TopLeft>
+                  <RoomName>
+                    <h1>{'Eaton Garth Penthouse'}</h1>
+                  </RoomName>
+                  <RoomAddress>
+                    <a href="#">25-25 Broadway, Astoria</a>
+                  </RoomAddress>
+                </TopLeft>
+                <TopRight>
+                  <RoomPrice>
+                    <span>$7500</span>
+                  </RoomPrice>
+                </TopRight>
+              </ContentTop>
+              <ContentOverView>
+                <LabelWrapper>
+                  <LabelInfo
+                    child={<span style={{ color: '#FF5A5F' }}>Phòng trọ</span>}
+                  />
+                  <LabelInfo child={<span>{`Bed: 4`}</span>} />
+                  <LabelInfo child={<span>{`Baths: 1`}</span>} />
+                  <LabelInfo
+                    child={
+                      <span>
+                        Diện tích: {`20`}
+                        {'\u33A1'}
+                      </span>
+                    }
+                  />
+                </LabelWrapper>
+                <Title>Over view</Title>
+                <Description>
+                  <p>
+                    Evans Tower very high demand corner junior one bedroom plus
+                    a large balcony boasting full open NYC views. You need to
+                    see the views to believe them. Mint condition with new
+                    hardwood floors. Lots of closets plus washer and dryer.
+                  </p>
+                  <p>
+                    Fully furnished. Elegantly appointed condominium unit
+                    situated on premier location. PS6. The wide entry hall leads
+                    to a large living room with dining area. This expansive 2
+                    bedroom and 2 renovated marble bathroom apartment has great
+                    windows. Despite the interior views, the apartments Southern
+                    and Eastern exposures allow for lovely natural light to fill
+                    every room. The master suite is surrounded by handcrafted
+                    milkwork and features incredible walk-in closet and storage
+                    space.
+                  </p>
+                  <p>
+                    The second bedroom is a corner room with double windows. The
+                    kitchen has fabulous space, new appliances, and a laundry
+                    area. Other features include rich herringbone floors, crown
+                    moldings and coffered ceilings throughout the apartment.
+                    1049 5th Avenue is a classic pre-war building located across
+                    from Central Park, the reservoir and The Metropolitan
+                    Museum. Elegant lobby and 24 hours doorman. This is a
+                    pet-friendly building.
+                  </p>
+                </Description>
+              </ContentOverView>
+              <ContentDetail>
+                <Title>Detail</Title>
+                <ListDetail data={listData} />
+              </ContentDetail>
+            </BasicInfo>
+            <WrapperInfo>
+              <Title>Amenities</Title>
+              <ListChecked data={listAmenities} />
+            </WrapperInfo>
+            <WrapperInfo>
+              <TitleWrapper>
+                <Title>Location</Title>
+                <RightTitle>
+                  <Icon>
+                    <SVGIcon name="location" />
+                  </Icon>
+                  <RoomAddress>
+                    <a
+                      href="https://www.google.com/maps/place/H%E1%BB%8Dc+Vi%E1%BB%87n+C%C3%B4ng+Ngh%E1%BB%87+B%C6%B0u+Ch%C3%ADnh+Vi%E1%BB%85n+Th%C3%B4ng/@21.0466287,105.7914947,17.75z/data=!4m5!3m4!1s0x3135ab306caa83a7:0xbfe4b316823e38f7!8m2!3d21.0466267!4d105.7921393?hl=vi-VN"
+                      target="_blank"
+                    >
+                      {`25-25 Broadway, Astoria`}
+                    </a>
+                  </RoomAddress>
+                </RightTitle>
+              </TitleWrapper>
+              <ImgMap>
+                <img src="../../../../assets/images/mapPTIT.JPG" />
+              </ImgMap>
+            </WrapperInfo>
+            <WrapperInfo>
+              <Title>Amenities</Title>
+              {valuation.map((item, index) => (
+                <div className={'mgb'} key={index}>
+                  <CNProgressBar label={item.label} value={item.value} />
+                </div>
+              ))}
+            </WrapperInfo>
+            <WrapperInfo>
+              <TitleWrapper>
+                <Title>{'2'} Comment</Title>
+                <RightTitle>
+                  <Icon>
+                    <CNStar value={2.5} readOnly size="small" />
+                  </Icon>
+                  <span>(2 comment)</span>
+                </RightTitle>
+              </TitleWrapper>
+              {listComment.map((item, index) => (
+                <BoxItem key={index}>
+                  <CommentItem data={item} />
+                </BoxItem>
+              ))}
+            </WrapperInfo>
+            <WrapperInfo>
+              <Title>Add a review</Title>
 
-            <FormAddReview onSubmit={handleSubmit} />
-          </WrapperInfo>
-        </ContentWrapper>
-        <SideBar></SideBar>
+              <FormAddReview onSubmit={handleSubmit} />
+            </WrapperInfo>
+          </ContentWrapper>
+          <SideBar>
+            <SearchRoom type="properties" />
+          </SideBar>
+        </Flex>
       </Container>
       <Footer />
     </Wrapper>
