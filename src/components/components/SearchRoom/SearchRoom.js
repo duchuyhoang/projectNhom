@@ -289,7 +289,7 @@ export const SearchRoom = ({ type }) => {
             max_price: priceRange[1]
         }
         for (const key in resObject) {
-            if (!resObject[key] || resObject[key] === "") {
+            if ((!resObject[key] && resObject[key] !== 0) || resObject[key] === "") {
                 delete resObject[key];
             }
 
@@ -382,8 +382,7 @@ export const SearchRoom = ({ type }) => {
                 <SVGIcon name="more" />
                     </AdvancedOptions>
                     <SearchAdvancedNested type={type} className={isAdvancedOptionsOpen && type === 'properties' ? searchFromStyles.fadeInNested : ""}>
-                        <UtilitiesWrapperNested>
-
+                        <UtilitiesWrapperNested style={{display: uitilitiesList ? 'none' : 'flex'}}>
                             {uitilitiesList && uitilitiesList.map((utility) => {
                                 return (
                                     <CNCheckBox
@@ -414,12 +413,12 @@ export const SearchRoom = ({ type }) => {
             <SearchAdvanced
                 className={isAdvancedOptionsOpen && type !== 'properties' ? searchFromStyles.fadeIn : ""}
             >
-                <UtilitiesWrapper>
+                <UtilitiesWrapper style={{display: uitilitiesList ? 'none' : 'flex'}}>
 
-                    {uitilitiesList && uitilitiesList.map((utility) => {
+                    {uitilitiesList  &&  uitilitiesList.map((utility) => {
                         return (
                             <CNCheckBox
-                                // className={searchPropertiesStyles.checkBox}
+                                className={searchFromStyles.checkBox}
                                 key={utility.id}
                                 label={utility.label}
                                 data={utility}
@@ -428,6 +427,7 @@ export const SearchRoom = ({ type }) => {
                             />
                         )
                     })}
+                    
                 </UtilitiesWrapper>
                 <SliderOptionsWrapper>
                     <SliderItem>

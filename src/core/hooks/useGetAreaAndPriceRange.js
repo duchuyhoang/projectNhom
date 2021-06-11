@@ -12,14 +12,18 @@ export const useGetAreaAndPriceRange = () => {
                setPriceRange([value.data.min_price, value.data.max_price]);
             }
             else
-               setPriceRange(null)
+            setPriceRange(null)
+         }).catch(err => {
+            setPriceRange([0,50000000])
          })
           axiosApi.get('room/getAcreageRange').then(value => {
             if (value.data !== null) {
                setAreaRange([value.data.min_acreage, value.data.max_acreage]);
             }
             else
-               setAreaRange(null)
+            setAreaRange(mull)
+         }).catch(err => {
+            setAreaRange([0,200000])
          })
    }, [])
    return {
