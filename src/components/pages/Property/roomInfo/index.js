@@ -15,6 +15,9 @@ import ListDetail from './ListDetail';
 import RoomInfoIcon from './RoomInfoIcon';
 import RoomSlide from './RoomSlide';
 import './styles.css';
+import {useParams,useHistory} from 'react-router-dom';
+
+
 import ViewAllPhoto from './ViewAllPhoto';
 
 const useStyles = makeStyles((theme) => ({
@@ -198,6 +201,14 @@ const BoxItem = styled.div`
 
 function RoomInfo(props) {
   const classes = useStyles();
+  const {name_router}=useParams();
+  let history = useHistory();
+
+if(!name_router){
+history.push("/home")
+}
+
+
   const dataImg = [
     {
       image:

@@ -24,6 +24,7 @@ const homeRoom = createSlice({
     name: 'room',
     initialState: homeRoomAdapter.getInitialState({
         loading: "idle",
+        searchParam:null,
         error: null
     }),
     reducers: {},

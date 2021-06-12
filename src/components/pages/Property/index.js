@@ -5,6 +5,7 @@ import {
   Switch,
   Route,
   Redirect,
+  useLocation,
   useRouteMatch,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
@@ -23,7 +24,7 @@ const Property = (props) => {
     <>
       <Suspense fallback={<CNLoading />}>
         <Switch>
-          <Route path={`${path}/room-info`} exact component={RoomInfo} />
+          <Route path={`${path}/:name_router`} exact component={RoomInfo} />
           <Route path={`${path}`} exact component={HomeListPage} />
           {/* <Route path="/" /> */}
         </Switch>
