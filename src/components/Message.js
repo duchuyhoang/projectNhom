@@ -15,7 +15,7 @@ import { roomSelectors, roomActions } from '@Core/redux/room'
 import { createSelector } from "reselect";
 import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 import {Map} from "@Components/components/Map/Map";
-
+import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/ForgetPasswordForm'
 
 const Message = ({ message }) => {
 
@@ -26,20 +26,10 @@ useEffect(()=>{
   dispatch(roomActions.getRoomsSearched());
 },[])
   return (
-
-    <div style={{backgroundColor: 'red', width: '100vw'}}>
-    <div style={{height: '200px'}}></div>
-   <SearchRoom />
-   <div style={{height: '200px'}}></div>
-   <div style={{maxWidth: '1200px',margin: '0 auto'}}>
-     <div style={{width: '33.33%'}}>
-     <SearchRoom  type="properties"/>
-     </div>
- 
-   </div>
- 
-   </div>
-    
+    <>
+    <div style={{height: "200px"}}></div>
+    <ForgetPasswordForm/>
+    </>
 
   );
 };

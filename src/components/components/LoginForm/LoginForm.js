@@ -485,7 +485,10 @@ export const LoginForm = ({
                   )}
                 />
               </CheckboxForm>
-              <a href="#">Lost Your Password?</a>
+              <a href="#" onClick={(e) => {
+                e.preventDefault();
+                setSelectedHomeModal('forgetPassword')
+              }}>Lost Your Password?</a>
             </UnderTextField>
 
             <CNButton
