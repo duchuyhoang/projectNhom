@@ -9,7 +9,7 @@ import { DropDownUserInfo } from './DropDownUserInfo';
 const BaseText = styled.div`
   color: ${(props) => props.theme.palette.text.secondary};
   font-family: ${(props) => props.theme.typography.fontFamily};
-  font-size: 23px;
+  font-size: 16px;
   cursor: pointer;
 `;
 
@@ -41,7 +41,7 @@ const DropDownUser = styled.div`
 
 const Container = styled(BaseText)`
   display: flex;
-  font-weight: bold;
+  font-weight: normal;
   position: relative;
   color: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
   > svg * {
@@ -99,9 +99,9 @@ export const UserInfo = React.memo(
                 setHomeModalOpen(true);
               }}
             >
-              Login
+            Login 
             </RegisterText>
-            /
+            <span> / </span>
             <RegisterText
               onClick={() => {
                 setSelectedHomeModal('register');

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1490 450" style="enable-background:new 0 0 1490 450;" xml:space="preserve"><link xmlns="" type="text/css" rel="stylesheet" id="dark-mode-custom-link"/><link xmlns="" type="text/css" rel="stylesheet" id="dark-mode-general-link"/><style xmlns="" lang="en" type="text/css" id="dark-mode-custom-style"/><style xmlns="" lang="en" type="text/css" id="dark-mode-native-style"/>
 <style type="text/css">
-	.st0{fill:#FF5A5F;}
-	.st1{fill:#484848;}
+	.st0{fill:red;}
+	.st1{fill:#ffffff;}
 </style>
 <g>
 	<path class="st0" d="M273.8,410.3c0,8.7-7,15.7-15.7,15.7H80.7C72,426,65,419,65,410.3V194.1c0-4.7,2.1-9.1,5.6-12.1L255.9,27.6   c5.8-4.9,14.3-4.9,20.1,0l185.3,154.4c6.7,5.6,7.6,15.5,2,22.1c-5.6,6.7-15.5,7.6-22.1,2L266,60.1L96.4,201.5v193.1h161.7   C266.8,394.6,273.8,401.6,273.8,410.3z M442.1,367.8c-17.2,20.8-43,39.8-76.5,56.5c-4.4,2.2-9.6,2.2-14,0   c-33.5-16.7-59.2-35.8-76.5-56.5c-51.1-61.7-15.5-129.7,37.2-129.7c21,0,36.4,8.6,46.3,16.7c9.9-8.1,25.3-16.7,46.3-16.7   C457.7,238.1,493.1,306.3,442.1,367.8z M404.9,269.5c-21.7,0-33.1,16.3-33.2,16.4c-6.5,9.8-20.3,9.2-26.1,0.1   c-1-1.4-12.2-16.5-33.3-16.5c-33.8,0-62.9,65.2,46.3,123.1C467.9,334.7,438.8,269.5,404.9,269.5z"/>

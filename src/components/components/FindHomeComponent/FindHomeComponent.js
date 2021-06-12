@@ -11,13 +11,18 @@ overflow:hidden;
 background-position:center center;
 `
 
+const BackgroundOverFlay = styled.div`
+background-color: rgba(29, 41, 62, 0.6);
+height: 105vh;
+`
+
 
 
 export const FindHomeComponent=(props)=>{
 return (
 <>
 <Container>
-    
+   <BackgroundOverFlay></BackgroundOverFlay> 
 </Container>
 </>
 )

@@ -18,7 +18,9 @@ import { authSelectors, authActions } from '@Core/redux/auth';
 RegisterForm.propTypes = {};
 
 const useRegisterStyle = makeStyles((theme) => ({
-  root: {},
+  root: {
+    zIndex: 20001,
+  },
   inputStyle: {
     marginBottom: '5px',
   },

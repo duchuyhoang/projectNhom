@@ -22,14 +22,15 @@ const NavBarContainer = styled.section`
       return props.isSmallVer ? props.theme.border.main : 'transparent';
     }};
   padding: 15px 0px;
-  z-index: 1484848;
+  z-index: 148;
 `;
 
 const Logo = styled.div`
   width: 15%;
-  margin-right: 80px;
+  margin-right: 40px;
+  margin-left: 16px;
   svg > path:last-child {
-    fill: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
+    fill: ${(props) => (props.currentTab === 'home' ? '#fff' : '#fff')};
   }
 `;
 
@@ -45,7 +46,7 @@ const ListContainer = styled.ul`
 const BaseText = styled.div`
   color: ${(props) => props.theme.palette.text.secondary};
   font-family: ${(props) => props.theme.typography.fontFamily};
-  font-size: 23px;
+  font-size: 16px;
   cursor: pointer;
   &:hover {
     color: ${(props) => props.theme.palette.primary.main};
@@ -139,11 +140,12 @@ const Link = styled.a`
 `;
 
 const RootItem = styled.li`
-  padding: 5px 15px;
+  padding: 33px 0;
+  margin: 0 22.5px;
   font-family: ${(props) => props.theme.typography.fontFamily};
-  font-weight: 600;
+  font-weight: normal;
   cursor: pointer;
-  font-size: 23px;
+  font-size: 16px;
   position: relative;
 
   color: ${(props) => {
@@ -162,9 +164,10 @@ const RootItem = styled.li`
     transform: rotateX(0);
   }
 
-  &:last-child {
-    border-right: 1px solid ${(props) => props.theme.border.main};
-  }
+  // &:last-child {
+  //   border-right: 1px solid ${(props) => props.theme.border.main};
+  // }
+
 `;
 
 const ModifiedButton = styled(CNButton)`
@@ -177,12 +180,12 @@ const ModifiedButton = styled(CNButton)`
       ? props.theme.palette.primary.main
       : '#fff'}!important;
   border-radius: 50px 50px 50px 50px !important;
-  padding: 11px 30px 11px 30px !important;
-  height: 65px !important;
-  width: 270px !important;
+  padding: 9px 25px !important;
+  height: 52px !important;
+  width: 210px !important;
   box-sizing: border-box;
   border: none;
-  font-size: 19px !important;
+  font-size: 14px !important;
   &:hover {
     background-color: ${(props) =>
       props.current === 'home'
@@ -190,13 +193,16 @@ const ModifiedButton = styled(CNButton)`
         : '#fff'}!important;
     color: ${(props) =>
       props.current === 'home' ? '#fff' : '#24334A'}!important;
+    border: none;
   }
 `;
 
 const RegisterTextContainer = styled(BaseText)`
   display: flex;
-  margin-right: 20px;
   font-weight: bold;
+  margin-right: 20px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255,255,255,0.3);
 `;
 
 const RegisterText = styled.div`
@@ -365,7 +371,7 @@ export const NavBar = (props) => {
         <>
           <NavBarContainer isSmall={mediaScreenTrue}>
             <Logo currentTab={currentTab}>
-              <SVGIcon name="logo" width="200" height="60" />
+              <SVGIcon name="logo" width="150" height="60" />
             </Logo>
 
             <ListContainer>
