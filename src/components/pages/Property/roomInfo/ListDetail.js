@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { uuid } from '@Ultis/uuid';
 const List = styled.ul`
   list-style: none;
   li {
@@ -24,12 +24,35 @@ const ItemValue = styled.div`
 function ListDetail({ data }) {
   return (
     <List>
-      {data.map((item, index) => (
-        <ListItem key={index}>
-          <ItemText>{item.text}:</ItemText>
-          <ItemValue>{item.value}</ItemValue>
-        </ListItem>
-      ))}
+      <ListItem key={uuid()}>
+        <ItemText>Tên phòng:</ItemText>
+        <ItemValue>{data.name}</ItemValue>
+      </ListItem>
+
+      <ListItem key={uuid()}>
+        <ItemText>Sức chứa:</ItemText>
+        <ItemValue>{data.capacity}</ItemValue>
+      </ListItem>
+      
+      <ListItem key={uuid()}>
+        <ItemText>Diện tích:</ItemText>
+        <ItemValue>{data.acreage}</ItemValue>
+      </ListItem>
+
+      <ListItem key={uuid()}>
+        <ItemText>Giá:</ItemText>
+        <ItemValue>{data.price}</ItemValue>
+      </ListItem>
+
+      <ListItem key={uuid()}>
+        <ItemText>Tiền nước:</ItemText>
+        <ItemValue>{data.water_bill}</ItemValue>
+      </ListItem>
+
+      <ListItem key={uuid()}>
+        <ItemText>Tiền điện(kWh):</ItemText>
+        <ItemValue>{data.utility_bill}</ItemValue>
+      </ListItem>
     </List>
   );
 }

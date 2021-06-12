@@ -3,6 +3,7 @@ import { createSelector } from "reselect";
 import { createAction } from '@reduxjs/toolkit'
 import homeRoomReducer, { homeRoomAdapter, getLatestHomeRoom } from "./homeRoom";
 import searchRoomReducer, { searchRoomAdapter, getRoomsSearched } from "./searchRoom";
+import currentRoomReducer, { setSelectedRoomByNameRouter} from "./currentRoom";
 
 const selectSelf = (state) => state.room
 
@@ -14,7 +15,6 @@ const homeRoomSelectors = homeRoomAdapter.getSelectors(selectHomeRoom);
 const homeRoomSelectAll = createSelector(homeRoomSelectors.selectAll, (state) => state)
 
 // search room
-
 const selectSearchRoom = createSelector(selectSelf, (state) => state.searchRoom)
 // 
 
@@ -28,31 +28,45 @@ const searchRoomSelectById = (id) => {
     }, (state) => state)
 }
 
-const increment=createAction("increment")
 
+
+// current selected room
+const selectCurrentRoomRoot=createSelector(selectSelf,(state)=>state.currentRoom);
+// 
+const selectCurrentRoom=createSelector(selectCurrentRoomRoot,(state)=>state.currentRoom);
+const currentRoomLoading =createSelector(selectCurrentRoomRoot,(state)=>state.loading)
+const currentRoomError=createSelector(selectCurrentRoomRoot,(state)=>state.error)
+
+const setCurrentRoom=createAction("setARoom");
 
 
 
 export const roomSelectors = {
     // homeRoom
     homeRoomSelectAll,
+
     // searchRoom
     searchRoomSelectorAll,
     searchRoomSelectById,
     searchRoomLoadingStatus,
     searchRoomError,
-    
+
+    // currentRoom
+    selectCurrentRoom,
+    currentRoomLoading,
+    currentRoomError
 }
 
 export const roomActions = {
     getLatestHomeRoom,
-    // getById:,
     getRoomsSearched,
-    increment
+    setSelectedRoomByNameRouter,
+    setCurrentRoom
 }
 
 
 export default combineReducers({
     homeRoom: homeRoomReducer,
-    searchRoom: searchRoomReducer
+    searchRoom: searchRoomReducer,
+    currentRoom: currentRoomReducer
 })

@@ -44,7 +44,7 @@ function RoomSlide({ data }) {
   return (
     <div className={classes.gridImage}>
       {data.map((item, index) => (
-        <img src={item.image} className={classes.imageItem} key={index} />
+        <img src={item.imagesLinks} className={classes.imageItem} key={index} />
       ))}
     </div>
   );

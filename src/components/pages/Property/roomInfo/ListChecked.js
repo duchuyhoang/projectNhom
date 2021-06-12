@@ -27,7 +27,7 @@ function ListChecked({ data }) {
       {data.map((item, index) => (
         <ListItem key={index}>
           <SVGIcon name={'tick'} width={'14px'} fill={'#ff5a5f'} />
-          <ItemValue>{item}</ItemValue>
+          <ItemValue>{item.utilitiesName}</ItemValue>
         </ListItem>
       ))}
     </List>
