@@ -14,13 +14,12 @@ import ListChecked from './ListChecked';
 import ListDetail from './ListDetail';
 import RoomInfoIcon from './RoomInfoIcon';
 import RoomSlide from './RoomSlide';
-import { PageNotFoundComponent } from "@Components/components/PageNotFoundComponent/PageNotFoundComponent";
-import { useCurrentRoom } from "./useCurrentRoom";
+import { PageNotFoundComponent } from '@Components/components/PageNotFoundComponent/PageNotFoundComponent';
+import { useCurrentRoom } from './useCurrentRoom';
 import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
-import { Map } from "@Components/components/Map/Map";
+import { Map } from '@Components/components/Map/Map';
 import './styles.css';
 import { useParams, useHistory } from 'react-router-dom';
-
 
 import ViewAllPhoto from './ViewAllPhoto';
 
@@ -206,13 +205,19 @@ const BoxItem = styled.div`
 function RoomInfo(props) {
   const classes = useStyles();
   const { name_router } = useParams();
-  const [selectLocation, setSelectLocation] = useState({ latitude: null, longtitude: null })
+  const [selectLocation, setSelectLocation] = useState({
+    latitude: null,
+    longtitude: null,
+  });
 
   const [showModal, setShowModal] = useState(false);
   let history = useHistory();
-  const { loading, currentRoom, currentRoomError } = useCurrentRoom(name_router);
+  const { loading, currentRoom, currentRoomError } = useCurrentRoom(
+    name_router
+  );
+
   if (!name_router) {
-    history.push("/home")
+    history.push('/home');
   }
 
   const valuation = [
@@ -249,32 +254,46 @@ function RoomInfo(props) {
     },
   ];
 
-
   const handleSubmit = useCallback((values) => {
     console.log(values);
-  }, [])
+  }, []);
 
   const handleShowPhoto = useCallback(() => {
     setShowModal(!showModal);
-  }, [showModal])
+  }, [showModal]);
 
+  let address = '';
 
-console.log(currentRoom);
+  if (currentRoom !== null) {
+    let stress =
+      'Đường ' +
+      currentRoom.street
+        .split(' ')
+        .map((item) => item.replace(item[0], item[0].toUpperCase()))
+        .join(' ');
+
+    address = `${currentRoom.house_number},
+    ${stress},
+    ${currentRoom.wardPrefix}
+    ${currentRoom.wardName},
+    ${currentRoom.districtName},
+    ${currentRoom.cityName}`;
+  }
+
   return (
     <>
-      {loading != "idle" && loading != "pending" ?
-
-        (currentRoom !== null && loading == "fulfilled" ?
+      {loading != 'idle' && loading != 'pending' ? (
+        currentRoom !== null && loading == 'fulfilled' ? (
           <Wrapper className={classes.root}>
-            <CNModal
-              showModal={showModal}
-              setShowModal={setShowModal}
-            >
-              <ViewAllPhoto data={currentRoom.images} onClick={handleShowPhoto} />
+            <CNModal showModal={showModal} setShowModal={setShowModal}>
+              <ViewAllPhoto
+                data={currentRoom.images}
+                onClick={handleShowPhoto}
+              />
             </CNModal>
 
             <SlideWrapper>
-              <RoomSlide data={currentRoom.images} ></RoomSlide>
+              <RoomSlide data={currentRoom.images}></RoomSlide>
               <Gallery>
                 <Container>
                   <BoxView>
@@ -300,7 +319,6 @@ console.log(currentRoom);
               </Gallery>
             </SlideWrapper>
 
-
             <Container>
               <Flex>
                 <ContentWrapper>
@@ -311,7 +329,7 @@ console.log(currentRoom);
                           <h1>{'Eaton Garth Penthouse'}</h1>
                         </RoomName>
                         <RoomAddress>
-                          <a href="#">25-25 Broadway, Astoria</a>
+                          <a href="#">{address}</a>
                         </RoomAddress>
                       </TopLeft>
                       <TopRight>
@@ -323,15 +341,15 @@ console.log(currentRoom);
                     <ContentOverView>
                       <LabelWrapper>
                         <LabelInfo
-                          child={<span style={{ color: '#FF5A5F' }}>Phòng trọ</span>}
+                          child={
+                            <span style={{ color: '#FF5A5F' }}>Phòng trọ</span>
+                          }
                         />
                         <LabelInfo child={<span>{`Bed: 4`}</span>} />
                         <LabelInfo child={<span>{`Baths: 1`}</span>} />
                         <LabelInfo
                           child={
-                            <span>
-                              Số nhà: {currentRoom.house_number}
-                            </span>
+                            <span>Số nhà: {currentRoom.house_number}</span>
                           }
                         />
                       </LabelWrapper>
@@ -342,14 +360,16 @@ console.log(currentRoom);
                     </ContentOverView>
                     <ContentDetail>
                       <Title>Detail</Title>
-                      <ListDetail data={{
-                        price: currentRoom.price,
-                        name: currentRoom.name,
-                        capacity: currentRoom.capacity,
-                        water_bill: currentRoom.water_bill,
-                        utility_bill: currentRoom.utility_bill,
-                        acreage: currentRoom.acreage,
-                      }} />
+                      <ListDetail
+                        data={{
+                          price: currentRoom.price,
+                          name: currentRoom.name,
+                          capacity: currentRoom.capacity,
+                          water_bill: currentRoom.water_bill,
+                          utility_bill: currentRoom.utility_bill,
+                          acreage: currentRoom.acreage,
+                        }}
+                      />
                     </ContentDetail>
                   </BasicInfo>
                   <WrapperInfo>
@@ -364,15 +384,21 @@ console.log(currentRoom);
                           <SVGIcon name="location" />
                         </Icon>
                         <RoomAddress>
-                          <Map defaultTarget={{ latitude: currentRoom.latitude || 21.046816934751238, longtitude: currentRoom.longtitude || 105.79207492501563 }}
-                            isRoute={true}
-                            currentTarget={selectLocation}
-                            setCurrentTarget={setSelectLocation} />
-                        
+                          <a href="#">{address}</a>
                         </RoomAddress>
                       </RightTitle>
                     </TitleWrapper>
                     <ImgMap>
+                      <Map
+                        defaultTarget={{
+                          latitude: currentRoom.latitude || 21.046816934751238,
+                          longtitude:
+                            currentRoom.longtitude || 105.79207492501563,
+                        }}
+                        isRoute={true}
+                        currentTarget={selectLocation}
+                        setCurrentTarget={setSelectLocation}
+                      />
                     </ImgMap>
                   </WrapperInfo>
                   <WrapperInfo>
@@ -412,15 +438,12 @@ console.log(currentRoom);
             </Container>
             <Footer />
           </Wrapper>
-
-          :
-
-          (loading == "rejected" && <PageNotFoundComponent />))
-
-
-        : <CNLoading />}
-
-
+        ) : (
+          loading == 'rejected' && <PageNotFoundComponent />
+        )
+      ) : (
+        <CNLoading />
+      )}
     </>
   );
 }
