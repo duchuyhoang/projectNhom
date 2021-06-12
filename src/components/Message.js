@@ -16,7 +16,7 @@ import { createSelector } from "reselect";
 import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 import {Map} from "@Components/components/Map/Map";
 import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/ForgetPasswordForm'
-
+import { UserProfilePage } from './pages/Users/UserProfilePage';
 const Message = ({ message }) => {
 
 const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
@@ -35,8 +35,8 @@ dispatch(roomActions.increment(300))
 // },[])
   return (
     <>
-    <div style={{height: "200px"}}></div>
-    <ForgetPasswordForm/>
+    <div style={{height:"100px"}}></div>
+    <UserProfilePage/>
     </>
 
   );
