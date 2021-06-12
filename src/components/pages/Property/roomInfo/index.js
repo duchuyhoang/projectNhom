@@ -5,7 +5,7 @@ import CNProgressBar from '@Components/shared/CNProgressBar/CNProgressBar';
 import CNStar from '@Components/shared/CNStar/CNStar';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import { makeStyles } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import CommentItem from './CommentItem';
 import FormAddReview from './FormAddReview';
@@ -14,8 +14,12 @@ import ListChecked from './ListChecked';
 import ListDetail from './ListDetail';
 import RoomInfoIcon from './RoomInfoIcon';
 import RoomSlide from './RoomSlide';
+import { PageNotFoundComponent } from "@Components/components/PageNotFoundComponent/PageNotFoundComponent";
+import { useCurrentRoom } from "./useCurrentRoom";
+import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
+import { Map } from "@Components/components/Map/Map";
 import './styles.css';
-import {useParams,useHistory} from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 
 import ViewAllPhoto from './ViewAllPhoto';
@@ -201,86 +205,16 @@ const BoxItem = styled.div`
 
 function RoomInfo(props) {
   const classes = useStyles();
-  const {name_router}=useParams();
+  const { name_router } = useParams();
+  const [selectLocation, setSelectLocation] = useState({ latitude: null, longtitude: null })
+
+  const [showModal, setShowModal] = useState(false);
   let history = useHistory();
+  const { loading, currentRoom, currentRoomError } = useCurrentRoom(name_router);
+  if (!name_router) {
+    history.push("/home")
+  }
 
-if(!name_router){
-history.push("/home")
-}
-
-
-  const dataImg = [
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/5-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/11-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/6-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/5-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
-    },
-    {
-      image:
-        'https://g5p6r6b9.stackpathcdn.com/homeo/wp-content/uploads/2020/04/4-1-960x600.jpg',
-    },
-  ];
-  const listData = [
-    {
-      text: 'Tên',
-      value: 'Penthouse',
-    },
-    {
-      text: 'Sức chứa(người)',
-      value: '3',
-    },
-    {
-      text: 'Diện tích',
-      value: '20\u33A1',
-    },
-    {
-      text: 'Giá',
-      value: '$7500',
-    },
-    {
-      text: 'Tiền nước',
-      value: '4.000đ',
-    },
-    {
-      text: 'Tiền điện(kWh)',
-      value: '4.000đ',
-    },
-  ];
-  const listAmenities = [
-    'Wifi',
-    'Tủ lạnh',
-    'Điều hòa',
-    'Máy giặt',
-    'Bếp',
-    'Khép kín',
-  ];
   const valuation = [
     {
       label: 'Medical',
@@ -315,179 +249,179 @@ history.push("/home")
     },
   ];
 
-  const handleSubmit = (values) => {
-    console.log(values);
-  };
-  const [showModal, setShowModal] = useState(false);
-  const handleShowPhoto = () => {
-    setShowModal(!showModal);
-  };
-  return (
-    <Wrapper className={classes.root}>
-      <CNModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        children={<ViewAllPhoto data={dataImg} onClick={handleShowPhoto} />}
-      />
-      <SlideWrapper>
-        <RoomSlide data={dataImg} />
-        <Gallery>
-          <Container>
-            <BoxView>
-              <ViewPhoto onClick={handleShowPhoto}>
-                <SVGIcon name={'camera'} />
-                <span>View Photos</span>
-              </ViewPhoto>
-              <RowIcon>
-                <div style={{ marginLeft: 'auto', display: 'flex' }}>
-                  <RoomInfoIcon
-                    selected={false}
-                    icon={<SVGIcon name="compare" />}
-                    style={{ marginRight: '12px' }}
-                  />
-                  <RoomInfoIcon
-                    selected={false}
-                    icon={<SVGIcon name="favourite" />}
-                  />
-                </div>
-              </RowIcon>
-            </BoxView>
-          </Container>
-        </Gallery>
-      </SlideWrapper>
-      <Container>
-        <Flex>
-          <ContentWrapper>
-            <BasicInfo>
-              <ContentTop>
-                <TopLeft>
-                  <RoomName>
-                    <h1>{'Eaton Garth Penthouse'}</h1>
-                  </RoomName>
-                  <RoomAddress>
-                    <a href="#">25-25 Broadway, Astoria</a>
-                  </RoomAddress>
-                </TopLeft>
-                <TopRight>
-                  <RoomPrice>
-                    <span>$7500</span>
-                  </RoomPrice>
-                </TopRight>
-              </ContentTop>
-              <ContentOverView>
-                <LabelWrapper>
-                  <LabelInfo
-                    child={<span style={{ color: '#FF5A5F' }}>Phòng trọ</span>}
-                  />
-                  <LabelInfo child={<span>{`Bed: 4`}</span>} />
-                  <LabelInfo child={<span>{`Baths: 1`}</span>} />
-                  <LabelInfo
-                    child={
-                      <span>
-                        Diện tích: {`20`}
-                        {'\u33A1'}
-                      </span>
-                    }
-                  />
-                </LabelWrapper>
-                <Title>Over view</Title>
-                <Description>
-                  <p>
-                    Evans Tower very high demand corner junior one bedroom plus
-                    a large balcony boasting full open NYC views. You need to
-                    see the views to believe them. Mint condition with new
-                    hardwood floors. Lots of closets plus washer and dryer.
-                  </p>
-                  <p>
-                    Fully furnished. Elegantly appointed condominium unit
-                    situated on premier location. PS6. The wide entry hall leads
-                    to a large living room with dining area. This expansive 2
-                    bedroom and 2 renovated marble bathroom apartment has great
-                    windows. Despite the interior views, the apartments Southern
-                    and Eastern exposures allow for lovely natural light to fill
-                    every room. The master suite is surrounded by handcrafted
-                    milkwork and features incredible walk-in closet and storage
-                    space.
-                  </p>
-                  <p>
-                    The second bedroom is a corner room with double windows. The
-                    kitchen has fabulous space, new appliances, and a laundry
-                    area. Other features include rich herringbone floors, crown
-                    moldings and coffered ceilings throughout the apartment.
-                    1049 5th Avenue is a classic pre-war building located across
-                    from Central Park, the reservoir and The Metropolitan
-                    Museum. Elegant lobby and 24 hours doorman. This is a
-                    pet-friendly building.
-                  </p>
-                </Description>
-              </ContentOverView>
-              <ContentDetail>
-                <Title>Detail</Title>
-                <ListDetail data={listData} />
-              </ContentDetail>
-            </BasicInfo>
-            <WrapperInfo>
-              <Title>Amenities</Title>
-              <ListChecked data={listAmenities} />
-            </WrapperInfo>
-            <WrapperInfo>
-              <TitleWrapper>
-                <Title>Location</Title>
-                <RightTitle>
-                  <Icon>
-                    <SVGIcon name="location" />
-                  </Icon>
-                  <RoomAddress>
-                    <a
-                      href="https://www.google.com/maps/place/H%E1%BB%8Dc+Vi%E1%BB%87n+C%C3%B4ng+Ngh%E1%BB%87+B%C6%B0u+Ch%C3%ADnh+Vi%E1%BB%85n+Th%C3%B4ng/@21.0466287,105.7914947,17.75z/data=!4m5!3m4!1s0x3135ab306caa83a7:0xbfe4b316823e38f7!8m2!3d21.0466267!4d105.7921393?hl=vi-VN"
-                      target="_blank"
-                    >
-                      {`25-25 Broadway, Astoria`}
-                    </a>
-                  </RoomAddress>
-                </RightTitle>
-              </TitleWrapper>
-              <ImgMap>
-                <img src="../../../../assets/images/mapPTIT.JPG" />
-              </ImgMap>
-            </WrapperInfo>
-            <WrapperInfo>
-              <Title>Amenities</Title>
-              {valuation.map((item, index) => (
-                <div className={'mgb'} key={index}>
-                  <CNProgressBar label={item.label} value={item.value} />
-                </div>
-              ))}
-            </WrapperInfo>
-            <WrapperInfo>
-              <TitleWrapper>
-                <Title>{'2'} Comment</Title>
-                <RightTitle>
-                  <Icon>
-                    <CNStar value={2.5} readOnly size="small" />
-                  </Icon>
-                  <span>(2 comment)</span>
-                </RightTitle>
-              </TitleWrapper>
-              {listComment.map((item, index) => (
-                <BoxItem key={index}>
-                  <CommentItem data={item} />
-                </BoxItem>
-              ))}
-            </WrapperInfo>
-            <WrapperInfo>
-              <Title>Add a review</Title>
 
-              <FormAddReview onSubmit={handleSubmit} />
-            </WrapperInfo>
-          </ContentWrapper>
-          <SideBar>
-            <SearchRoom type="properties" />
-          </SideBar>
-        </Flex>
-      </Container>
-      <Footer />
-    </Wrapper>
+  const handleSubmit = useCallback((values) => {
+    console.log(values);
+  }, [])
+
+  const handleShowPhoto = useCallback(() => {
+    setShowModal(!showModal);
+  }, [showModal])
+
+
+console.log(currentRoom);
+  return (
+    <>
+      {loading != "idle" && loading != "pending" ?
+
+        (currentRoom !== null && loading == "fulfilled" ?
+          <Wrapper className={classes.root}>
+            <CNModal
+              showModal={showModal}
+              setShowModal={setShowModal}
+            >
+              <ViewAllPhoto data={currentRoom.images} onClick={handleShowPhoto} />
+            </CNModal>
+
+            <SlideWrapper>
+              <RoomSlide data={currentRoom.images} ></RoomSlide>
+              <Gallery>
+                <Container>
+                  <BoxView>
+                    <ViewPhoto onClick={handleShowPhoto}>
+                      <SVGIcon name={'camera'} />
+                      <span>View Photos</span>
+                    </ViewPhoto>
+                    <RowIcon>
+                      <div style={{ marginLeft: 'auto', display: 'flex' }}>
+                        <RoomInfoIcon
+                          selected={false}
+                          icon={<SVGIcon name="compare" />}
+                          style={{ marginRight: '12px' }}
+                        />
+                        <RoomInfoIcon
+                          selected={false}
+                          icon={<SVGIcon name="favourite" />}
+                        />
+                      </div>
+                    </RowIcon>
+                  </BoxView>
+                </Container>
+              </Gallery>
+            </SlideWrapper>
+
+
+            <Container>
+              <Flex>
+                <ContentWrapper>
+                  <BasicInfo>
+                    <ContentTop>
+                      <TopLeft>
+                        <RoomName>
+                          <h1>{'Eaton Garth Penthouse'}</h1>
+                        </RoomName>
+                        <RoomAddress>
+                          <a href="#">25-25 Broadway, Astoria</a>
+                        </RoomAddress>
+                      </TopLeft>
+                      <TopRight>
+                        <RoomPrice>
+                          <span>$7500</span>
+                        </RoomPrice>
+                      </TopRight>
+                    </ContentTop>
+                    <ContentOverView>
+                      <LabelWrapper>
+                        <LabelInfo
+                          child={<span style={{ color: '#FF5A5F' }}>Phòng trọ</span>}
+                        />
+                        <LabelInfo child={<span>{`Bed: 4`}</span>} />
+                        <LabelInfo child={<span>{`Baths: 1`}</span>} />
+                        <LabelInfo
+                          child={
+                            <span>
+                              Số nhà: {currentRoom.house_number}
+                            </span>
+                          }
+                        />
+                      </LabelWrapper>
+                      <Title>Over view</Title>
+                      <Description>
+                        <p>{currentRoom.overview}</p>
+                      </Description>
+                    </ContentOverView>
+                    <ContentDetail>
+                      <Title>Detail</Title>
+                      <ListDetail data={{
+                        price: currentRoom.price,
+                        name: currentRoom.name,
+                        capacity: currentRoom.capacity,
+                        water_bill: currentRoom.water_bill,
+                        utility_bill: currentRoom.utility_bill,
+                        acreage: currentRoom.acreage,
+                      }} />
+                    </ContentDetail>
+                  </BasicInfo>
+                  <WrapperInfo>
+                    <Title>Amenities</Title>
+                    <ListChecked data={currentRoom.utilities} />
+                  </WrapperInfo>
+                  <WrapperInfo>
+                    <TitleWrapper>
+                      <Title>Location</Title>
+                      <RightTitle>
+                        <Icon>
+                          <SVGIcon name="location" />
+                        </Icon>
+                        <RoomAddress>
+                          <Map defaultTarget={{ latitude: currentRoom.latitude || 21.046816934751238, longtitude: currentRoom.longtitude || 105.79207492501563 }}
+                            isRoute={true}
+                            currentTarget={selectLocation}
+                            setCurrentTarget={setSelectLocation} />
+                        
+                        </RoomAddress>
+                      </RightTitle>
+                    </TitleWrapper>
+                    <ImgMap>
+                    </ImgMap>
+                  </WrapperInfo>
+                  <WrapperInfo>
+                    <Title>Amenities</Title>
+                    {valuation.map((item, index) => (
+                      <div className={'mgb'} key={index}>
+                        <CNProgressBar label={item.label} value={item.value} />
+                      </div>
+                    ))}
+                  </WrapperInfo>
+                  <WrapperInfo>
+                    <TitleWrapper>
+                      <Title>{'2'} Comment</Title>
+                      <RightTitle>
+                        <Icon>
+                          <CNStar value={2.5} readOnly size="small" />
+                        </Icon>
+                        <span>(2 comment)</span>
+                      </RightTitle>
+                    </TitleWrapper>
+                    {listComment.map((item, index) => (
+                      <BoxItem key={index}>
+                        <CommentItem data={item} />
+                      </BoxItem>
+                    ))}
+                  </WrapperInfo>
+                  <WrapperInfo>
+                    <Title>Add a review</Title>
+
+                    <FormAddReview onSubmit={handleSubmit} />
+                  </WrapperInfo>
+                </ContentWrapper>
+                <SideBar>
+                  <SearchRoom type="properties" />
+                </SideBar>
+              </Flex>
+            </Container>
+            <Footer />
+          </Wrapper>
+
+          :
+
+          (loading == "rejected" && <PageNotFoundComponent />))
+
+
+        : <CNLoading />}
+
+
+    </>
   );
 }
 

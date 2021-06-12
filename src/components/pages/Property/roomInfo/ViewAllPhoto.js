@@ -63,8 +63,8 @@ function ViewAllPhoto({ data, onClick }) {
         <Slider {...settings}>
           {data.map((item) => {
             return (
-              <Img>
-                <img src={item.image} />
+              <Img key={item.imagesIds}>
+                <img src={item.imagesLinks} />
               </Img>
             );
           })}

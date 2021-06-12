@@ -56,13 +56,12 @@ const Container = styled.div`
 `
 const TopImage = styled.img`
     margin-bottom: 40px;
-    width: ${props => props.isMobile ? "100%" : "auto"}
+    width: ${props => props.isMobile ? "100%" : "auto"};
 `
 const Slogan = styled.h4`
     font-size:40px;
     color:${props => props.theme.palette.text.primary};
     margin: 0;
-    
 `
 const Description = styled.p`
     color:${props => props.theme.palette.text.primary};

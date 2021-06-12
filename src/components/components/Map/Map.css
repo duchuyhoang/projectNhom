@@ -27,9 +27,10 @@
     font-weight: 700;
     position: absolute;
     line-height: 26px;
-    padding: 0 8px;
+    padding: 0 7px;
     right: 10px  ;
     top: 1px;
+    height: 25px;
     cursor: pointer;
     border: none;
     text-decoration: none;
