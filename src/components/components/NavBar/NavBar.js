@@ -22,7 +22,7 @@ const NavBarContainer = styled.section`
       return props.isSmallVer ? props.theme.border.main : 'transparent';
     }};
   padding: 15px 0px;
-  z-index: 1484848;
+  z-index: 10;
 `;
 
 const Logo = styled.div`
