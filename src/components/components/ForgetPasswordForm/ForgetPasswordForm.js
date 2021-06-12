@@ -43,7 +43,7 @@ const Container = styled.div`
     border-radius: 6px;
     font-family: ${props => props.theme.typography.fontFamily};
     display: flex;
-    height: ${props => props.isMobile ? '520px' : '600px'};
+    height: ${props => props.isMobile ? '440px' : '600px'};
     will-change: transform opacity;
     max-width: 812px;
     width: 100%;
@@ -53,7 +53,7 @@ const Container = styled.div`
     animation: ${upToDown} ease-in-out .5s;
 `;
 const LeftContainer = styled.div`
-   width: 50%;
+    width: 50%;
     border-radius: 6px;
     over-flow: hidden;
     & > img{
@@ -66,6 +66,9 @@ const RightContainer = styled.div`
  flex: 1;
  padding: 0 15px;
  position: relative;
+ display: flex;
+ flex-direction: column;
+ 
 `
 const Title = styled.div`
     display: flex;
@@ -85,21 +88,8 @@ cursor: pointer;
     }
 }
 `
-const Notice = styled.div`
-    background-color: #ccf5ef;
-    margin-bottom: 20px;
-    padding: 10px 18px;
-    font-size: 14px;
-    border-radius: 6px;
-`
-const NoticeInfo = styled.p`
-    font-size: 14px;
-    font-weight: 400;
-    > strong {
-        color: #27ceb4;
-        font-weight: bold;
-        font-size:16px;
-    }
+const ContentRight = styled.div`
+   margin-top: ${props => props.isMobile ? '0' : '60px'};
 
 `
 const AlertWarning = styled.div`
@@ -115,6 +105,7 @@ const MainTitle = styled.h3`
     color: ${props => props.theme.palette.text.primary};
 `
 const LinkBackToLogin = styled.a`
+   display: inline-block;
     text-decoration: none;
     color:#8b91dd;
     font-size: 18px;
@@ -162,18 +153,14 @@ export const ForgetPasswordForm = ({ showModal, setShowModal, setSelectedHomeMod
             </LeftContainer>
             <RightContainer isMobile={isMobile}>
                 <Title>
-                    Login
+                    Reset Password
                     <TititleIcon onClick={() => setShowModal(prev => !prev)}>
                         <SVGIcon name="close" fill="#006c70"
                             height="12px"
                             width="12px" />
                     </TititleIcon>
-
                 </Title>
-                <Notice>
-                    <NoticeInfo>Username: <strong>agency</strong>  or <strong>agent</strong></NoticeInfo>
-                    <NoticeInfo>Password: <strong>password</strong></NoticeInfo>
-                </Notice>
+               <ContentRight isMobile={isMobile}>
                 <AlertWarning>
                     Enter an username or e-mail address.
                 </AlertWarning>
@@ -216,6 +203,7 @@ export const ForgetPasswordForm = ({ showModal, setShowModal, setSelectedHomeMod
                         Cancel
                     </CNButton>
                 </form>
+                </ContentRight>
                 <LinkBackToLogin onClick={(e) => {
                     e.preventDefault();
                     setSelectedHomeModal('login')
