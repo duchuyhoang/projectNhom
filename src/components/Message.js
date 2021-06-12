@@ -22,9 +22,10 @@ const Message = ({ message }) => {
 const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
 
   return (
-
-  <ForgetPasswordForm/>
-    
+    <>
+    <div style={{height: "200px"}}></div>
+    <ForgetPasswordForm/>
+    </>
 
   );
 };

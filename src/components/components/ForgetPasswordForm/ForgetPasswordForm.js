@@ -1,35 +1,227 @@
-import React from 'react'
-import styled,{css} from 'styled-components'
+import React, { useEffect, useCallback } from 'react'
+import styled, { keyframes } from 'styled-components'
 import { FormControl, FormHelperText, makeStyles } from '@material-ui/core';
-import {backgroundImage} from '@Assets/images/bg-login.jpg';
-// styled CSS
-const alignCenter = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+import useIsMobile from '@Core/hooks/useIsMobile';
+import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
+import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
+import { CNButton } from '@Components/shared/CNButton/CNButton';
+import backgroundImage from '@Assets/images/bg.jpg';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+const useForgetPasswordFormStyles = makeStyles((theme) => ({
+    input: {
+        marginBottom: 20,
+        position: 'relative',
+    },
+    helperText: {
+        color: theme.palette.primary.main,
+        position: 'absolute',
+        bottom: 0
+    }
+}))
+
+
+// Animation
+const upToDown = keyframes`
+    from{
+        transform: translateY(-20%);
+        opacity:0;
+       
+    }
+    to{
+        transform: translateY(0%);
+        opacity: 1;
+        
+    }
 `
 // styled components
 const Container = styled.div`
-    padding: 6px;
-    background-color: ${props => props.theme.palette.background.theme};
+    box-sizing: border-box;
+    padding: ${props => props.isMobile ? '0' : '20px'};
+    background-color: ${props => props.theme.palette.background.secondary};
     border-radius: 6px;
     font-family: ${props => props.theme.typography.fontFamily};
-    ${alignCenter};
+    display: flex;
+    height: ${props => props.isMobile ? '520px' : '600px'};
+    will-change: transform opacity;
+    max-width: 812px;
+    width: 100%;
+    > *{
+        box-sizing: border-box;
+    }
+    animation: ${upToDown} ease-in-out .5s;
 `;
 const LeftContainer = styled.div`
+   width: 50%;
+    border-radius: 6px;
+    over-flow: hidden;
+    & > img{
+        width:100%;
+        height:100%;
+    }
+    display: ${props => props.isMobile ? 'none' : 'block'}
 `
 const RightContainer = styled.div`
+ flex: 1;
+ padding: 0 15px;
+ position: relative;
 `
-export const  ForgetPasswordForm = () => {
+const Title = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #006c70;
+    font-size: 20px;
+    font-weight: bold;
+    transition: .2s all;
+ 
+`
+const TititleIcon = styled.a`
+cursor: pointer;
+&:hover {
+    & > svg{
+        fill: ${props => props.theme.palette.primary.main};
+    }
+}
+`
+const Notice = styled.div`
+    background-color: #ccf5ef;
+    margin-bottom: 20px;
+    padding: 10px 18px;
+    font-size: 14px;
+    border-radius: 6px;
+`
+const NoticeInfo = styled.p`
+    font-size: 14px;
+    font-weight: 400;
+    > strong {
+        color: #27ceb4;
+        font-weight: bold;
+        font-size:16px;
+    }
+
+`
+const AlertWarning = styled.div`
+    padding: 15px;
+    background-color:#fcf8e3;
+    border: 1px solid ##faebcc;
+    color: #8a6d3b;
+    margin-bottom: 24px;
+`
+const MainTitle = styled.h3`
+    text-align: center;
+    font-size:22px;
+    color: ${props => props.theme.palette.text.primary};
+`
+const LinkBackToLogin = styled.a`
+    text-decoration: none;
+    color:#8b91dd;
+    font-size: 18px;
+    position: absolute;
+    bottom: 0;
+    cursor: pointer;
+    transition: .2s all;
+    &:hover{
+        color: ${props => props.theme.palette.primary.main};
+    }
+`
+export const ForgetPasswordForm = ({ showModal, setShowModal, setSelectedHomeModal }) => {
+    const forgetPasswordFormStyles = useForgetPasswordFormStyles();
+    const {isMobile} = useIsMobile();
+    const keyPress = useCallback(
+        (e) => {
+            if (e.key === 'escape' && showModal)
+                setShowModal(false);
+        },
+        [showModal],
+    )
+    useEffect(() => {
+        document.addEventListener('keydown', keyPress);
+        return () => document.removeEventListener('keydown', keyPress);
+    }, [keyPress]);
+    const defaultValues = {
+        email: ''
+    }
+    const schema = yup.object().shape({
+        email: yup.string().required('Please enter your Email').email('Email is not invalid')
+    })
+    const { control, formState, handleSubmit, reset } = useForm({
+        mode: 'onSubmit',
+        defaultValues,
+        resolver: yupResolver(schema),
+    })
+    const handleGetSubmitHandler = (values) => {
+        console.log(values)
+        reset(defaultValues)
+    }
     return (
-       <Container>
-           <LeftContainer>
-               <img src={backgroundImage}/>
-           </LeftContainer>
-           <RightContainer>
-              
-           </RightContainer>
-       </Container>
+        <Container isMobile={isMobile}>
+            <LeftContainer isMobile={isMobile}>
+                <img src={backgroundImage} />
+            </LeftContainer>
+            <RightContainer isMobile={isMobile}>
+                <Title>
+                    Login
+                    <TititleIcon onClick={() => setShowModal(prev => !prev)}>
+                        <SVGIcon name="close" fill="#006c70"
+                            height="12px"
+                            width="12px" />
+                    </TititleIcon>
+
+                </Title>
+                <Notice>
+                    <NoticeInfo>Username: <strong>agency</strong>  or <strong>agent</strong></NoticeInfo>
+                    <NoticeInfo>Password: <strong>password</strong></NoticeInfo>
+                </Notice>
+                <AlertWarning>
+                    Enter an username or e-mail address.
+                </AlertWarning>
+                <MainTitle>
+                    Reset Password
+                </MainTitle>
+                <form onSubmit={handleSubmit(handleGetSubmitHandler)}>
+                    <Controller
+
+                        name="email"
+                        control={control}
+                        render={({ field: { onChange, value } }) =>
+                        (<FormControl required fullWidth>
+                            <label htmlFor="input">
+                                E-mail</label>
+                            <CNTextField
+                                className={forgetPasswordFormStyles.input}
+                                id="input"
+                                fullWidth
+                                type="email"
+                                placeholder="Enter your E-mail"
+                                error={!!formState.errors['usernameOrEmail']}
+                                value={value ? value : ''}
+                                inputChange={(e) => {
+                                    onChange(e);
+                                }}
+
+                            />
+                            <FormHelperText
+                                className={forgetPasswordFormStyles.helperText}>
+                                {formState.errors['email']?.message}
+                            </FormHelperText>
+                        </FormControl>
+                        )}
+                    />
+                    <CNButton fullWidth type="submit" buttonType="main">
+                        Get New Password
+                    </CNButton>
+                    <CNButton fullWidth type="reset" buttonType="main" onClick={() => reset({ defaultValues })}>
+                        Cancel
+                    </CNButton>
+                </form>
+                <LinkBackToLogin onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedHomeModal('login')
+                }}>Click to Login</LinkBackToLogin>
+            </RightContainer>
+        </Container>
     )
 }
 
