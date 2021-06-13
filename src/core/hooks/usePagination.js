@@ -13,16 +13,6 @@ export const usePagination = (enableFirstTimeRender = true, page_index, item_per
 
 
     useEffect(() => {
-        if (!enableFirstTimeCall.current) {
-
-            enableFirstTimeCall.current = false;
-            return;
-        }
-        handlePageIndexChange()
-
-    }, [pageIndex])
-
-    useEffect(() => {
         if (!enableFirstTimeCallPageIndex.current) {
 
             enableFirstTimeCallPageIndex.current = false;
@@ -32,13 +22,23 @@ export const usePagination = (enableFirstTimeRender = true, page_index, item_per
 
     }, [pageIndex])
 
-useEffect(() => {
-    if(!enableFirstTimeCallItemPerPage.current){
-        enableFirstTimeCallItemPerPage.current=false;
-        return;
-    }
-    handleItemPerPageChange()
-})
+    useEffect(() => {
+        if (!enableFirstTimeCallItemPerPage.current) {
+
+            enableFirstTimeCallItemPerPage.current = false;
+            return;
+        }
+        handlePageIndexChange()
+
+    }, [pageIndex])
+
+// useEffect(() => {
+//     if(!enableFirstTimeCallItemPerPage.current){
+//         enableFirstTimeCallItemPerPage.current=false;
+//         return;
+//     }
+//     handleItemPerPageChange()
+// })
 
 
     return {

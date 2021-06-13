@@ -23,8 +23,6 @@ const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238
 const loading=useSelector(roomSelectors.searchRoomLoadingStatus);
 const data=useSelector(roomSelectors.searchRoomSelectById(93));
 const dispatch=useDispatch();
-console.log(roomActions.increment);
-dispatch(roomActions.increment(300))
 
 // console.log(data);
 // console.log("loading",loading);
