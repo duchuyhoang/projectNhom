@@ -36,7 +36,7 @@ dispatch(roomActions.increment(300))
   return (
     <>
     <div style={{height:"100px"}}></div>
-    <UserProfilePage/>
+    <ForgetPasswordForm/>
     </>
 
   );
