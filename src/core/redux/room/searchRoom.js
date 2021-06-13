@@ -60,7 +60,6 @@ const searchRoom = createSlice({
         state.loading = 'pending';
       })
       .addCase(getRoomsSearched.fulfilled, (state, action) => {
-        console.log("ad");
         state.loading = 'fulfilled';
         state.totalPage = action.payload.totalPage;
         state.searchCondition = action.payload.searchCondition;

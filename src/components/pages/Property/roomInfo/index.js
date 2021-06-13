@@ -258,8 +258,6 @@ function RoomInfo(props) {
     setShowModal(!showModal);
   }, [showModal])
 
-
-console.log(currentRoom);
   return (
     <>
       {loading != "idle" && loading != "pending" ?

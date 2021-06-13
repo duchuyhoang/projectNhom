@@ -13,7 +13,6 @@ export const axiosApi = axios.create({
 
 
 axiosApi.interceptors.request.use((request) => {
-    // console.log("request", request);
 
     const accessToken = getCookie("cn11_access_token") || null;
     const accessHeader = "Bearer " + accessToken;

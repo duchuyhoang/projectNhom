@@ -372,7 +372,6 @@ export const SearchRoom = ({
   const searchRoomCondition=useSelector(roomSelectors.searchRoomCondition)
 
   useEffect(() => {
-console.log("hê");
     // get room 
     dispatch(roomActions.getRoomsSearched({items_per_page,page_index,...searchRoomCondition}));
   },[items_per_page,page_index]);

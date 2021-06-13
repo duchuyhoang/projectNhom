@@ -110,9 +110,11 @@ function listRoom(props) {
   const classes = useStyles();
   const listRoom = useSelector(roomSelectors.searchRoomSelectorAll) || [];
   const totalPages = useSelector(roomSelectors.searchRoomTotalPages);
-  console.log(useSelector(state=>state));
-  const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
-console.log(searchRoomLoading);
+
+  // loading here
+  // const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
+
+
   const {
     pageIndex,
     setPageIndex,
