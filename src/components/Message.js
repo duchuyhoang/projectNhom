@@ -16,14 +16,14 @@ import { createSelector } from "reselect";
 import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 import {Map} from "@Components/components/Map/Map";
 import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/ForgetPasswordForm'
-
+import { UserProfilePage } from './pages/Users/UserProfilePage';
 const Message = ({ message }) => {
 
 
   return (
     <>
-    <div style={{height: "200px"}}></div>
-    <ForgetPasswordForm/>
+    <div style={{height:"100px"}}></div>
+    <UserProfilePage/>
     </>
 
   );

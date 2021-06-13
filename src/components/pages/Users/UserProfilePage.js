@@ -8,6 +8,7 @@ import {UserProfile} from '@Components/components/UserProfile/UserProfile'
 import {SearchRoom} from '@Components/components/SearchRoom/SearchRoom'
 import { currentUserSelectors, currentUserActions } from '@Core/redux/user';
 import {ContactForm} from '@Components/components/ContactForm/ContactForm'
+import { ReviewForm } from '@Components/components/ReviewForm/ReviewForm';
 const useUserProfilePageStyles = makeStyles((theme) =>({
     container:{
 
@@ -44,6 +45,7 @@ const BreadCrumbTitle = styled.h3`
 const UserProfileWrapper = styled.div`
     margin-bottom:30px;
 `
+const TabWrapper = styled.div``
 const addtionalInfo = styled.div``
 // Right Content
 const RightContainer = styled.div`
@@ -52,6 +54,27 @@ const RightContainer = styled.div`
 `
 const SearchPropertiesWrapper = styled.div``
 const ContactFormWrapper = styled.div``
+const OverViewComponent = () => {
+    return(
+        <div>ABC</div>
+    )
+}
+const PropertiesComponent = () => {
+    return (
+        <div>ABC</div>
+    )
+}
+
+const ReviewComponent = () => {
+    return(
+        <ReviewForm/>
+    )
+}
+const tabList = [
+    {label: 'Overviews', component: <OverViewComponent/>},
+    {label: 'Properties', component: <PropertiesComponent/>},
+    {label: 'Reviews', component: <ReviewComponent/>}
+]
 export const UserProfilePage = () => {
     const userProfilePageStyles = useUserProfilePageStyles();
     const currentUserInfo = useSelector(currentUserSelectors.selectUserInfo)
@@ -82,6 +105,9 @@ export const UserProfilePage = () => {
                     website={currentUserInfo.website ? currentUserInfo.website : "unavailable"}
                     />)}
                     </UserProfileWrapper>
+                    <TabWrapper>
+                        <CNTab tabList= {tabList}/>
+                    </TabWrapper>
                 </LeftContainer>
                 <RightContainer>
                     <ContactFormWrapper>
