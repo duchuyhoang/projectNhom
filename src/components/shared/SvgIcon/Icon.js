@@ -33,6 +33,9 @@ import Star from '@Assets/svg/star.svg';
 import LinkedIn from '@Assets/svg/linkedin.svg';
 import Camera from '@Assets/svg/camera.svg';
 import CurrentLocation from '@Assets/svg/currentLocation.svg';
+import GridList from '@Assets/svg/gridList.svg';
+import GridMenu from '@Assets/svg/gridMenu.svg';
+
 const IconMap = {
   logo: Logo,
   envelope: Envelope,
@@ -68,6 +71,8 @@ const IconMap = {
   linkedin: LinkedIn,
   camera: Camera,
   currentLocation: CurrentLocation,
+  gridList: GridList,
+  gridMenu: GridMenu,
 };
 
 export const SVGIcon = ({ name, width = 16, height = 16, ...rest }) => {
