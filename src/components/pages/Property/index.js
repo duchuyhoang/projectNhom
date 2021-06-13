@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-const HomeListPage = loadable(() => import('./list/index'), {
+const HomeListPage = loadable(() => import('./listRoom/index'), {
   fallback: <CNLoading />,
 });
 const RoomInfo = loadable(() => import('./roomInfo/index'), {
