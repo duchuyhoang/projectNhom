@@ -22,6 +22,8 @@ const searchRoomSelectors = searchRoomAdapter.getSelectors(selectSearchRoom)
 const searchRoomSelectorAll = createSelector(searchRoomSelectors.selectAll, (state) => state)
 const searchRoomLoadingStatus = createSelector(selectSearchRoom, (state) => state.loading);
 const searchRoomError = createSelector(selectSearchRoom, (state) => state.error);
+const searchRoomCondition=createSelector(selectSearchRoom,(state) => state.searchCondition);
+const searchRoomTotalPages=createSelector(selectSearchRoom,(state)=>state.totalPage)
 const searchRoomSelectById = (id) => {
     return createSelector((state) => {
         return searchRoomSelectors.selectById(state, id)
@@ -50,7 +52,9 @@ export const roomSelectors = {
     searchRoomSelectById,
     searchRoomLoadingStatus,
     searchRoomError,
-
+    searchRoomCondition,
+    searchRoomTotalPages,
+    
     // currentRoom
     selectCurrentRoom,
     currentRoomLoading,

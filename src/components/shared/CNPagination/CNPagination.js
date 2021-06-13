@@ -59,19 +59,20 @@ const usePaginationItemStyles = makeStyles((theme) => {
         }
     }
 })
-export const CNPagination = ({ page, paginationState, setPaginationState, total, siblingCount, ...rest }) => {
+export const CNPagination = ({ page,setPaginationIndex, total, ...rest }) => {
     const paginationStyles = usePaginationStyles();
     const paginationItemStyles = usePaginationItemStyles();
 
 
     const paginationHandler = (e, page) => {
-        setPaginationState({ ...paginationState, currentValue: page })
+        setPaginationIndex(page);
     }
     return (
         <>
             <Pagination
                 classes={paginationStyles}
                 page={page}
+                count={total}
                 siblingCount={1}
                 hideNextButton={page === total}
                 hidePrevButton={page === 1}
