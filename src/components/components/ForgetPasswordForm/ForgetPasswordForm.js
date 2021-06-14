@@ -119,7 +119,7 @@ const LinkBackToLogin = styled.a`
 `
 export const ForgetPasswordForm = ({ showModal, setShowModal, setSelectedHomeModal }) => {
     const forgetPasswordFormStyles = useForgetPasswordFormStyles();
-    const {isMobile} = useIsMobile();
+    const { isMobile } = useIsMobile();
     const keyPress = useCallback(
         (e) => {
             if (e.key === 'escape' && showModal)
@@ -160,49 +160,49 @@ export const ForgetPasswordForm = ({ showModal, setShowModal, setSelectedHomeMod
                             width="12px" />
                     </TititleIcon>
                 </Title>
-               <ContentRight isMobile={isMobile}>
-                <AlertWarning>
-                    Enter an username or e-mail address.
-                </AlertWarning>
-                <MainTitle>
-                    Reset Password
-                </MainTitle>
-                <form onSubmit={handleSubmit(handleGetSubmitHandler)}>
-                    <Controller
+                <ContentRight isMobile={isMobile}>
+                    <AlertWarning>
+                        Enter an username or e-mail address.
+                    </AlertWarning>
+                    <MainTitle>
+                        Reset Password
+                    </MainTitle>
+                    <form onSubmit={handleSubmit(handleGetSubmitHandler)}>
+                        <Controller
 
-                        name="email"
-                        control={control}
-                        render={({ field: { onChange, value } }) =>
-                        (<FormControl required fullWidth>
-                            <label htmlFor="input">
-                                E-mail</label>
-                            <CNTextField
-                                className={forgetPasswordFormStyles.input}
-                                id="input"
-                                fullWidth
-                                type="email"
-                                placeholder="Enter your E-mail"
-                                error={!!formState.errors['usernameOrEmail']}
-                                value={value ? value : ''}
-                                inputChange={(e) => {
-                                    onChange(e);
-                                }}
+                            name="email"
+                            control={control}
+                            render={({ field: { onChange, value } }) =>
+                            (<FormControl required fullWidth>
+                                <label htmlFor="input">
+                                    E-mail</label>
+                                <CNTextField
+                                    className={forgetPasswordFormStyles.input}
+                                    id="input"
+                                    fullWidth
+                                    type="email"
+                                    placeholder="Enter your E-mail"
+                                    error={!!formState.errors['usernameOrEmail']}
+                                    value={value ? value : ''}
+                                    inputChange={(e) => {
+                                        onChange(e);
+                                    }}
 
-                            />
-                            <FormHelperText
-                                className={forgetPasswordFormStyles.helperText}>
-                                {formState.errors['email']?.message}
-                            </FormHelperText>
-                        </FormControl>
-                        )}
-                    />
-                    <CNButton fullWidth type="submit" buttonType="main">
-                        Get New Password
-                    </CNButton>
-                    <CNButton fullWidth type="reset" buttonType="main" onClick={() => reset({ defaultValues })}>
-                        Cancel
-                    </CNButton>
-                </form>
+                                />
+                                <FormHelperText
+                                    className={forgetPasswordFormStyles.helperText}>
+                                    {formState.errors['email']?.message}
+                                </FormHelperText>
+                            </FormControl>
+                            )}
+                        />
+                        <CNButton fullWidth type="submit" buttonType="main">
+                            Get New Password
+                        </CNButton>
+                        <CNButton fullWidth type="reset" buttonType="main" onClick={() => reset({ defaultValues })}>
+                            Cancel
+                        </CNButton>
+                    </form>
                 </ContentRight>
                 <LinkBackToLogin onClick={(e) => {
                     e.preventDefault();
