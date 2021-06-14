@@ -19,18 +19,7 @@ import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/Forg
 
 const Message = ({ message }) => {
 
-const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
-const loading=useSelector(roomSelectors.searchRoomLoadingStatus);
-const data=useSelector(roomSelectors.searchRoomSelectById(93));
-const dispatch=useDispatch();
 
-// console.log(data);
-// console.log("loading",loading);
-// const dispatch = useDispatch(roomSelectors.searchRoomSelectorAll);
-// const x = useSelector(roomSelectors.searchRoomSelectorAll);
-// useEffect(()=>{
-//   dispatch(roomActions.getRoomsSearched());
-// },[])
   return (
     <>
     <div style={{height: "200px"}}></div>
