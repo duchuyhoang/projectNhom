@@ -53,7 +53,7 @@ const Container = styled.div`
     padding:30px;
     background-color: ${props => props.theme.palette.background.secondary};
     border-radius: 6px;
-    border: 1px solid ${props => props.theme.palette.border}
+    border: 1px solid ${props => props.theme.palette.border};
 `
 const Title = styled.div`
     font-size: 18px;
@@ -71,7 +71,7 @@ const SliderItem = styled.div`
 `
 const SliderTitle = styled.h3`
 
-`
+`;
 const AdvancedOptions = styled.div`
     display: flex;
     cursor: pointer;
@@ -133,7 +133,6 @@ export const SearchProperties = () => {
     }, [listUltility])
 
     const changeProvinceHandler = (e) => {
-        console.log(e)
         if (e === null) {
             setSelectedProvince(null)
             setSelectedDistrict(null)

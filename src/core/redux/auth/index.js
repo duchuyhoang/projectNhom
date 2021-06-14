@@ -174,7 +174,6 @@ const authSlice = createSlice({
             state.loading = "pending";
         })
             .addCase(signUp.fulfilled, (state, action) => {
-                console.log(action);
                 state.loading = "fulfilled";
                 state.id = parseJwt(action.payload.accessToken)?.id || null;
                 state.permission = parseJwt(action.payload.accessToken)?.permission;

@@ -7,7 +7,7 @@ import styled, { css } from 'styled-components';
 import './NavBar.css';
 import { SmallScreenNavBar } from './SmallScreenNavBar';
 import { UserInfo } from './UserInfo';
-
+import { Link } from 'react-router-dom';
 const NavBarContainer = styled.section`
   display: flex;
   width: 100%;
@@ -127,7 +127,7 @@ const Item = styled.li`
   }
 `;
 
-const Link = styled.a`
+const Linka = styled.a`
   ${BaseItem}
   &:not(:last-child) {
     border-bottom: 1px solid ${(props) => props.theme.border.main};
@@ -217,7 +217,7 @@ const RecursiveNav = ({ data, index }) => {
             return (
               <div key={index}>
                 {item.type === 'link' ? (
-                  <Link>{item.title}</Link>
+                  <Linka>{item.title}</Linka>
                 ) : (
                   <Item>
                     {item.title}
@@ -238,7 +238,7 @@ const RecursiveNav = ({ data, index }) => {
           return (
             <div key={index}>
               {item.type === 'link' ? (
-                <Link>{item.title}</Link>
+                <Linka>{item.title}</Linka>
               ) : (
                 <Item>
                   {item.title}
@@ -364,35 +364,39 @@ export const NavBar = (props) => {
       ) : (
         <>
           <NavBarContainer isSmall={mediaScreenTrue}>
-            <Logo currentTab={currentTab}>
-              <SVGIcon name="logo" width="200" height="60" />
-            </Logo>
+            <Link to={'/home'}>
+              <Logo currentTab={currentTab}>
+                <SVGIcon name="logo" width="200" height="60" />
+              </Logo>
+            </Link>
 
             <ListContainer>
               {rootItemData.map((item, index) => {
                 return (
-                  <RootItem
-                    currentTab={currentTab}
-                    active={currentTab === item.id}
-                    onClick={handleOver(item.id)}
-                    onMouseOver={handleOver(0)}
-                    key={index}
-                  >
-                    {item.content}
-                    {mockData[item.id].length > 0 && (
-                      <ArrowDown
-                        name="arrowDown"
-                        width="10"
-                        height="10"
-                        style={{ marginTop: 3, marginLeft: 5 }}
-                      />
-                    )}
-                    {mockData[item.id].length > 0 && (
-                      <DropDown className={selectedTab == 0 ? 'active' : ''}>
-                        <RecursiveNav data={mockData[item.id]} index={0} />
-                      </DropDown>
-                    )}
-                  </RootItem>
+                  <Link className={'listLink'} to={`/${item.id}`}>
+                    <RootItem
+                      currentTab={currentTab}
+                      active={currentTab === item.id}
+                      onClick={handleOver(item.id)}
+                      onMouseOver={handleOver(0)}
+                      key={index}
+                    >
+                      {item.content}
+                      {mockData[item.id].length > 0 && (
+                        <ArrowDown
+                          name="arrowDown"
+                          width="10"
+                          height="10"
+                          style={{ marginTop: 3, marginLeft: 5 }}
+                        />
+                      )}
+                      {mockData[item.id].length > 0 && (
+                        <DropDown className={selectedTab == 0 ? 'active' : ''}>
+                          <RecursiveNav data={mockData[item.id]} index={0} />
+                        </DropDown>
+                      )}
+                    </RootItem>
+                  </Link>
                 );
               })}
 

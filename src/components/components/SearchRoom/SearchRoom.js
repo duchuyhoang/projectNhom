@@ -18,7 +18,8 @@ import { CNSlider } from '@Components/shared/CNSlider/CNSlider';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import auth from '@Core/redux/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { roomActions, roomSelectors } from '@Core/redux/room';
 
 const useSearchRoomStyles = makeStyles((theme) => ({
   mainForm: (props) => ({
@@ -255,7 +256,12 @@ const SliderTitle = styled.h3`
 var maxArea,
   maxPrice,
   first = true;
-export const SearchRoom = ({ type }) => {
+export const SearchRoom = ({
+  type,
+  items_per_page,
+  page_index,
+  setPageIndex,
+}) => {
   const {
     listProvince,
     listDistrict,
@@ -279,6 +285,8 @@ export const SearchRoom = ({ type }) => {
     first = false;
   }
 
+  const dispatch = useDispatch();
+
   const { listUltility } = useListUltilities();
   const modifiedListUltility = listUltility.map((utility) => {
     return {
@@ -289,13 +297,14 @@ export const SearchRoom = ({ type }) => {
     };
   });
   const [uitilitiesList, setUitilitiesList] = useState(null);
-
   const [isAdvancedOptionsOpen, setIsAdvancedOptionsOpen] = useState(false);
   const [areaSliderValue, setAreaSliderValue] = useState([0, 100]);
   const [priceSliderValue, setPriceSliderValue] = useState([0, 100]);
+
   useEffect(() => {
     setUitilitiesList(modifiedListUltility);
   }, [listUltility]);
+
   const areaChangeHandler = (event, newValue) => {
     setAreaSliderValue(newValue);
     setAreaRange([
@@ -303,6 +312,7 @@ export const SearchRoom = ({ type }) => {
       Math.floor((newValue[1] / 100) * maxArea),
     ]);
   };
+
   const priceChangeHandler = (event, newValue) => {
     setPriceSliderValue(newValue);
     setPriceRange([
@@ -320,13 +330,13 @@ export const SearchRoom = ({ type }) => {
     district: null,
     ward: null,
   };
-  const schema = yup.object().shape({
-    name: yup.string().required('Vui lòng nhập từ khóa'),
-  });
+  // const schema = yup.object().shape({
+  //   name: yup.string().required('Vui lòng nhập từ khóa'),
+  // });
   const { control, handleSubmit, formState } = useForm({
     mode: 'onSubmit',
     defaultValues,
-    resolver: yupResolver(schema),
+    // resolver: yupResolver(schema),
   });
 
   const handleSearchSubmit = (values) => {
@@ -352,8 +362,24 @@ export const SearchRoom = ({ type }) => {
         delete resObject[key];
       }
     }
-    console.log(resObject);
+
+    setPageIndex(1);
+    dispatch(roomActions.getRoomsSearched({ items_per_page, ...resObject }));
   };
+
+  const searchRoomCondition = useSelector(roomSelectors.searchRoomCondition);
+
+  useEffect(() => {
+    // get room
+    dispatch(
+      roomActions.getRoomsSearched({
+        items_per_page,
+        page_index,
+        ...searchRoomCondition,
+      })
+    );
+  }, [items_per_page, page_index]);
+
   return (
     <Container>
       <Title type={type}>Find Your Dream Home</Title>

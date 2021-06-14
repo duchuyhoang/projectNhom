@@ -1,20 +1,18 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
 import { CNButton } from '@Components/shared/CNButton/CNButton';
-import useIsMobile from '@Core/hooks/useIsMobile';
-import { FormControl, FormHelperText, makeStyles } from '@material-ui/core';
-import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
-import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
-import { uuid } from '@Ultis/uuid';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
+import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
+import useIsMobile from '@Core/hooks/useIsMobile';
+import { authActions, authSelectors } from '@Core/redux/auth';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FormControl, FormHelperText, makeStyles } from '@material-ui/core';
+import { uuid } from '@Ultis/uuid';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { authSelectors, authActions } from '@Core/redux/auth';
-import {FacebookLoginComponent} from "./FacebookLogin";
-
-
+import styled, { css, keyframes } from 'styled-components';
+import * as yup from 'yup';
+import { FacebookLoginComponent } from './FacebookLogin';
 
 const useLogInFormStyle = makeStyles((theme) => ({
   root: {
@@ -249,18 +247,20 @@ const UnderButton = styled.div`
   }
 `;
 
-
 export const LoginForm = ({
   showModal,
   setShowModal,
   setSelectedHomeModal,
+  setShowSnackBar,
 }) => {
   const { isMobile } = useIsMobile();
   const logInFormStyle = useLogInFormStyle();
   const dispatch = useDispatch();
   const isLogin = useSelector(authSelectors.selectIsLogin);
-  const loginAuthLoadingStatus = useSelector(authSelectors.selectAuthLoadingStatus);
-  const errorLogin = useSelector(authSelectors.selectAuthErrorStatus)
+  const loginAuthLoadingStatus = useSelector(
+    authSelectors.selectAuthLoadingStatus
+  );
+  const errorLogin = useSelector(authSelectors.selectAuthErrorStatus);
 
   const keyPress = useCallback(
     (e) => {
@@ -272,24 +272,23 @@ export const LoginForm = ({
   );
 
   useEffect(() => {
-    // Set another error for login 
-    if (loginAuthLoadingStatus !== "idle" && errorLogin) {
-      setError("wrongInfo", {
-        type: "manual",
+    // Set another error for login
+    if (loginAuthLoadingStatus !== 'idle' && errorLogin) {
+      setError('wrongInfo', {
+        type: 'manual',
         message: errorLogin,
-      })
+      });
     }
-
-
-  }, [loginAuthLoadingStatus, errorLogin])
+  }, [loginAuthLoadingStatus, errorLogin]);
 
   // For login successful
   useEffect(() => {
     if (isLogin) {
+      setShowSnackBar();
       setShowModal((prev) => !prev);
       reset();
     }
-  }, [isLogin])
+  }, [isLogin]);
 
   // For click outside
   useEffect(() => {
@@ -327,22 +326,23 @@ export const LoginForm = ({
     keepLogin: false,
   };
 
-
   const { control, formState, handleSubmit, reset, setError } = useForm({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValue,
     resolver: yupResolver(schema),
   });
 
   const handleLoginSubmit = (values) => {
     const { email, password } = values;
-    dispatch(authActions.userLogin({
-      email,
-      password
-    }))
+    dispatch(
+      authActions.userLogin({
+        email,
+        password,
+      })
+    );
     reset({
-      ...defaultValue
-    })
+      ...defaultValue,
+    });
   };
 
   return (
@@ -394,12 +394,12 @@ export const LoginForm = ({
                 <FormControl fullWidth>
                   <CNTextField
                     type="text"
-                    value={value ? value : ""}
+                    value={value ? value : ''}
                     placeholder="Enter your email"
                     isAutoComplete={true}
                     className={logInFormStyle.textFieldStyle}
                     inputChange={(e) => {
-                      onChange(e)
+                      onChange(e);
                     }}
                     fullWidth
                     error={!!formState.errors['email']}
@@ -428,7 +428,7 @@ export const LoginForm = ({
               render={({ field: { onChange, value } }) => (
                 <FormControl fullWidth>
                   <CNTextField
-                    value={value ? value : ""}
+                    value={value ? value : ''}
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter password"
                     isAutoComplete={false}
@@ -485,10 +485,15 @@ export const LoginForm = ({
                   )}
                 />
               </CheckboxForm>
-              <a href="#" onClick={(e) => {
-                e.preventDefault();
-                setSelectedHomeModal('forgetPassword')
-              }}>Lost Your Password?</a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedHomeModal('forgetPassword');
+                }}
+              >
+                Lost Your Password?
+              </a>
             </UnderTextField>
 
             <CNButton

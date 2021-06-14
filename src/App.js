@@ -38,7 +38,7 @@ export const App = ({ title }) => {
 
             <Route path="/home" component={Home} />
 
-            <Route path="/property" component={Property} />
+            <Route path="/properties" component={Property} />
 
             <Route path="/users">
               <PrivateRoute accessRule="MEMBER">

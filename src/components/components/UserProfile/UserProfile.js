@@ -67,8 +67,8 @@ const UserInfo = styled.div`
     padding-left: ${props => props.isMobile ? '0' : '30px'};
 `
 const TitleWrapper = styled.div`
-    display: flex;
-   
+        display: flex;
+        align-items: center;
 `
 const TitleName = styled.h1`
     font-size:18px;
@@ -76,6 +76,7 @@ const TitleName = styled.h1`
     margin-right: 4px;
 `
 const TitleFeature = styled.span`
+    display: inline-block;
 `
 const JobPropperty = styled.div`
     color: ${props => props.theme.palette.primary.main};
