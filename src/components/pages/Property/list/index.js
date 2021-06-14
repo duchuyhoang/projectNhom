@@ -3,7 +3,6 @@ import {usePropertyContext,withPropertyContext} from "./PropertyContext";
 
  const PropertyMainPage=(props)=>{
 const value=usePropertyContext();
-console.log("value",value);
 return (
 <div>
     List main page

@@ -326,7 +326,7 @@ function RoomInfo(props) {
                     <ContentTop>
                       <TopLeft>
                         <RoomName>
-                          <h1>{'Eaton Garth Penthouse'}</h1>
+                          <h1>{currentRoom.name}</h1>
                         </RoomName>
                         <RoomAddress>
                           <a href="#">{address}</a>
