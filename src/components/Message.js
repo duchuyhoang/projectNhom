@@ -22,7 +22,6 @@ const Message = ({ message }) => {
 
   return (
     <>
-    <div style={{height:"100px"}}></div>
     <UserProfilePage/>
     </>
 

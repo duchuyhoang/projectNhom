@@ -31,13 +31,15 @@ const Container = styled.div`
     font-family: ${(props) => props.theme.typography.fontFamily};
     padding: 30px;
     margin-bottom: 30px;
+    border-radius:6px;
+    border: 1px solid ${(props) => props.theme.border.main};
 `
 const Title = styled.h3`
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 30px;
 `
-export const ContactForm = () => {
+export const ContactForm = ({ name }) => {
     const contactFormStyles = useContactFormStyles();
     const defaultValues = {
         name: '',
@@ -61,15 +63,15 @@ export const ContactForm = () => {
     }
     return (
         <Container>
-            <Title>Contact Tom Wilson</Title>
+            <Title>Contact {name}</Title>
             <form className=
                 {contactFormStyles.form} onSubmit={handleSubmit(sendMessageHandler)}>
-                <Controller 
+                <Controller
                     name='name'
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                        <FormControl 
-                        className={contactFormStyles.formControl} >
+                        <FormControl
+                            className={contactFormStyles.formControl} >
                             <CNTextField
                                 className={contactFormStyles.textField}
                                 fullWidth
@@ -92,7 +94,7 @@ export const ContactForm = () => {
                     name='email'
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                        <FormControl  className={contactFormStyles.formControl}>
+                        <FormControl className={contactFormStyles.formControl}>
                             <CNTextField
                                 fullWidth
                                 placeholder="Email"
@@ -114,7 +116,7 @@ export const ContactForm = () => {
                     name='phone'
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                        <FormControl  className={contactFormStyles.formControl}>
+                        <FormControl className={contactFormStyles.formControl}>
                             <CNTextField
                                 fullWidth
                                 placeholder="Phone"
@@ -136,7 +138,7 @@ export const ContactForm = () => {
                     name='message'
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                        <FormControl  className={contactFormStyles.formControl}>
+                        <FormControl className={contactFormStyles.formControl}>
                             <CNTextField
                                 fullWidth
                                 multiline

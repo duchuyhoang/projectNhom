@@ -8,19 +8,45 @@ import { CNTextField} from '@Components/shared/CNTextField/CNTextField';
 import CNStar from '@Components/shared/CNStar/CNStar'
 import {CNButton} from '@Components/shared/CNButton/CNButton';
 
+const useReviewFormStyles = makeStyles((theme)=>({
+    form:{
+        width: '100%'
+    },
+    controller:{
+        width: '48%',
+        marginBottom: 30,
+        position: "relative"
+    },
+    commentTextField:{
+        width: "100%",
+        marginBottom: 30
+    },
+    helperText:{
+        position:"absolute",
+        color: theme.palette.primary.main,
+        bottom: -20
+    }
+}))
+
 const Container = styled.div`
     font-family:${(props) => props.theme.typography.fontFamily};
+    padding-bottom: 20px;
 
 `
 const Title = styled.h3`
+    margin-bottom: 10px;
 `
-const RattingWrapper = styled.div``
+const RattingWrapper = styled.div`
+    margin-bottom: 20px;
+`
 const Row = styled.div`
 display: flex;
 justify-content: space-between;
+width:100%;
 `
 export const ReviewForm = () => {
-    const [starRating, setStarRating] = useState(0);
+    const reviewFormStyles = useReviewFormStyles();
+    const [starRating, setStarRating] = useState(5);
     const starRatingHandler = (e) => {
         setStarRating(e.target.value);
     }
@@ -48,14 +74,16 @@ export const ReviewForm = () => {
             <RattingWrapper>
                 <CNStar value={starRating} size='large' onChange={starRatingHandler}/>
             </RattingWrapper>
-            <form onSubmit={handleSubmit(addReviewHandler)}>
-
+            <form className={reviewFormStyles.form} onSubmit={handleSubmit(addReviewHandler)}>
+            <Row>
                 <Controller
+   
                 name = "name"
                 control={control}
                 render = {({ field: { onChange, value}}) => (
-                    <FormControl>
+                    <FormControl   className={reviewFormStyles.controller}>
                         <CNTextField
+                        fullWidth
                         name = "name"
                         type="text"
                         placeholder="Your name"
@@ -64,18 +92,20 @@ export const ReviewForm = () => {
                         value={value ? value : ''}
 
                         />
-                         <FormHelperText >
+                         <FormHelperText className={reviewFormStyles.helperText} >
                       {formState.errors['name']?.message}
                     </FormHelperText>
                     </FormControl>
                 )}
                 />
                 <Controller
+                    
                 name = "email"
                 control={control}
                 render = {({ field: { onChange, value}}) => (
-                    <FormControl>
+                    <FormControl className={reviewFormStyles.controller}>
                         <CNTextField
+                        fullWidth
                         name = "email"
                         type="email"
                         placeholder="Your email"
@@ -84,18 +114,21 @@ export const ReviewForm = () => {
                         value={value ? value : ''}
 
                         />
-                         <FormHelperText >
+                         <FormHelperText className={reviewFormStyles.helperText}>
                       {formState.errors['email']?.message}
                     </FormHelperText>
                     </FormControl>
                 )}
                 />
+                </Row>
+                <Row>
                 <Controller
                 name = "comment"
                 control={control}
                 render = {({ field: { onChange, value}}) => (
-                    <FormControl>
+                    <FormControl className={reviewFormStyles.commentTextField}>
                         <CNTextField
+                        fullWidth
                         name = "comment"
                         type="text"
                         placeholder="Your comment (optional)"
@@ -110,6 +143,7 @@ export const ReviewForm = () => {
                     </FormControl>
                 )}
                 />
+                </Row>
                 <CNButton type="submit" buttonType="main" >Submit Review</CNButton>
             </form>
         </Container>

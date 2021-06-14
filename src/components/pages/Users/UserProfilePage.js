@@ -1,26 +1,24 @@
-import React, {useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react'
 import { useAuth } from '@Core/hooks/useAuth';
+import { useLocationNameByCoordinate } from '@Core/hooks/useLocationNameByCoordinate';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core';
-import {CNTab} from '@Components/shared/CNTab/CNTab'
-import {UserProfile} from '@Components/components/UserProfile/UserProfile'
-import {SearchRoom} from '@Components/components/SearchRoom/SearchRoom'
-import { currentUserSelectors, currentUserActions } from '@Core/redux/user';
-import {ContactForm} from '@Components/components/ContactForm/ContactForm'
+import { CNTab } from '@Components/shared/CNTab/CNTab'
+import { UserProfile } from '@Components/components/UserProfile/UserProfile'
+import { SearchRoom } from '@Components/components/SearchRoom/SearchRoom'
+import { ContactForm } from '@Components/components/ContactForm/ContactForm'
 import { ReviewForm } from '@Components/components/ReviewForm/ReviewForm';
-const useUserProfilePageStyles = makeStyles((theme) =>({
-    container:{
+import { Map } from '@Components/components/Map/Map';
 
-    }
-}))
 // styled components
 const Wrapper = styled.div`
 background-color:#F7F7F7;
 font-family: ${(props) => props.theme.typography.fontFamily};
+
 `
 const Container = styled.div`
-    max-width:1200px;
+    padding-top: 100px;
+   max-width:1200px;
     margin: 0 auto;
     display: flex;
     box-sizing: border-box;
@@ -38,6 +36,7 @@ const BreadCrumbContainer = styled.div`
     margin-bottom: 45px;
 `
 const BreadCrumbRouter = styled.div`
+margin-bottom:20px;
 `
 const BreadCrumbTitle = styled.h3`
 
@@ -54,71 +53,114 @@ const RightContainer = styled.div`
 `
 const SearchPropertiesWrapper = styled.div``
 const ContactFormWrapper = styled.div``
-const OverViewComponent = () => {
-    return(
-        <div>ABC</div>
-    )
+// For Oberview
+
+const Introduction = styled.div`
+    margin-bottom: 30px;
+    & > p{
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+`
+const LocationWrapper = styled.div``
+const LocationHeader = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 30px;
+`
+const LocationTitle = styled.h3`
+    font-size: 20px;
+    font-weight: bold;
+`
+const LocationName = styled.h3`
+    font-size: 14px;
+    color: ${props => props.theme.palette.primary.main};
+    font-weight: 400;
+`
+const Mapwrapper = styled.div`
+    & > div{
+        width:100%;
+    }
+`
+const defaultTarget = {
+    latitude: 20.981056,
+    longtitude: 105.787139
 }
-const PropertiesComponent = () => {
+const OverViewComponent = () => {
+    const locationName = useLocationNameByCoordinate({ ...defaultTarget })
+
     return (
-        <div>ABC</div>
+        <>
+            <Introduction>
+                <p>Evans Tower very high demand corner junior one bedroom plus a large balcony boasting full open NYC views. You need to see the views to believe them. Mint condition with new hardwood floors. Lots of closets plus washer and dryer.</p>
+                <p>Fully furnished. Elegantly appointed condominium unit situated on premier location. PS6. The wide entry hall leads to a large living room with dining area. This expansive 2 bedroom and 2 renovated marble bathroom apartment has great windows. Despite the interior views, the apartments Southern and Eastern exposures allow for lovely natural light to fill every room. The master suite is surrounded by handcrafted milkwork and features incredible walk-in closet and storage space.</p>
+                <p>The second bedroom is a corner room with double windows. The kitchen has fabulous space, new appliances, and a laundry area. Other features include rich herringbone floors, crown moldings and coffered ceilings throughout the apartment. 1049 5th Avenue is a classic pre-war building located across from Central Park, the reservoir and The Metropolitan Museum. Elegant lobby and 24 hours doorman. This is a pet-friendly building.</p>
+            </Introduction>
+            <LocationWrapper>
+                <LocationHeader>
+                    <LocationTitle>Location</LocationTitle>
+                    <LocationName>
+                        {locationName}
+                    </LocationName>
+                </LocationHeader>
+                <Mapwrapper>
+                    <Map  defaultTarget={defaultTarget} currentTarget={defaultTarget} />
+                </Mapwrapper>
+
+            </LocationWrapper>
+        </>
     )
 }
 
 const ReviewComponent = () => {
-    return(
-        <ReviewForm/>
+    return (
+        <ReviewForm />
     )
 }
 const tabList = [
-    {label: 'Overviews', component: <OverViewComponent/>},
-    {label: 'Properties', component: <PropertiesComponent/>},
-    {label: 'Reviews', component: <ReviewComponent/>}
+    { label: 'Overviews', component: <OverViewComponent /> },
+
+    { label: 'Reviews', component: <ReviewComponent /> }
 ]
 export const UserProfilePage = () => {
-    const userProfilePageStyles = useUserProfilePageStyles();
-    const currentUserInfo = useSelector(currentUserSelectors.selectUserInfo)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(currentUserActions.getCurrentUser({id: 1}))
-    },[])
-    console.log(currentUserInfo)
+    const { name, phone, avatar, } = useAuth();
     return (
-                <Wrapper>
+        <Wrapper>
             <Container >
                 <LeftContainer>
                     <BreadCrumbContainer>
                         <BreadCrumbRouter>
-                        Home > Agents > {currentUserInfo?.name}
+                            Home {'>'} Agents {'>'} {name}
                         </BreadCrumbRouter>
-                        <BreadCrumbTitle>{currentUserInfo?.name}</BreadCrumbTitle>
+                    <BreadCrumbTitle>{name}</BreadCrumbTitle>
                     </BreadCrumbContainer>
-                    <UserProfileWrapper>
-                    {currentUserInfo && (<UserProfile
-                    avatar={currentUserInfo.avatar}
-        
-                    name={currentUserInfo.name}
-                    job={currentUserInfo.job ? currentUserInfo.job : "Unknown" }
-                    phone={currentUserInfo.phone}
-                    fax={currentUserInfo.fax ? currentUserInfo.fax : "unavailable"}
-                    email={currentUserInfo.fax ? currentUserInfo.email : "unavailable"}
-                    website={currentUserInfo.website ? currentUserInfo.website : "unavailable"}
+                <UserProfileWrapper>
+                    {name && (<UserProfile
+                        avatar={avatar}
+                        name={name}
+                        job={"Unknown"}
+                        phone={phone}
+                        fax={"unavailable"}
+                        email={"unavailable"}
+                        website={"unavailable"}
+                        quantityProperty = {2}
                     />)}
-                    </UserProfileWrapper>
-                    <TabWrapper>
-                        <CNTab tabList= {tabList}/>
-                    </TabWrapper>
+                </UserProfileWrapper>
+                <TabWrapper>
+                    <CNTab tabList={tabList} />
+                </TabWrapper>
                 </LeftContainer>
-                <RightContainer>
-                    <ContactFormWrapper>
-                        <ContactForm/>
-                    </ContactFormWrapper>
-                    <SearchPropertiesWrapper>
-                        <SearchRoom type="properties" />
-                    </SearchPropertiesWrapper>
-                </RightContainer>
+            <RightContainer>
+                <ContactFormWrapper>
+                    <ContactForm name={name} />
+                </ContactFormWrapper>
+                <SearchPropertiesWrapper>
+                    <SearchRoom type="properties" />
+                </SearchPropertiesWrapper>
+            </RightContainer>
             </Container>
-            </Wrapper>
+        </Wrapper >
     )
 }
 
