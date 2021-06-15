@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { axiosApi } from '@Core/api/axiosApi';
 import { FormControl, FormHelperText, makeStyles } from '@material-ui/core';
@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 const useForgetPasswordFormStyles = makeStyles((theme) => ({
   input: {
-    marginBottom: 20,
+    marginBottom: 40,
     position: 'relative',
   },
   helperText: {
@@ -114,6 +114,9 @@ const LinkBackToLogin = styled.a`
     color: ${(props) => props.theme.palette.primary.main};
   }
 `;
+const ErrorNotification = styled.p`
+
+`
 export const ForgetPasswordForm = ({
   showModal,
   setShowModal,
@@ -145,6 +148,7 @@ export const ForgetPasswordForm = ({
     defaultValues,
     resolver: yupResolver(schema),
   });
+  const [isErrorSent,setIsErrorSent] = useState(false);
   const handleGetSubmitHandler = (values) => {
     console.log(values);
     const { email } = values;
@@ -155,8 +159,8 @@ export const ForgetPasswordForm = ({
       })
       .catch((err) => {
         console.log('Lỗi');
-      });
-
+        setIsErrorSent(true);
+      })
     reset(defaultValues);
   };
   return (
@@ -201,6 +205,9 @@ export const ForgetPasswordForm = ({
                 </FormControl>
               )}
             />
+           {isErrorSent && <ErrorNotification>
+                    Email is not existed in server
+            </ErrorNotification>}
             <CNButton fullWidth type="submit" buttonType="main">
               Get New Password
             </CNButton>
