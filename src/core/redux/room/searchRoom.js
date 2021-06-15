@@ -29,7 +29,7 @@ export const getRoomsSearched = createAsyncThunk(
       }).toString();
 
       const { data } = await axiosApi.get(`/room/search?${urlSearchQuery}`);
-      console.log('data', data);
+     
       return {
         data: data.data,
         totalPage: data.totalPage,
@@ -40,13 +40,15 @@ export const getRoomsSearched = createAsyncThunk(
         searchCondition:
           Object.keys(searchCondition).length === 0 ? null : searchCondition,
       };
-    } catch (error) {}
+    } catch (error) {
+      return rejectWithValue({err})
+    }
   }
 );
 
 const searchRoom = createSlice({
   name: 'searchRoom',
-  initialState: homeRoomAdapter.getInitialState({
+  initialState: searchRoomAdapter.getInitialState({
     loading: 'idle',
     error: null,
     searchCondition: null,

@@ -91,7 +91,9 @@ function CurrentLocation({ setTargetLocation }) {
 
     return (
         <div className="currentLocationIcon">
-            <SVGIcon name="currentLocation" onClick={() => { map.locate() }} />
+            <SVGIcon name="currentLocation" onClick={(e) => { 
+                e.stopPropagation()
+                map.locate() }} />
         </div>
     )
 }
