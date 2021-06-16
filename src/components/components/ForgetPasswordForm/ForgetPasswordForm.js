@@ -12,14 +12,17 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 const useForgetPasswordFormStyles = makeStyles((theme) => ({
   input: {
-    marginBottom: 40,
+    marginBottom: 42,
     position: 'relative',
   },
   helperText: {
     color: theme.palette.primary.main,
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
   },
+  mainForm: {
+    position: 'relative',
+  }
 }));
 
 // Animation
@@ -114,7 +117,17 @@ const LinkBackToLogin = styled.a`
     color: ${(props) => props.theme.palette.primary.main};
   }
 `;
-const ErrorNotification = styled.p`
+const ErrorNotification = styled.div`
+  position: absolute;
+  text-align: center;
+  bottom: 134px;
+  width: 100%;
+  color: ${(props) => props.theme.palette.primary.main};
+`
+const LinkToSignUp = styled.a`
+  text-decoration: none;
+  cursor: pointer;
+  color: #006c70;
 
 `
 export const ForgetPasswordForm = ({
@@ -161,7 +174,7 @@ export const ForgetPasswordForm = ({
         console.log('Lỗi');
         setIsErrorSent(true);
       })
-    reset(defaultValues);
+    // reset(defaultValues);
   };
   return (
     <Container isMobile={isMobile}>
@@ -178,7 +191,7 @@ export const ForgetPasswordForm = ({
         <ContentRight isMobile={isMobile}>
           <AlertWarning>Enter an username or e-mail address.</AlertWarning>
           <MainTitle>Reset Password</MainTitle>
-          <form onSubmit={handleSubmit(handleGetSubmitHandler)}>
+          <form className={forgetPasswordFormStyles.mainForm} onSubmit={handleSubmit(handleGetSubmitHandler)}>
             <Controller
               name="email"
               control={control}
@@ -191,10 +204,11 @@ export const ForgetPasswordForm = ({
                     fullWidth
                     type="email"
                     placeholder="Enter your E-mail"
-                    error={!!formState.errors['usernameOrEmail']}
+                    error={!!formState.errors['email'] || isErrorSent}
                     value={value ? value : ''}
                     inputChange={(e) => {
                       onChange(e);
+                      setIsErrorSent(false);
                     }}
                   />
                   <FormHelperText
@@ -206,7 +220,11 @@ export const ForgetPasswordForm = ({
               )}
             />
            {isErrorSent && <ErrorNotification>
-                    Email is not existed in server
+                    <p>Email is not registered</p>
+                    <p>Do you want create a new account? <LinkToSignUp onClick={e => {
+                      e.preventDefault();
+                      setSelectedHomeModal('register');
+                    }}>Sign up</LinkToSignUp></p>
             </ErrorNotification>}
             <CNButton fullWidth type="submit" buttonType="main">
               Get New Password
