@@ -243,7 +243,6 @@ function AddRoom(props) {
 
     // For ultility
     checkboxData.forEach((ultility, index) => {
-      console.log(ultility);
       if (ultility.isChecked) {
         roomForm.append('ultilities', JSON.stringify({ id: ultility.value }));
       }
