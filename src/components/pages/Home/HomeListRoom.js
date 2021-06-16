@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import RoomCard from '@Components/components/RoomCard/RoomCard';
-import { useDispatch, useSelector } from 'react-redux';
+import { CNSnackBar } from '@Components/shared/CNSnackBar/CNSnackBar';
 import { roomActions, roomSelectors } from '@Core/redux/room';
+import { makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import './HomeListRoom.css';
-import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -60,13 +61,20 @@ export const HomeListRoom = () => {
   useEffect(() => {
     dispatch(roomActions.getLatestHomeRoom());
   }, []);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
   console.log(listRoom);
-
-  // if(listRoom?.l)
 
   return (
     <>
+      <CNSnackBar severity="info" isOpen={isOpen} onClose={handleClose}>
+        Bạn phải login để xem phòng
+      </CNSnackBar>
       {listRoom && listRoom?.length > 0 ? (
         <Slider {...settings} className={classes.slider}>
           {listRoom.map((room, index) => {
@@ -85,6 +93,8 @@ export const HomeListRoom = () => {
                 user_avatar={room.user_avatar}
                 list_utilities={room.utilities}
                 createTime={room.createTime}
+                linkTo={`/properties/${room.name_router}`}
+                handleClick={handleOpen}
               />
             );
           })}

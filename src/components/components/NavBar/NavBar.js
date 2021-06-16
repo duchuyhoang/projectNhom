@@ -3,11 +3,12 @@ import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import useMediaQuery from '@Core/hooks/useMediaQuery';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import './NavBar.css';
 import { SmallScreenNavBar } from './SmallScreenNavBar';
 import { UserInfo } from './UserInfo';
-
 const NavBarContainer = styled.section`
   display: flex;
   width: 100%;
@@ -29,7 +30,7 @@ const Logo = styled.div`
   width: 15%;
   margin-right: 80px;
   svg > path:last-child {
-    fill: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
+    fill: ${(props) => (props.pathname === '/home' ? '#fff' : '#484848')};
   }
 `;
 
@@ -127,7 +128,7 @@ const Item = styled.li`
   }
 `;
 
-const Link = styled.a`
+const Linka = styled.div`
   ${BaseItem}
   &:not(:last-child) {
     border-bottom: 1px solid ${(props) => props.theme.border.main};
@@ -149,7 +150,7 @@ const RootItem = styled.li`
   color: ${(props) => {
     return props.active
       ? props.theme.palette.primary.main
-      : props.currentTab === 'home'
+      : props.pathname === '/home'
       ? '#fff'
       : '#484848';
   }};
@@ -169,11 +170,11 @@ const RootItem = styled.li`
 
 const ModifiedButton = styled(CNButton)`
   background-color: ${(props) =>
-    props.current === 'home'
+    props.pathname === '/home'
       ? props.theme.palette.text.secondary
       : '#24334A'}!important;
   color: ${(props) =>
-    props.current === 'home'
+    props.pathname === '/home'
       ? props.theme.palette.primary.main
       : '#fff'}!important;
   border-radius: 50px 50px 50px 50px !important;
@@ -185,11 +186,11 @@ const ModifiedButton = styled(CNButton)`
   font-size: 19px !important;
   &:hover {
     background-color: ${(props) =>
-      props.current === 'home'
+      props.pathname === '/home'
         ? props.theme.palette.primary.main
         : '#fff'}!important;
     color: ${(props) =>
-      props.current === 'home' ? '#fff' : '#24334A'}!important;
+      props.pathname === '/home' ? '#fff' : '#24334A'}!important;
   }
 `;
 
@@ -217,7 +218,7 @@ const RecursiveNav = ({ data, index }) => {
             return (
               <div key={index}>
                 {item.type === 'link' ? (
-                  <Link>{item.title}</Link>
+                  <Linka>{item.title}</Linka>
                 ) : (
                   <Item>
                     {item.title}
@@ -238,7 +239,7 @@ const RecursiveNav = ({ data, index }) => {
           return (
             <div key={index}>
               {item.type === 'link' ? (
-                <Link>{item.title}</Link>
+                <Linka>{item.title}</Linka>
               ) : (
                 <Item>
                   {item.title}
@@ -256,10 +257,13 @@ const RecursiveNav = ({ data, index }) => {
 
 export const NavBar = (props) => {
   const { mediaScreenTrue } = useMediaQuery('(min-width:1400px)');
-  const { currentTab } = props;
+  const { currentTab, setCurrentTab } = props;
   const [selectedTab, setSelectedTab] = useState(currentTab);
   const [homeModalOpen, setHomeModalOpen] = useState(false);
   const [selectedHomeModal, setSelectedHomeModal] = useState('login');
+  const location = useLocation();
+  setCurrentTab(location.pathname.slice(1));
+
   const handleOver = (selectTab) => (event) => {
     setSelectedTab(selectTab);
   };
@@ -364,48 +368,51 @@ export const NavBar = (props) => {
       ) : (
         <>
           <NavBarContainer isSmall={mediaScreenTrue}>
-            <Logo currentTab={currentTab}>
-              <SVGIcon name="logo" width="200" height="60" />
-            </Logo>
+            <Link to={'/home'}>
+              <Logo pathname={location.pathname}>
+                <SVGIcon name="logo" width="200" height="60" />
+              </Logo>
+            </Link>
 
             <ListContainer>
               {rootItemData.map((item, index) => {
                 return (
-                  <RootItem
-                    currentTab={currentTab}
-                    active={currentTab === item.id}
-                    onClick={handleOver(item.id)}
-                    onMouseOver={handleOver(0)}
-                    key={index}
-                  >
-                    {item.content}
-                    {mockData[item.id].length > 0 && (
-                      <ArrowDown
-                        name="arrowDown"
-                        width="10"
-                        height="10"
-                        style={{ marginTop: 3, marginLeft: 5 }}
-                      />
-                    )}
-                    {mockData[item.id].length > 0 && (
-                      <DropDown className={selectedTab == 0 ? 'active' : ''}>
-                        <RecursiveNav data={mockData[item.id]} index={0} />
-                      </DropDown>
-                    )}
-                  </RootItem>
+                  <Link key={index} className={'listLink'} to={`/${item.id}`}>
+                    <RootItem
+                      pathname={location.pathname}
+                      active={currentTab === item.id}
+                      onClick={handleOver(item.id)}
+                      onMouseOver={handleOver(0)}
+                    >
+                      {item.content}
+                      {mockData[item.id].length > 0 && (
+                        <ArrowDown
+                          name="arrowDown"
+                          width="10"
+                          height="10"
+                          style={{ marginTop: 3, marginLeft: 5 }}
+                        />
+                      )}
+                      {mockData[item.id].length > 0 && (
+                        <DropDown className={selectedTab == 0 ? 'active' : ''}>
+                          <RecursiveNav data={mockData[item.id]} index={0} />
+                        </DropDown>
+                      )}
+                    </RootItem>
+                  </Link>
                 );
               })}
 
               <RegisterTextContainer style={{ color: '#fff' }}>
                 <UserInfo
-                  currentTab={currentTab}
+                  pathname={location.pathname}
                   setSelectedHomeModal={setSelectedHomeModal}
                   setHomeModalOpen={setHomeModalOpen}
                 />
               </RegisterTextContainer>
 
               <ModifiedButton
-                current={currentTab}
+                pathname={location.pathname}
                 startIcon={
                   <SVGIcon
                     name="plus"

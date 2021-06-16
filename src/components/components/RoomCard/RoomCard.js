@@ -1,14 +1,15 @@
+import noImage from '@Assets/background/noImage.jpg';
 import { CNAvatar } from '@Components/shared/CNAvatar/CNAvatar';
 import { CNPropertyLabel } from '@Components/shared/CNPropertyLabel/CNPropertyLabel';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
+import { useAuth } from '@Core/hooks/useAuth';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import React from 'react';
+import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import styled from 'styled-components';
 import RoomCardIcon from './RoomCardIcon';
-import Moment from 'react-moment';
-import noImage from '@Assets/background/noImage.jpg';
-import { uuid } from '@Ultis/uuid';
 import './styles.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -186,6 +187,8 @@ function RoomCard({
   user_avatar,
   list_utilities,
   createTime,
+  linkTo,
+  handleClick,
 }) {
   const classes = useStyles();
   const settings = {
@@ -197,6 +200,8 @@ function RoomCard({
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const useInfo = useAuth();
+
   return (
     <Paper elevation={4} className={classes.paper}>
       <Top>
@@ -248,9 +253,13 @@ function RoomCard({
           </PropertyType>
           <PropertyTitle>
             <Typography component="h2" className={classes.h2Type}>
-              <a className={classes.h2Title} href="#">
+              <Link
+                className={classes.h2Title}
+                to={useInfo.isLogin ? linkTo : null}
+                onClick={handleClick}
+              >
                 {name}
-              </a>
+              </Link>
             </Typography>
           </PropertyTitle>
           <PropertyLocation>
