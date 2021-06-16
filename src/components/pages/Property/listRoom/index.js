@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
   },
+  page: {
+    margin: '30px 0',
+    '& > ul': {
+      justifyContent: 'flex-end',
+    },
+  },
 }));
 
 const Wrapper = styled.div`
@@ -114,92 +120,97 @@ function listRoom(props) {
   // loading here
   // const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
 
-
   const {
     pageIndex,
     setPageIndex,
     itemPerPage,
     setItemPerPage,
-  } = usePagination(false, 1, 2);
+  } = usePagination(false, 1, 4);
 
   return (
     <>
       {/* {searchRoomLoading !== 'idle' && searchRoomLoading !== 'pending' ? ( */}
-        <Wrapper>
-          <Container>
-            <ListTop>
-              <Title>Properties</Title>
-              <GirdIcon>
-                <GirdFlex>
-                  <ListGridIcon
-                    icon={<SVGIcon name="gridMenu" />}
-                    className={classes.icon}
-                    selected={true}
-                  ></ListGridIcon>
-                  <ListGridIcon
-                    icon={<SVGIcon name="gridList" />}
-                    className={classes.icon}
-                  ></ListGridIcon>
-                </GirdFlex>
-              </GirdIcon>
-            </ListTop>
-            <ListContent>
-              <Row>
-                <LeftBar>
-                  <SearchRoom
-                    type="properties"
-                    items_per_page={itemPerPage}
-                    page_index={pageIndex}
-                    setPageIndex={(number) => {
-                      setPageIndex(number);
+      <Wrapper>
+        <Container>
+          <ListTop>
+            <Title>Properties</Title>
+            <GirdIcon>
+              <GirdFlex>
+                <ListGridIcon
+                  icon={<SVGIcon name="gridMenu" />}
+                  className={classes.icon}
+                  selected={true}
+                ></ListGridIcon>
+                <ListGridIcon
+                  icon={<SVGIcon name="gridList" />}
+                  className={classes.icon}
+                ></ListGridIcon>
+              </GirdFlex>
+            </GirdIcon>
+          </ListTop>
+          <ListContent>
+            <Row>
+              <LeftBar>
+                <SearchRoom
+                  type="properties"
+                  items_per_page={itemPerPage}
+                  page_index={pageIndex}
+                  setPageIndex={(number) => {
+                    setPageIndex(number);
+                  }}
+                />
+              </LeftBar>
+              <RightBar>
+                <OrderWrapper>
+                  <ResultCount>Showing 1 – 9 of 14 results</ResultCount>
+                  <Order>
+                    <span>Sort By: </span>
+                  </Order>
+                </OrderWrapper>
+                <ListRoom>
+                  <div className={classes.row}>
+                    {listRoom.map((room, index) => {
+                      return (
+                        <RoomCard
+                          key={index}
+                          name={room.name}
+                          city={room.cityName}
+                          district={room.districtName}
+                          ward={room.wardName}
+                          list_images={room?.images || []}
+                          price={
+                            room.water_bill + room.price + room.utility_bill
+                          }
+                          capacity={room.capacity}
+                          acreage={room.acreage}
+                          user_name={room.user_name}
+                          user_avatar={room.user_avatar}
+                          list_utilities={room.utilities}
+                          createTime={room.createTime}
+                          linkTo={`/properties/${room.name_router}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </ListRoom>
+                {totalPages === 0 ? (
+                  ''
+                ) : (
+                  <CNPagination
+                    total={totalPages == 0 ? 1 : totalPages}
+                    page={pageIndex}
+                    className={classes.page}
+                    setPaginationIndex={(page) => {
+                      setPageIndex(page);
                     }}
                   />
-                </LeftBar>
-                <RightBar>
-                  <OrderWrapper>
-                    <ResultCount>Showing 1 – 9 of 14 results</ResultCount>
-                    <Order>
-                      <span>Sort By: </span>
-                    </Order>
-                  </OrderWrapper>
-                  <ListRoom>
-                    <div className={classes.row}>
-                      {listRoom.map((room, index) => {
-                        return (
-                          <RoomCard
-                            key={index}
-                            name={room.name}
-                            city={room.cityName}
-                            district={room.districtName}
-                            ward={room.wardName}
-                            list_images={room?.images || []}
-                            price={
-                              room.water_bill + room.price + room.utility_bill
-                            }
-                            capacity={room.capacity}
-                            acreage={room.acreage}
-                            user_name={room.user_name}
-                            user_avatar={room.user_avatar}
-                            list_utilities={room.utilities}
-                            createTime={room.createTime}
-                          />
-                        );
-                      })}
-                    </div>
-                  </ListRoom>
-                </RightBar>
-              </Row>
-            </ListContent>
-            <CNPagination
-              total={totalPages == 0 ? 1 : totalPages}
-              page={pageIndex}
-              setPaginationIndex={(page) => {
-                setPageIndex(page);
-              }}
-            />
-          </Container>
-          <Footer />
-        </Wrapper>
+                )}
+              </RightBar>
+            </Row>
+          </ListContent>
+        </Container>
+        <Footer />
+      </Wrapper>
       {/* ) : (
         <CNLoading />
       )} */}

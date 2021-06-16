@@ -43,9 +43,9 @@ const Container = styled(BaseText)`
   display: flex;
   font-weight: bold;
   position: relative;
-  color: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
+  color: ${(props) => (props.pathname === '/home' ? '#fff' : '#484848')};
   > svg * {
-    fill: ${(props) => (props.currentTab === 'home' ? '#fff' : '#484848')};
+    fill: ${(props) => (props.pathname === '/home' ? '#fff' : '#484848')};
   }
   &:hover ${DropDownUser} {
     transform: rotateX(0deg);
@@ -70,10 +70,10 @@ const UserName = styled.p`
 `;
 
 export const UserInfo = React.memo(
-  ({ setSelectedHomeModal, setHomeModalOpen, currentTab }) => {
+  ({ setSelectedHomeModal, setHomeModalOpen, pathname }) => {
     const userInfo = useAuth();
     return (
-      <Container currentTab={currentTab}>
+      <Container pathname={pathname}>
         {userInfo.isLogin ? (
           <>
             <CNAvatar type="small" src={userInfo.avatar} />

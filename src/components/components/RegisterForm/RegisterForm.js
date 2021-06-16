@@ -50,6 +50,7 @@ const useRegisterStyle = makeStyles((theme) => ({
     justifyContent: 'space-between',
     height: '80%',
     marginTop: '30px',
+    position: 'relative',
   },
   helperTextStyles: {
     color: 'red',
@@ -143,7 +144,11 @@ const SmallText = styled.small`
     }
   }
 `;
-
+const ErrorNotification = styled.div`
+  color: ${props => props.theme.palette.primary.main};
+  position: absolute;
+  bottom: 100px;
+`
 function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   const { isMobile } = useIsMobile();
   const RegisterStyle = useRegisterStyle();
@@ -151,19 +156,18 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   const isLogin = useSelector(authSelectors.selectIsLogin);
   const loginAuthLoadingStatus = useSelector(authSelectors.selectAuthLoadingStatus);
   const errorSignUp = useSelector(authSelectors.selectAuthErrorStatus)
+  console.log(errorSignUp)
+  // useEffect(() => {
+  //   // Set another error for login 
+  //   if (loginAuthLoadingStatus !== "idle" && errorSignUp) {
+  //     setError("wrongInfo", {
+  //       type: "manual",
+  //       message: errorSignUp,
+  //     })
+  //   }
 
 
-  useEffect(() => {
-    // Set another error for login 
-    if (loginAuthLoadingStatus !== "idle" && errorSignUp) {
-      setError("wrongInfo", {
-        type: "manual",
-        message: errorSignUp,
-      })
-    }
-
-
-  }, [loginAuthLoadingStatus, errorSignUp])
+  // }, [loginAuthLoadingStatus, errorSignUp])
 
 
 
@@ -186,7 +190,7 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   ];
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setRetypeShowPassword] = useState(false);
-
+  const [isFocus, setIsFocus] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword((x) => !x);
   };
@@ -212,6 +216,7 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   });
 
   const { handleSubmit, control, formState, reset, setError } = useForm({
+    mode: 'onChange',
     defaultValues: {
       user_name: '',
       email: '',
@@ -235,7 +240,7 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   const handleResgisterSubmit = (values) => {
 
     const { user_name, password, email } = values;
-
+    setIsFocus(false);
     dispatch(authActions.signUp({ user_name, password, email }))
   };
 
@@ -280,7 +285,10 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                     <SVGIcon name="user" width="21px" height="21px"></SVGIcon>
                   }
                   fullWidth
-                  inputChange={onChange}
+                  inputChange={(e) => {
+                    onChange(e)
+                    setIsFocus(true)
+                  }}
                 />
                 <FormHelperText className={RegisterStyle.helperTextStyles}>
                   {formState.errors['user_name']?.message}
@@ -298,13 +306,17 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                 <CNTextField
                   type="text"
                   placeholder="Email"
-                  error={!!formState.errors['email']}
+                  error={!!formState.errors['email'] || (!isFocus && errorSignUp)}
                   className={RegisterStyle.textFieldStyle}
                   fullWidth
                   endAdornment={
                     <SVGIcon name="user" width="21px" height="21px" />
                   }
-                  inputChange={onChange}
+                  inputChange={(e) => {
+                    onChange(e)
+                    setIsFocus(true)
+                  }}
+                 
                 />
                 <FormHelperText className={RegisterStyle.helperTextStyles}>
                   {formState.errors['email']?.message}
@@ -344,7 +356,11 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                     </InputAdornment>
                   }
                   name="password"
-                  inputChange={onChange}
+                  inputChange={(e) => {
+                    onChange(e)
+                    setIsFocus(true)
+                  }}
+            
                 />
                 <FormHelperText className={RegisterStyle.helperTextStyles}>
                   {formState.errors['password']?.message}
@@ -356,7 +372,7 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
           <Controller
             control={control}
             name="retypePassword"
-            render={({ field: { onChange } }) => (
+            render={({ field: {  onChange } }) => (
               <FormControl fullWidth>
                 <CNTextField
                   type={showRetypePassword ? 'text' : 'password'}
@@ -376,8 +392,12 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                       />
                     </InputAdornment>
                   }
-                  inputChange={onChange}
-                ></CNTextField>
+                  inputChange={(e) => {
+                    onChange(e)
+                    setIsFocus(true)
+                  }}
+               
+                />
                 <FormHelperText className={RegisterStyle.helperTextStyles}>
                   {formState.errors['retypePassword']?.message}
                 </FormHelperText>
@@ -395,15 +415,15 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                 width={'100%'}
                 customComponents={{ DropdownIndicator }}
                 onChange={(e) => {
-                  // Log to view what is in here
-                  console.log(e);
                   onChange(e ? e.value : null);
+                  setIsFocus(true);
                 }}
                 className={RegisterStyle.selectStyle}
+                
               />
             )}
           />
-
+          {errorSignUp && !isFocus && <ErrorNotification>Email has already been registered</ErrorNotification>}
           <CNButton
             name="registerSubmit"
             buttonType="main"

@@ -336,7 +336,10 @@ console.log(currentRoom);
                       </TopLeft>
                       <TopRight>
                         <RoomPrice>
-                          <span>$7500</span>
+                          <span>
+                            {currentRoom.price}
+                            {' VND'}
+                          </span>
                         </RoomPrice>
                       </TopRight>
                     </ContentTop>

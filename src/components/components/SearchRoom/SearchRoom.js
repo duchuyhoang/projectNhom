@@ -287,8 +287,6 @@ export const SearchRoom = ({
 
   const dispatch = useDispatch();
 
- 
-
   const { listUltility } = useListUltilities();
   const modifiedListUltility = listUltility.map((utility) => {
     return {
@@ -332,13 +330,13 @@ export const SearchRoom = ({
     district: null,
     ward: null,
   };
-  const schema = yup.object().shape({
-    name: yup.string().required('Vui lòng nhập từ khóa'),
-  });
+  // const schema = yup.object().shape({
+  //   name: yup.string().required('Vui lòng nhập từ khóa'),
+  // });
   const { control, handleSubmit, formState } = useForm({
     mode: 'onSubmit',
     defaultValues,
-    resolver: yupResolver(schema),
+    // resolver: yupResolver(schema),
   });
 
   const handleSearchSubmit = (values) => {
@@ -369,12 +367,18 @@ export const SearchRoom = ({
     dispatch(roomActions.getRoomsSearched({ items_per_page, ...resObject }));
   };
 
-  const searchRoomCondition=useSelector(roomSelectors.searchRoomCondition)
+  const searchRoomCondition = useSelector(roomSelectors.searchRoomCondition);
 
   useEffect(() => {
-    // get room 
-    dispatch(roomActions.getRoomsSearched({items_per_page,page_index,...searchRoomCondition}));
-  },[items_per_page,page_index]);
+    // get room
+    dispatch(
+      roomActions.getRoomsSearched({
+        items_per_page,
+        page_index,
+        ...searchRoomCondition,
+      })
+    );
+  }, [items_per_page, page_index]);
 
   return (
     <Container>

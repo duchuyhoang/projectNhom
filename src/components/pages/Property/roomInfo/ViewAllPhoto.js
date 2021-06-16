@@ -13,7 +13,7 @@ const ViewTop = styled.div`
   align-items: center;
   position: absolute;
   width: 100%;
-  top: -100px;
+  top: -50px;
   color: #fff;
   > svg {
     fill: #fff;
