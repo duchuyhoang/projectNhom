@@ -16,20 +16,12 @@ import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
 import { PrivateRoute } from '@Components/PrivateRoute';
 
 export const App = ({ title }) => {
-  const [curTab, setCurTab] = useState('home');
-  let path = window.location.pathname;
-  path = path.split('/')[1];
-
-  useCallback(
-    useEffect(() => {
-      setCurTab(path.toLowerCase());
-    }, [path])
-  );
+  const [currentTab, setCurrentTab] = useState('home');
 
   return (
     <>
       <Router>
-        <NavBar currentTab={curTab}></NavBar>
+        <NavBar currentTab={currentTab} setCurrentTab={setCurrentTab}></NavBar>
         <Suspense fallback={<CNLoading />}>
           <Switch>
             <Route path="/test" component={Message}>
