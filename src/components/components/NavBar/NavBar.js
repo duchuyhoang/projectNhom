@@ -1,4 +1,4 @@
-import { HomeModal } from '@Components/components/Modals/HomeModal';
+import  HomeModal  from '@Components/components/Modals/HomeModal';
 import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import useMediaQuery from '@Core/hooks/useMediaQuery';

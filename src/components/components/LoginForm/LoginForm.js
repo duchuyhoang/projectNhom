@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import React, { useRef, useEffect, useCallback, useState } from 'react';
+import {Link, useHistory} from 'react-router-dom'
+import styled, { css, keyframes } from 'styled-components';
+>>>>>>> 3321f6c (Add Error Notification and Attach Link Form)
 import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
@@ -253,7 +259,7 @@ const ErrorNotification = styled.p`
   bottom: 54px;
  
 `
-export const LoginForm = ({
+ const LoginForm = ({
   showModal,
   setShowModal,
   setSelectedHomeModal,
@@ -263,11 +269,9 @@ export const LoginForm = ({
   const logInFormStyle = useLogInFormStyle();
   const dispatch = useDispatch();
   const isLogin = useSelector(authSelectors.selectIsLogin);
-  const loginAuthLoadingStatus = useSelector(
-    authSelectors.selectAuthLoadingStatus
-  );
-  const errorLogin = useSelector(authSelectors.selectAuthErrorStatus);
-
+  const loginAuthLoadingStatus = useSelector(authSelectors.selectAuthLoadingStatus);
+  const errorLogin = useSelector(authSelectors.selectAuthErrorStatus)
+  const history = useHistory();
   const keyPress = useCallback(
     (e) => {
       if (e.key === 'Escape' && showModal) {
@@ -277,17 +281,7 @@ export const LoginForm = ({
     [showModal]
   );
 
-  // useEffect(() => {
-  //   // Set another error for login 
-  //   if (loginAuthLoadingStatus !== "idle" && errorLogin) {
-  //     setError("wrongInfo", {
-  //       type: "manual",
-  //       message: errorLogin,
-  //     })
-  //   }
 
-
-  // }, [loginAuthLoadingStatus, errorLogin])
 
   // For login successful
   useEffect(() => {
@@ -320,7 +314,10 @@ export const LoginForm = ({
   const toggleShowPassword = () => {
     setShowPassword((x) => !x);
   };
-
+  const closeHandler = (e) =>{
+    e.preventDefault();
+    history.push('/home');
+  }
   //validate form
   const schema = yup.object().shape({
     email: yup
@@ -367,7 +364,7 @@ export const LoginForm = ({
         <ModalContent>
           <HeaderLogIn>
             <HeaderLogInText>Login</HeaderLogInText>
-            <HeaderLogInClose href="#">
+            <Link onClick={closeHandler}>
               <SVGIcon
                 name="close"
                 width="10px"
@@ -375,7 +372,7 @@ export const LoginForm = ({
                 fill="#006c70"
                 onClick={() => setShowModal((prev) => !prev)}
               />
-            </HeaderLogInClose>
+            </Link>
           </HeaderLogIn>
           <form
             onSubmit={handleSubmit(handleLoginSubmit)}
@@ -494,15 +491,7 @@ export const LoginForm = ({
                   )}
                 />
               </CheckboxForm>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedHomeModal('forgetPassword');
-                }}
-              >
-                Lost Your Password?
-              </a>
+              <Link to="/reset-password">Lost Your Password?</Link>
             </UnderTextField>
 
              {errorLogin && !isFocus  && <ErrorNotification>Thông tin đăng nhập không chính xác</ErrorNotification>}
@@ -518,19 +507,17 @@ export const LoginForm = ({
 
           <UnderButton>
             Don't you have an account?
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedHomeModal('register');
-              }}
+            <Link
+              to="/signup"
             >
               {' '}
               Register
-            </a>
+            </Link>
           </UnderButton>
         </ModalContent>
       </LogInForm>
     </>
   );
 };
+
+export default LoginForm;

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import styled, { css } from 'styled-components'
+import {Link} from 'react-router-dom'
 import { makeStyles } from "@material-ui/core"
 import { CNTextField } from '../../shared/CNTextField/CNTextField'
 import { CNButton } from '../../shared/CNButton/CNButton'
@@ -67,6 +68,7 @@ const Description = styled.p`
     color:${props => props.theme.palette.text.primary};
     font-size:20px;
     text-align: center;
+    margin-bottom: 10px;
 `
 const Content = styled.div`
     ${AlignCenter};
@@ -80,25 +82,27 @@ width: ${props => props.isMobile ? "100%" : "60%"};
 const ButtonWrapper = styled.div`
 width: ${props => props.isMobile ? "80%" : "20%"};
 `
-export const PageNotFoundComponent = () => {
+ const PageNotFoundComponent = () => {
     const { isMobile } = useIsMobile();
     const PageNotFoundComponentStyles = usePageNotFoundStyles();
     return (
         <Background>
             <Container isMobile={isMobile}>
-                <TopImage isMobile={isMobile} src={PageNotFoundImg}></TopImage>
+                <TopImage isMobile={isMobile} src={PageNotFoundImg} alt = "Page Not Found :((" />
                 <Slogan>404</Slogan>
                 <Description>Sorry but the page you are looking for does not exist, have been removed, name changed or is temporarity unavailable.</Description>
                 <Content className={PageNotFoundComponentStyles.Content}>
                     <TextFieldWrapper isMobile={isMobile}>
                         <CNTextField className={PageNotFoundComponentStyles.TextField} placeholder="Search" endAdornment={<SVGIcon width="30px" height="30px" className={PageNotFoundComponentStyles.SVGIcon} name="search" />} fullWidth />
                     </TextFieldWrapper>
-                    <ButtonWrapper isMobile={isMobile}>
-                        <CNButton type="main" className={PageNotFoundComponentStyles.Button}>Back to Home</CNButton>
-                    </ButtonWrapper>
+                    <Link style={{textDecoration: 'none'}} to='/home' isMobile={isMobile}>
+                        <CNButton buttonType="main" className={PageNotFoundComponentStyles.Button}>Back to Home</CNButton>
+                    </Link>
 
                 </Content>
             </Container>
         </Background>
     )
 }
+
+export default PageNotFoundComponent

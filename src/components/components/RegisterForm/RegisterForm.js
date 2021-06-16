@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import {Link, useHistory} from 'react-router-dom';
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
@@ -156,18 +157,8 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   const isLogin = useSelector(authSelectors.selectIsLogin);
   const loginAuthLoadingStatus = useSelector(authSelectors.selectAuthLoadingStatus);
   const errorSignUp = useSelector(authSelectors.selectAuthErrorStatus)
-  console.log(errorSignUp)
-  // useEffect(() => {
-  //   // Set another error for login 
-  //   if (loginAuthLoadingStatus !== "idle" && errorSignUp) {
-  //     setError("wrongInfo", {
-  //       type: "manual",
-  //       message: errorSignUp,
-  //     })
-  //   }
 
 
-  // }, [loginAuthLoadingStatus, errorSignUp])
 
 
 
@@ -191,12 +182,17 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setRetypeShowPassword] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
+  const history = useHistory();
   const toggleShowPassword = () => {
     setShowPassword((x) => !x);
   };
   const toggleShowRetypePassword = () => {
     setRetypeShowPassword((x) => !x);
   };
+  const closeHandler = (e) => {
+    e.preventDefault();
+    history.push('/home')
+  }
   const schema = yup.object().shape({
     user_name: yup
       .string()
@@ -257,15 +253,15 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
       <FormContent isMobile={isMobile}>
         <ContentHeader>
           <ContentTitle>Register</ContentTitle>
-          <FormClose>
+          <Link onClick={closeHandler}>
             <SVGIcon
               name="close"
               width="10px"
               height="10px"
               fill="#006c70"
-              onClick={() => setShowModal((prev) => !prev)}
+             
             />
-          </FormClose>
+          </Link>
         </ContentHeader>
         <form
           className={RegisterStyle.formStyle}
@@ -435,15 +431,11 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
           </CNButton>
           <SmallText>
             Already have an account?{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedHomeModal('login');
-              }}
+            <Link
+             to='/login'
             >
               Login
-            </a>
+            </Link>
           </SmallText>
         </form>
       </FormContent>

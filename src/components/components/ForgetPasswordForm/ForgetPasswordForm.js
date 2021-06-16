@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
+import {Link, useHistory} from 'react-router-dom'
 import styled, { keyframes } from 'styled-components';
 import { axiosApi } from '@Core/api/axiosApi';
 import { FormControl, FormHelperText, makeStyles } from '@material-ui/core';
@@ -22,6 +23,18 @@ const useForgetPasswordFormStyles = makeStyles((theme) => ({
   },
   mainForm: {
     position: 'relative',
+  },
+  loginButton:{
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    fontSize: 18,
+    marginTop: 40,
+    fontWeight: 700
+  },
+  signupLink:{
+    color: '#006c70',
+    textDecoration: 'none',
+    fontWeight: 700
   }
 }));
 
@@ -44,6 +57,7 @@ const Container = styled.div`
   padding: ${(props) => (props.isMobile ? '0' : '20px')};
   background-color: ${(props) => props.theme.palette.background.secondary};
   border-radius: 6px;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
   font-family: ${(props) => props.theme.typography.fontFamily};
   display: flex;
   height: ${(props) => (props.isMobile ? '440px' : '600px')};
@@ -124,19 +138,15 @@ const ErrorNotification = styled.div`
   width: 100%;
   color: ${(props) => props.theme.palette.primary.main};
 `
-const LinkToSignUp = styled.a`
-  text-decoration: none;
-  cursor: pointer;
-  color: #006c70;
 
-`
-export const ForgetPasswordForm = ({
+ const ForgetPasswordForm = ({
   showModal,
   setShowModal,
   setSelectedHomeModal,
 }) => {
   const forgetPasswordFormStyles = useForgetPasswordFormStyles();
   const { isMobile } = useIsMobile();
+  const history = useHistory();
   const keyPress = useCallback(
     (e) => {
       if (e.key === 'escape' && showModal) setShowModal(false);
@@ -162,6 +172,10 @@ export const ForgetPasswordForm = ({
     resolver: yupResolver(schema),
   });
   const [isErrorSent,setIsErrorSent] = useState(false);
+  const closeHandler = (e) => {
+    e.preventDefault();
+    history.push('/home');
+  }
   const handleGetSubmitHandler = (values) => {
     console.log(values);
     const { email } = values;
@@ -184,9 +198,9 @@ export const ForgetPasswordForm = ({
       <RightContainer isMobile={isMobile}>
         <Title>
           Reset Password
-          <TititleIcon onClick={() => setShowModal((prev) => !prev)}>
+          <Link onClick={closeHandler}>
             <SVGIcon name="close" fill="#006c70" height="12px" width="12px" />
-          </TititleIcon>
+          </Link>
         </Title>
         <ContentRight isMobile={isMobile}>
           <AlertWarning>Enter an username or e-mail address.</AlertWarning>
@@ -221,10 +235,7 @@ export const ForgetPasswordForm = ({
             />
            {isErrorSent && <ErrorNotification>
                     <p>Email is not registered</p>
-                    <p>Do you want create a new account? <LinkToSignUp onClick={e => {
-                      e.preventDefault();
-                      setSelectedHomeModal('register');
-                    }}>Sign up</LinkToSignUp></p>
+                    <p>Do you want create a new account? <Link className={forgetPasswordFormStyles.signupLink} to="/signup">Sign up</Link></p>
             </ErrorNotification>}
             <CNButton fullWidth type="submit" buttonType="main">
               Get New Password
@@ -239,15 +250,15 @@ export const ForgetPasswordForm = ({
             </CNButton>
           </form>
         </ContentRight>
-        <LinkBackToLogin
-          onClick={(e) => {
-            e.preventDefault();
-            setSelectedHomeModal('login');
-          }}
+        <Link
+         to="/login"
+         className={forgetPasswordFormStyles.loginButton}
         >
           Click to Login
-        </LinkBackToLogin>
+        </Link>
       </RightContainer>
     </Container>
   );
 };
+
+export default ForgetPasswordForm

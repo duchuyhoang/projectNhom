@@ -10,6 +10,8 @@ const Message = lazy(() => import('@Components/Message'));
 import { NavBar } from '@Components/components/NavBar/NavBar';
 const Home = lazy(() => import('@Components/pages/Home'));
 const Property = lazy(() => import('@Components/pages/Property'));
+const PageNotFoundComponent = lazy(() => import('@Components/components/PageNotFoundComponent/PageNotFoundComponent'));
+
 // const Users = lazy(() => import('@Components/pages/Users'));
 import UserPageRoute from '@Components/pages/Users';
 import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
@@ -39,13 +41,16 @@ export const App = ({ title }) => {
               </PrivateRoute>
             </Route>
 
-            <Route path="/">
+            <Route path="/" exact>
               <Redirect
                 to={{
                   pathname: '/home',
                 }}
               />
             </Route>
+            {/* <Route path="*" >
+              <PageNotFoundComponent/>
+            </Route> */}
           </Switch>
         </Suspense>
         {/* </Content> */}

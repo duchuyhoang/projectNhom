@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '@Core/hooks/useAuth';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import { CNAvatar } from '@Components/shared/CNAvatar/CNAvatar';
@@ -93,23 +94,19 @@ export const UserInfo = React.memo(
               height="25"
               style={{ margin: '0 5px' }}
             />
-            <RegisterText
-              onClick={(e) => {
-                setSelectedHomeModal('login');
-                setHomeModalOpen(true);
-              }}
-            >
-              Login
-            </RegisterText>
-            /
-            <RegisterText
-              onClick={() => {
-                setSelectedHomeModal('register');
-                setHomeModalOpen(true);
-              }}
-            >
-              Register
-            </RegisterText>
+            <Link style={{textDecoration: 'none', color: '#FFF'}} to="/login">
+              <RegisterText
+              >
+                Login
+              </RegisterText>
+            </Link>/
+            <Link style={{textDecoration: 'none', color: '#FFF'}} to='/signup'>
+              <RegisterText
+
+              >
+                Register
+              </RegisterText>
+            </Link>
           </>
         )}
       </Container>

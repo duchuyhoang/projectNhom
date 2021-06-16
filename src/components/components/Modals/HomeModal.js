@@ -1,44 +1,48 @@
-import React, { useState } from 'react';
+import React, { lazy, useState, Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom'
 import { CNModal } from '@Components/shared/CNModal/CNModal';
-import { LoginForm } from '@Components/components/LoginForm/LoginForm';
-import RegisterForm from '../RegisterForm/RegisterForm';
-import { ForgetPasswordForm } from '../ForgetPasswordForm/ForgetPasswordForm';
-import { CNSnackBar } from '@Components/shared/CNSnackBar/CNSnackBar';
 
-export const HomeModal = ({ selectedModal, setSelectedHomeModal, ...rest }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
+import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
+import styled from 'styled-components';
+const LoginForm = lazy(() => import('@Components/components/LoginForm/LoginForm'))
+const RegisterForm = lazy(() => import('@Components/components/RegisterForm/RegisterForm'))
+const ForgetPasswordForm = lazy(() => import('@Components/components/ForgetPasswordForm/ForgetPasswordForm'))
+const Container = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,0,0,0.7);
+  z-index:2000;
+`
+const HomeModal = () => {
   return (
     <>
-      <CNSnackBar severity="success" isOpen={isOpen} onClose={handleClose}>
-        Login thành công. Xin chào 🎉
-      </CNSnackBar>
-      <CNModal {...rest}>
-        {selectedModal === 'login' && (
-          <LoginForm
-            {...rest}
-            setSelectedHomeModal={setSelectedHomeModal}
-            setShowSnackBar={handleOpen}
-          />
-        )}
-        {selectedModal === 'register' && (
-          <RegisterForm
-            {...rest}
-            setSelectedHomeModal={setSelectedHomeModal}
-          ></RegisterForm>
-        )}
-        {selectedModal === 'forgetPassword' && (
-          <ForgetPasswordForm
-            {...rest}
-            setSelectedHomeModal={setSelectedHomeModal}
-          />
-        )}
-      </CNModal>
+      <Suspense fallback={<CNLoading />}>
+        <Switch>
+          <Route path='/login'>
+            <Container><LoginForm /></Container>
+          </Route>
+          <Route path='/signup'>
+            <Container>
+              <RegisterForm />
+            </Container>
+
+          </Route>
+          <Route path='/reset-password'>
+            <Container>
+
+              <ForgetPasswordForm />
+            </Container>
+
+          </Route>
+        </Switch>
+      </Suspense>
     </>
   );
 };
+export default HomeModal

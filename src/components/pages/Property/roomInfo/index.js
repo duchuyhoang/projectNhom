@@ -14,7 +14,7 @@ import ListChecked from './ListChecked';
 import ListDetail from './ListDetail';
 import RoomInfoIcon from './RoomInfoIcon';
 import RoomSlide from './RoomSlide';
-import { PageNotFoundComponent } from '@Components/components/PageNotFoundComponent/PageNotFoundComponent';
+import  PageNotFoundComponent  from '@Components/components/PageNotFoundComponent/PageNotFoundComponent';
 import { useCurrentRoom } from './useCurrentRoom';
 import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
 import { Map } from '@Components/components/Map/Map';
