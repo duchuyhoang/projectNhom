@@ -1,6 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
+import { userPermission } from '@Core/const';
+import { authSelectors } from '@Core/redux/auth';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const DropDownItem = styled.div`
@@ -26,6 +29,7 @@ const ModifiedIcon = styled(SVGIcon)`
 `;
 
 export const DropDownUserInfo = ({ signOutHandle }) => {
+  const permission = useSelector(authSelectors.selectCurrentUserPermissions);
   return (
     <>
       <DropDownContainer>
@@ -48,16 +52,36 @@ export const DropDownUserInfo = ({ signOutHandle }) => {
           />
           Profile
         </DropDownItem>
-       <Link style={{textDecoration: 'none'}} to="/users/add-room"><DropDownItem>
-          <ModifiedIcon
-            name="plus"
-            width="18"
-            height="18"
-            style={{ fill: 'black' }}
-          />
-          Add Room
-        </DropDownItem>
-        </Link> 
+        {userPermission[permission] >= 0 ? (
+          <Link style={{ textDecoration: 'none' }} to="/users/add-room">
+            <DropDownItem>
+              <ModifiedIcon
+                name="plus"
+                width="18"
+                height="18"
+                style={{ fill: 'black' }}
+              />
+              Add Room
+            </DropDownItem>
+          </Link>
+        ) : (
+          ''
+        )}
+        {userPermission[permission] === 1 ? (
+          <Link style={{ textDecoration: 'none' }} to="/test">
+            <DropDownItem>
+              <ModifiedIcon
+                name="tick"
+                width="18"
+                height="18"
+                style={{ fill: 'black' }}
+              />
+              Approve Room
+            </DropDownItem>
+          </Link>
+        ) : (
+          ''
+        )}
 
         <DropDownItem>
           <ModifiedIcon
