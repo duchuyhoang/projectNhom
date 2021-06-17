@@ -12,12 +12,13 @@ const rootReducer=combineReducers(reducer)
 const preloadedState = {};
 
 const resettableReducer=(state,action)=>{
-    if(action.type==="auth/log_out/fulfilled"){
-        return rootReducer(undefined,action)
-    }
-    else{
+
+    // if(action.type==="auth/log_out/fulfilled"){
+    //     return rootReducer(undefined,action)
+    // }
+    // else{
         return rootReducer(state,action);
-    }
+    // }
 }
 
 
