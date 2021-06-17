@@ -2,9 +2,9 @@ import {
   createAsyncThunk,
   createSlice,
   createEntityAdapter,
+  createAction,
 } from '@reduxjs/toolkit';
 import { axiosApi } from '@Core/api/axiosApi';
-import { homeRoomAdapter } from './homeRoom';
 
 export const searchRoomAdapter = createEntityAdapter({
   selectId: (room) => room.id,
@@ -29,7 +29,7 @@ export const getRoomsSearched = createAsyncThunk(
       }).toString();
 
       const { data } = await axiosApi.get(`/room/search?${urlSearchQuery}`);
-     
+
       return {
         data: data.data,
         totalPage: data.totalPage,
@@ -41,9 +41,13 @@ export const getRoomsSearched = createAsyncThunk(
           Object.keys(searchCondition).length === 0 ? null : searchCondition,
       };
     } catch (error) {
-      return rejectWithValue({err})
+      return rejectWithValue({ err });
     }
   }
+);
+
+export const updateSearchRoomCondition = createAction(
+  'searchRoom/updateCondition'
 );
 
 const searchRoom = createSlice({
@@ -70,8 +74,12 @@ const searchRoom = createSlice({
       })
       .addCase(getRoomsSearched.rejected, (state, action) => {
         state.loading = 'error';
-        state.totalPage=1;
+        state.totalPage = 1;
       });
+
+    builder.addCase('searchRoom/updateCondition', (state, action) => {
+      state.searchCondition = action.payload.searchCondition;
+    });
   },
 });
 

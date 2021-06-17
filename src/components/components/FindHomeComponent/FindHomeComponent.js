@@ -1,12 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
 import homeBackground from '@Assets/background/homeBg.jpg';
-import { SearchRoom } from '../SearchRoom/SearchRoom';
+import { authSelectors } from '@Core/redux/auth';
 import { makeStyles } from '@material-ui/core';
-
-const useStyles = makeStyles((theme) => ({
-  root: {},
-}));
+import React from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { SearchRoom } from '../SearchRoom/SearchRoom';
 
 const Container = styled.section`
   background-image: url(${homeBackground});
@@ -21,11 +19,12 @@ const Container = styled.section`
 `;
 
 export const FindHomeComponent = (props) => {
-  const classes = useStyles();
+  const isLogin = useSelector(authSelectors.selectIsLogin);
+
   return (
     <>
       <Container>
-        <SearchRoom />
+        <SearchRoom needRedirect={isLogin} isLogin={isLogin} />
       </Container>
     </>
   );

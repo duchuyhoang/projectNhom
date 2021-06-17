@@ -3,6 +3,7 @@ import { useLocationSearch } from '@Core/hooks/useLocationSearch';
 import { useListUltilities } from '@Core/hooks/useListUltilities';
 import { useGetAreaAndPriceRange } from '@Core/hooks/useGetAreaAndPriceRange';
 import styled from 'styled-components';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   makeStyles,
   FormControl,
@@ -20,6 +21,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { roomActions, roomSelectors } from '@Core/redux/room';
+import { CNSnackBar } from '@Components/shared/CNSnackBar/CNSnackBar';
 
 const useSearchRoomStyles = makeStyles((theme) => ({
   mainForm: (props) => ({
@@ -223,7 +225,8 @@ const SearchAdvancedNested = styled.div`
 `;
 const UtilitiesWrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.border.main};
-
+  display: flex;
+  flex-wrap: wrap;
   > label {
     width: calc(100% / 4);
     margin-right: 10px;
@@ -256,235 +259,354 @@ const SliderTitle = styled.h3`
 var maxArea,
   maxPrice,
   first = true;
-export const SearchRoom = ({
-  type,
-  items_per_page,
-  page_index,
-  setPageIndex,
-}) => {
-  const {
-    listProvince,
-    listDistrict,
-    listWard,
-    selectedProvince,
-    selectedDistrict,
-    selectedWard,
-    setSelectedProvince,
-    setSelectedDistrict,
-    setSelectedWard,
-  } = useLocationSearch();
-  const {
-    areaRange,
-    priceRange,
-    setAreaRange,
-    setPriceRange,
-  } = useGetAreaAndPriceRange();
-  if (areaRange && priceRange && first) {
-    maxArea = areaRange[1];
-    maxPrice = priceRange[1];
-    first = false;
-  }
+export const SearchRoom = React.memo(
+  ({
+    needRedirect,
+    type,
+    items_per_page,
+    page_index,
+    setPageIndex,
+    isLogin,
+  }) => {
+    const {
+      listProvince,
+      listDistrict,
+      listWard,
+      selectedProvince,
+      selectedDistrict,
+      selectedWard,
+      setSelectedProvince,
+      setSelectedDistrict,
+      setSelectedWard,
+    } = useLocationSearch();
 
-  const dispatch = useDispatch();
-
-  const { listUltility } = useListUltilities();
-  const modifiedListUltility = listUltility.map((utility) => {
-    return {
-      label: utility.label,
-      value: utility.value,
-      id: utility.value,
-      isChecked: false,
-    };
-  });
-  const [uitilitiesList, setUitilitiesList] = useState(null);
-  const [isAdvancedOptionsOpen, setIsAdvancedOptionsOpen] = useState(false);
-  const [areaSliderValue, setAreaSliderValue] = useState([0, 100]);
-  const [priceSliderValue, setPriceSliderValue] = useState([0, 100]);
-
-  useEffect(() => {
-    setUitilitiesList(modifiedListUltility);
-  }, [listUltility]);
-
-  const areaChangeHandler = (event, newValue) => {
-    setAreaSliderValue(newValue);
-    setAreaRange([
-      Math.floor(newValue[0] / 100) * maxArea,
-      Math.floor((newValue[1] / 100) * maxArea),
-    ]);
-  };
-
-  const priceChangeHandler = (event, newValue) => {
-    setPriceSliderValue(newValue);
-    setPriceRange([
-      Math.floor((newValue[0] / 100) * maxPrice),
-      Math.floor((newValue[1] / 100) * maxPrice),
-    ]);
-  };
-  const showAdvancedOptionsHandler = () => {
-    setIsAdvancedOptionsOpen((preStatus) => !preStatus);
-  };
-  const searchFromStyles = useSearchRoomStyles({ type });
-  const defaultValues = {
-    name: '',
-    city: null,
-    district: null,
-    ward: null,
-  };
-  // const schema = yup.object().shape({
-  //   name: yup.string().required('Vui lòng nhập từ khóa'),
-  // });
-  const { control, handleSubmit, formState } = useForm({
-    mode: 'onSubmit',
-    defaultValues,
-    // resolver: yupResolver(schema),
-  });
-
-  const handleSearchSubmit = (values) => {
-    let uitilitiesArray = [];
-
-    uitilitiesList.forEach((utility) => {
-      if (utility.isChecked) uitilitiesArray.push(utility.value);
-    });
-
-    const resObject = {
-      name: values.name,
-      city: values.city,
-      district: values.district,
-      ward: values.ward,
-      utilities: uitilitiesArray.join(','),
-      min_acreage: areaRange[0],
-      max_acreage: areaRange[1],
-      min_price: priceRange[0],
-      max_price: priceRange[1],
-    };
-    for (const key in resObject) {
-      if ((!resObject[key] && resObject[key] !== 0) || resObject[key] === '') {
-        delete resObject[key];
-      }
+    const {
+      areaRange,
+      priceRange,
+      setAreaRange,
+      setPriceRange,
+    } = useGetAreaAndPriceRange();
+    if (areaRange && priceRange && first) {
+      maxArea = areaRange[1];
+      maxPrice = priceRange[1];
+      first = false;
     }
 
-    setPageIndex(1);
-    dispatch(roomActions.getRoomsSearched({ items_per_page, ...resObject }));
-  };
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
 
-  const searchRoomCondition = useSelector(roomSelectors.searchRoomCondition);
+    const { listUltility } = useListUltilities();
+    const modifiedListUltility = listUltility.map((utility) => {
+      return {
+        label: utility.label,
+        value: utility.value,
+        id: utility.value,
+        isChecked: false,
+      };
+    });
+    const [uitilitiesList, setUitilitiesList] = useState(null);
+    const [isAdvancedOptionsOpen, setIsAdvancedOptionsOpen] = useState(false);
+    const [areaSliderValue, setAreaSliderValue] = useState([0, 100]);
+    const [priceSliderValue, setPriceSliderValue] = useState([0, 100]);
 
-  useEffect(() => {
-    // get room
-    dispatch(
-      roomActions.getRoomsSearched({
-        items_per_page,
-        page_index,
-        ...searchRoomCondition,
-      })
+    useEffect(() => {
+      setUitilitiesList(modifiedListUltility);
+    }, [listUltility]);
+
+    const areaChangeHandler = (event, newValue) => {
+      setAreaSliderValue(newValue);
+      setAreaRange([
+        Math.floor(newValue[0] / 100) * maxArea,
+        Math.floor((newValue[1] / 100) * maxArea),
+      ]);
+    };
+
+    const priceChangeHandler = (event, newValue) => {
+      setPriceSliderValue(newValue);
+      setPriceRange([
+        Math.floor((newValue[0] / 100) * maxPrice),
+        Math.floor((newValue[1] / 100) * maxPrice),
+      ]);
+    };
+    const showAdvancedOptionsHandler = () => {
+      setIsAdvancedOptionsOpen((preStatus) => !preStatus);
+    };
+    const searchFromStyles = useSearchRoomStyles({ type });
+    const defaultValues = {
+      name: '',
+      city: null,
+      district: null,
+      ward: null,
+    };
+    // const schema = yup.object().shape({
+    //   name: yup.string().required('Vui lòng nhập từ khóa'),
+    // });
+    const { control, handleSubmit, formState } = useForm({
+      mode: 'onSubmit',
+      defaultValues,
+      // resolver: yupResolver(schema),
+    });
+    const [isOpen, setIsOpen] = useState(false);
+    const handleClose = () => {
+      setIsOpen(false);
+    };
+
+    const handleSearchSubmit = (values) => {
+      console.log('hello');
+      console.log(needRedirect);
+      let uitilitiesArray = [];
+
+      uitilitiesList.forEach((utility) => {
+        if (utility.isChecked) uitilitiesArray.push(utility.value);
+      });
+
+      const resObject = {
+        name: values.name,
+        city: values.city,
+        district: values.district,
+        ward: values.ward,
+        utilities: uitilitiesArray.join(','),
+        min_acreage: areaRange[0],
+        max_acreage: areaRange[1],
+        min_price: priceRange[0],
+        max_price: priceRange[1],
+      };
+      for (const key in resObject) {
+        if (
+          (!resObject[key] && resObject[key] !== 0) ||
+          resObject[key] === ''
+        ) {
+          delete resObject[key];
+        }
+      }
+      if (isLogin) {
+        if (needRedirect) {
+          console.log('gg');
+          dispatch(
+            roomActions.updateSearchRoomCondition({
+              searchCondition: resObject,
+            })
+          );
+          history.push('/properties', { from: location.pathname });
+        } else {
+          setPageIndex(1);
+          dispatch(
+            roomActions.getRoomsSearched({ items_per_page, ...resObject })
+          );
+        }
+      } else {
+        setIsOpen(true);
+      }
+    };
+
+    const searchRoomCondition = useSelector(roomSelectors.searchRoomCondition);
+    const searchRoomLoading = useSelector(
+      roomSelectors.searchRoomLoadingStatus
     );
-  }, [items_per_page, page_index]);
 
-  return (
-    <Container>
-      <Title type={type}>Find Your Dream Home</Title>
-      <Description type={type}>
-        From as low as $10 per day with limited time offer discounts
-      </Description>
-      <form
-        className={searchFromStyles.mainForm}
-        onSubmit={handleSubmit(handleSearchSubmit)}
-      >
-        <SearchFormMain type={type}>
-          <AdvancedTitle type={type}>Advanced Search</AdvancedTitle>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <FormControl className={searchFromStyles.formControl}>
-                <CNTextField
-                  placeholder="Enter keyword..."
-                  error={!!formState.errors['name']}
-                  values={value ? value : ''}
-                  inputChange={(e) => {
-                    onChange(e);
-                  }}
-                />
-                <FormHelperText className={searchFromStyles.helperText}>
-                  {formState.errors['name']?.message}
-                </FormHelperText>
-              </FormControl>
-            )}
-          />
-          <Controller
-            name="city"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <FormControl className={searchFromStyles.formControlSelect}>
-                <CNSelect
-                  value={selectedProvince}
-                  onChange={(e) => {
-                    setSelectedProvince(e);
-                    onChange(e ? e.value : null);
-                  }}
-                  className={searchFromStyles.selectStyles}
-                  options={listProvince}
-                  placeholder="Select Province"
-                />
-              </FormControl>
-            )}
-          />
-          <Controller
-            name="district"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <FormControl className={searchFromStyles.formControlSelect}>
-                <CNSelect
-                  value={selectedDistrict}
-                  onChange={(e) => {
-                    setSelectedDistrict(e);
-                    onChange(e ? e.value : null);
-                  }}
-                  className={searchFromStyles.selectStyles}
-                  options={listDistrict}
-                  placeholder="Select District"
-                />
-              </FormControl>
-            )}
-          />
-          <Controller
-            name="ward"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <FormControl className={searchFromStyles.formControlSelect}>
-                <CNSelect
-                  value={selectedWard}
-                  onChange={(e) => {
-                    setSelectedWard(e);
-                    onChange(e ? e.value : null);
-                  }}
-                  options={listWard}
-                  className={searchFromStyles.selectStyles}
-                  placeholder="Select Ward"
-                />
-              </FormControl>
-            )}
-          />
+    useEffect(() => {
+      // get room
+      dispatch(
+        roomActions.getRoomsSearched({
+          items_per_page,
+          page_index,
+          ...searchRoomCondition,
+        })
+      );
+    }, [items_per_page, page_index]);
 
-          <AdvancedOptions
-            type={type}
-            className={isAdvancedOptionsOpen ? searchFromStyles.active : ''}
-            onClick={showAdvancedOptionsHandler}
-          >
-            Advanced
-            <SVGIcon name="more" style={{ marginLeft: '15px' }} />
-          </AdvancedOptions>
-          <SearchAdvancedNested
-            type={type}
+    return (
+      <Container>
+        <CNSnackBar severity="info" isOpen={isOpen} onClose={handleClose}>
+          Bạn phải login mới có thể tìm kiếm!!!
+        </CNSnackBar>
+        <Title type={type}>Find Your Dream Home</Title>
+        <Description type={type}>
+          From as low as $10 per day with limited time offer discounts
+        </Description>
+        <form
+          className={searchFromStyles.mainForm}
+          onSubmit={handleSubmit(handleSearchSubmit)}
+        >
+          <SearchFormMain type={type}>
+            <AdvancedTitle type={type}>Advanced Search</AdvancedTitle>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <FormControl className={searchFromStyles.formControl}>
+                  <CNTextField
+                    placeholder="Enter keyword..."
+                    error={!!formState.errors['name']}
+                    values={value ? value : ''}
+                    inputChange={(e) => {
+                      onChange(e);
+                    }}
+                  />
+                  <FormHelperText className={searchFromStyles.helperText}>
+                    {formState.errors['name']?.message}
+                  </FormHelperText>
+                </FormControl>
+              )}
+            />
+            <Controller
+              name="city"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <FormControl className={searchFromStyles.formControlSelect}>
+                  <CNSelect
+                    value={selectedProvince}
+                    onChange={(e) => {
+                      setSelectedProvince(e);
+                      onChange(e ? e.value : null);
+                    }}
+                    className={searchFromStyles.selectStyles}
+                    options={listProvince}
+                    placeholder="Select Province"
+                  />
+                </FormControl>
+              )}
+            />
+            <Controller
+              name="district"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <FormControl className={searchFromStyles.formControlSelect}>
+                  <CNSelect
+                    value={selectedDistrict}
+                    onChange={(e) => {
+                      setSelectedDistrict(e);
+                      onChange(e ? e.value : null);
+                    }}
+                    className={searchFromStyles.selectStyles}
+                    options={listDistrict}
+                    placeholder="Select District"
+                  />
+                </FormControl>
+              )}
+            />
+            <Controller
+              name="ward"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <FormControl className={searchFromStyles.formControlSelect}>
+                  <CNSelect
+                    value={selectedWard}
+                    onChange={(e) => {
+                      setSelectedWard(e);
+                      onChange(e ? e.value : null);
+                    }}
+                    options={listWard}
+                    className={searchFromStyles.selectStyles}
+                    placeholder="Select Ward"
+                  />
+                </FormControl>
+              )}
+            />
+
+            <AdvancedOptions
+              type={type}
+              className={isAdvancedOptionsOpen ? searchFromStyles.active : ''}
+              onClick={showAdvancedOptionsHandler}
+            >
+              Advanced
+              <SVGIcon name="more" style={{ marginLeft: '15px' }} />
+            </AdvancedOptions>
+            <SearchAdvancedNested
+              type={type}
+              className={
+                isAdvancedOptionsOpen && type === 'properties'
+                  ? searchFromStyles.fadeInNested
+                  : ''
+              }
+            >
+              <UtilitiesWrapperNested
+                style={{
+                  display: uitilitiesList !== null && uitilitiesList.length > 0,
+                }}
+              >
+                {uitilitiesList &&
+                  uitilitiesList.map((utility) => {
+                    return (
+                      <CNCheckBox
+                        className={searchFromStyles.checkBox}
+                        key={utility.id}
+                        label={utility.label}
+                        data={utility}
+                        checkBoxState={uitilitiesList}
+                        setCheckBoxState={setUitilitiesList}
+                      />
+                    );
+                  })}
+              </UtilitiesWrapperNested>
+
+              <SliderItemNested>
+                {areaRange && (
+                  <SliderTitle>
+                    {' '}
+                    Home Area (Sqft){' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'decimal',
+                    }).format(areaRange[0])}{' '}
+                    -{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'decimal',
+                    }).format(areaRange[1])}{' '}
+                  </SliderTitle>
+                )}
+                <CNSlider
+                  value={areaSliderValue}
+                  handleChange={areaChangeHandler}
+                />
+              </SliderItemNested>
+              <SliderItemNested>
+                {priceRange && (
+                  <SliderTitle>
+                    {' '}
+                    From{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(priceRange[0])}{' '}
+                    to{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(priceRange[1])}{' '}
+                  </SliderTitle>
+                )}
+                <CNSlider
+                  value={priceSliderValue}
+                  handleChange={priceChangeHandler}
+                />
+              </SliderItemNested>
+            </SearchAdvancedNested>
+            <CNButton
+              type="submit"
+              className={searchFromStyles.searchButton}
+              buttonType="main"
+              loading={
+                searchRoomLoading == 'idle' || searchRoomLoading == 'pending'
+              }
+            >
+              Search
+            </CNButton>
+          </SearchFormMain>
+
+          <SearchAdvanced
             className={
-              isAdvancedOptionsOpen && type === 'properties'
-                ? searchFromStyles.fadeInNested
+              isAdvancedOptionsOpen && type !== 'properties'
+                ? searchFromStyles.fadeIn
                 : ''
             }
           >
-            <UtilitiesWrapperNested
+            <UtilitiesWrapper
               style={{
-                display: uitilitiesList !== null && uitilitiesList.length > 0,
+                display:
+                  uitilitiesList !== null && uitilitiesList.length > 0
+                    ? 'flex'
+                    : 'none',
               }}
             >
               {uitilitiesList &&
@@ -500,133 +622,54 @@ export const SearchRoom = ({
                     />
                   );
                 })}
-            </UtilitiesWrapperNested>
-
-            <SliderItemNested>
-              {areaRange && (
-                <SliderTitle>
-                  {' '}
-                  Home Area (Sqft){' '}
-                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
-                    areaRange[0]
-                  )}{' '}
-                  -{' '}
-                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
-                    areaRange[1]
-                  )}{' '}
-                </SliderTitle>
-              )}
-              <CNSlider
-                value={areaSliderValue}
-                handleChange={areaChangeHandler}
-              />
-            </SliderItemNested>
-            <SliderItemNested>
-              {priceRange && (
-                <SliderTitle>
-                  {' '}
-                  From{' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'currency',
-                    currency: 'VND',
-                  }).format(priceRange[0])}{' '}
-                  to{' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'currency',
-                    currency: 'VND',
-                  }).format(priceRange[1])}{' '}
-                </SliderTitle>
-              )}
-              <CNSlider
-                value={priceSliderValue}
-                handleChange={priceChangeHandler}
-              />
-            </SliderItemNested>
-          </SearchAdvancedNested>
-          <CNButton
-            type="submit"
-            className={searchFromStyles.searchButton}
-            buttonType="main"
-          >
-            Search
-          </CNButton>
-        </SearchFormMain>
-
-        <SearchAdvanced
-          className={
-            isAdvancedOptionsOpen && type !== 'properties'
-              ? searchFromStyles.fadeIn
-              : ''
-          }
-        >
-          <UtilitiesWrapper
-            style={{
-              display:
-                uitilitiesList !== null && uitilitiesList.length > 0
-                  ? 'flex'
-                  : 'none',
-            }}
-          >
-            {uitilitiesList &&
-              uitilitiesList.map((utility) => {
-                return (
-                  <CNCheckBox
-                    className={searchFromStyles.checkBox}
-                    key={utility.id}
-                    label={utility.label}
-                    data={utility}
-                    checkBoxState={uitilitiesList}
-                    setCheckBoxState={setUitilitiesList}
-                  />
-                );
-              })}
-          </UtilitiesWrapper>
-          <SliderOptionsWrapper>
-            <SliderItem>
-              {areaRange && (
-                <SliderTitle>
-                  {' '}
-                  Home Area (Sqft){' '}
-                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
-                    areaRange[0]
-                  )}{' '}
-                  -{' '}
-                  {new Intl.NumberFormat('ve-VE', { style: 'decimal' }).format(
-                    areaRange[1]
-                  )}{' '}
-                </SliderTitle>
-              )}
-              <CNSlider
-                value={areaSliderValue}
-                handleChange={areaChangeHandler}
-                className={searchFromStyles.slider}
-              />
-            </SliderItem>
-            <SliderItem>
-              {priceRange && (
-                <SliderTitle>
-                  {' '}
-                  From{' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'currency',
-                    currency: 'VND',
-                  }).format(priceRange[0])}{' '}
-                  to{' '}
-                  {new Intl.NumberFormat('ve-VE', {
-                    style: 'currency',
-                    currency: 'VND',
-                  }).format(priceRange[1])}{' '}
-                </SliderTitle>
-              )}
-              <CNSlider
-                value={priceSliderValue}
-                handleChange={priceChangeHandler}
-                className={searchFromStyles.slider}
-              />
-            </SliderItem>
-          </SliderOptionsWrapper>
-        </SearchAdvanced>
-      </form>
-    </Container>
-  );
-};
+            </UtilitiesWrapper>
+            <SliderOptionsWrapper>
+              <SliderItem>
+                {areaRange && (
+                  <SliderTitle>
+                    {' '}
+                    Home Area (Sqft){' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'decimal',
+                    }).format(areaRange[0])}{' '}
+                    -{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'decimal',
+                    }).format(areaRange[1])}{' '}
+                  </SliderTitle>
+                )}
+                <CNSlider
+                  value={areaSliderValue}
+                  handleChange={areaChangeHandler}
+                  className={searchFromStyles.slider}
+                />
+              </SliderItem>
+              <SliderItem>
+                {priceRange && (
+                  <SliderTitle>
+                    {' '}
+                    From{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(priceRange[0])}{' '}
+                    to{' '}
+                    {new Intl.NumberFormat('ve-VE', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(priceRange[1])}{' '}
+                  </SliderTitle>
+                )}
+                <CNSlider
+                  value={priceSliderValue}
+                  handleChange={priceChangeHandler}
+                  className={searchFromStyles.slider}
+                />
+              </SliderItem>
+            </SliderOptionsWrapper>
+          </SearchAdvanced>
+        </form>
+      </Container>
+    );
+  }
+);
