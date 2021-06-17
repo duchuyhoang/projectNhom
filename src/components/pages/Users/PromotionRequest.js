@@ -375,7 +375,7 @@ export const PromotionRequest = () => {
                       className={promotionRequestStyles.tableCell}
                       align="center"
                     >
-                      {roomData?.dateCreated}
+                      {new Date(roomData?.createTime).toLocaleString()}
                     </TableCell>
                     <TableCell
                       className={promotionRequestStyles.actions}

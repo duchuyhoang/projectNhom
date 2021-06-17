@@ -3,7 +3,8 @@ import { CNButton } from '@Components/shared/CNButton/CNButton';
 import { CNCheckBox } from '@Components/shared/CNCheckBox/CNCheckBox';
 import { CNSelect } from '@Components/shared/CNSelect/CNSelect';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
-import {Map} from "@Components/components/Map/Map";
+import { CNSnackBar } from '@Components/shared/CNSnackBar/CNSnackBar';
+import { Map } from '@Components/components/Map/Map';
 import { useLocationSearch } from '@Core/hooks/useLocationSearch';
 import { useListUltilities } from '@Core/hooks/useListUltilities';
 import { useListImages } from '@Core/hooks/useListImages';
@@ -124,13 +125,15 @@ function AddRoom(props) {
     setSelectedWard,
   } = useLocationSearch();
 
-  const [selectLocation,setSelectLocation]=useState({ latitude: 21.046816934751238, longtitude: 105.79207492501563 })
+  const [selectLocation, setSelectLocation] = useState({
+    latitude: 21.046816934751238,
+    longtitude: 105.79207492501563,
+  });
   const { listUltility } = useListUltilities();
 
   const { listImages, setAddListImages, deleteAnImage } = useListImages();
   const [checkboxData, setCheckboxState] = useState([]);
 
-  
   useEffect(() => {
     if (listUltility)
       setCheckboxState(
@@ -174,10 +177,6 @@ function AddRoom(props) {
       .string()
       .required('Vui lòng số nhà')
       .matches(/^[0-9]+$/, 'Số nhà không hợp lệ'),
-    alley: yup
-      .string()
-      .required('Vui lòng nhập ngõ ngách')
-      .matches(/^[0-9|/]+$/, 'Ngõ ngách không hợp lệ'),
     street: yup.string().required('Vui lòng nhập tên đường'),
     ward: yup
       .string()
@@ -210,7 +209,10 @@ function AddRoom(props) {
     defaultValues,
     resolver: yupResolver(schema),
   });
-
+  const [isOpen, setIsOpen] = useState();
+  const handleCloseSnackBar = () => {
+    setIsOpen(false);
+  };
   const handleAddSubmit = (values) => {
     console.log('submit');
     var roomForm = new FormData();
@@ -226,9 +228,9 @@ function AddRoom(props) {
       }
     }
 
-    roomForm.append("latitude",selectLocation.latitude);
-    roomForm.append("longtitude",selectLocation.longtitude);
-    
+    roomForm.append('latitude', selectLocation.latitude);
+    roomForm.append('longtitude', selectLocation.longtitude);
+
     // For images
 
     if (listImages.length === 1) {
@@ -238,8 +240,6 @@ function AddRoom(props) {
         roomForm.append('multipleRoomImage', image.toUpload);
       });
     }
-
-   
 
     // For ultility
     checkboxData.forEach((ultility, index) => {
@@ -256,10 +256,18 @@ function AddRoom(props) {
       .catch((err) => {
         console.log(err);
       });
+    setIsOpen(true);
   };
 
   return (
     <Wrapper>
+      <CNSnackBar
+        severity="success"
+        isOpen={isOpen}
+        onClose={handleCloseSnackBar}
+      >
+        Bài đăng của bạn sẽ sớm được đăng nếu không có sai phạm!
+      </CNSnackBar>
       <Container>
         <Title>Add Room</Title>
         <Content>
@@ -421,9 +429,7 @@ function AddRoom(props) {
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <FormControl className={classes.formControl}>
-                      <Label htmlFor="form-add-alley">
-                        Ngõ ngách<span> *</span>
-                      </Label>
+                      <Label htmlFor="form-add-alley">Ngõ ngách</Label>
                       <CNTextField
                         id="form-add-alley"
                         type="text"
@@ -547,8 +553,12 @@ function AddRoom(props) {
             </Box>
             <Box>
               <Box>
-              <TitleBox>Chọn vị trí qua bản đồ</TitleBox>
-              <Map isRoute={false} currentTarget={selectLocation} setCurrentTarget={setSelectLocation}/>   
+                <TitleBox>Chọn vị trí qua bản đồ</TitleBox>
+                <Map
+                  isRoute={false}
+                  currentTarget={selectLocation}
+                  setCurrentTarget={setSelectLocation}
+                />
               </Box>
               <TitleBox>Giá</TitleBox>
               <BoxRow className={classes.boxRow}>

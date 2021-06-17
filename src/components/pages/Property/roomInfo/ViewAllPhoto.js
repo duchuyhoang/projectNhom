@@ -26,11 +26,13 @@ const NumImg = styled.div`
 `;
 const Img = styled.div`
   width: 100%;
+  max-height: 800px;
   > img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    margin: auto;
   }
 `;
 

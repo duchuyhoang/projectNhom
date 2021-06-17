@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { usePagination } from '@Core/hooks/usePagination';
 import ListGridIcon from './ListGridIcon';
 import { CNPagination } from '@Components/shared/CNPagination/CNPagination';
+import { authSelectors } from '@Core/redux/auth';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -115,6 +116,7 @@ function listRoom(props) {
   const classes = useStyles();
   const listRoom = useSelector(roomSelectors.searchRoomSelectorAll) || [];
   const totalPages = useSelector(roomSelectors.searchRoomTotalPages);
+  const isLogin = useSelector(authSelectors.selectIsLogin);
 
   // loading here
   // const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
@@ -152,6 +154,7 @@ function listRoom(props) {
               <LeftBar>
                 <SearchRoom
                   type="properties"
+                  isLogin={isLogin}
                   items_per_page={itemPerPage}
                   page_index={pageIndex}
                   setPageIndex={(number) => {
@@ -161,7 +164,7 @@ function listRoom(props) {
               </LeftBar>
               <RightBar>
                 <OrderWrapper>
-                  <ResultCount>Showing 1 – 9 of 14 results</ResultCount>
+                  <ResultCount>Showing results</ResultCount>
                   <Order>
                     <span>Sort By: </span>
                   </Order>

@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   image: {
     display: 'block',
     width: '100%',
-    height: 'auto',
+    height: '100%',
     backgroundSize: 'cover',
     objectFit: 'cover',
     backgroundPosition: 'center',
@@ -213,7 +213,6 @@ function RoomCard({
                   return (
                     <div className={classes.imageContainer} key={index}>
                       <img
-                        style={{ objectFit: 'cover', height: '100%' }}
                         key={image.imagesIds}
                         className={classes.image}
                         src={image.imagesLinks}
@@ -223,10 +222,7 @@ function RoomCard({
                 })
               ) : (
                 <div className={classes.imageContainer}>
-                  <img
-                    src={noImage}
-                    style={{ objectFit: 'cover', height: '100%' }}
-                  />
+                  <img src={noImage} className={classes.image} />
                 </div>
               )}
             </Slider>

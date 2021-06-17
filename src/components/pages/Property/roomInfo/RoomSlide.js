@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         : props.length === 2
         ? "'i1 i2' 'i1 i2'"
         : props.length === 1
-        ? 'i1'
+        ? "'i1 i1' 'i1 i1'"
         : "'i1 i1 i2 i3' 'i1 i1 i4 i5'",
   }),
   imageItem: {

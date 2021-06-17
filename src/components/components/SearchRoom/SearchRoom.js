@@ -21,6 +21,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { roomActions, roomSelectors } from '@Core/redux/room';
+import { CNSnackBar } from '@Components/shared/CNSnackBar/CNSnackBar';
 
 const useSearchRoomStyles = makeStyles((theme) => ({
   mainForm: (props) => ({
@@ -224,7 +225,8 @@ const SearchAdvancedNested = styled.div`
 `;
 const UtilitiesWrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.border.main};
-
+  display: flex;
+  flex-wrap: wrap;
   > label {
     width: calc(100% / 4);
     margin-right: 10px;
@@ -258,7 +260,14 @@ var maxArea,
   maxPrice,
   first = true;
 export const SearchRoom = React.memo(
-  ({ needRedirect, type, items_per_page, page_index, setPageIndex }) => {
+  ({
+    needRedirect,
+    type,
+    items_per_page,
+    page_index,
+    setPageIndex,
+    isLogin,
+  }) => {
     const {
       listProvince,
       listDistrict,
@@ -338,9 +347,13 @@ export const SearchRoom = React.memo(
       defaultValues,
       // resolver: yupResolver(schema),
     });
+    const [isOpen, setIsOpen] = useState(false);
+    const handleClose = () => {
+      setIsOpen(false);
+    };
 
     const handleSearchSubmit = (values) => {
-      console.log("hello");
+      console.log('hello');
       console.log(needRedirect);
       let uitilitiesArray = [];
 
@@ -367,28 +380,30 @@ export const SearchRoom = React.memo(
           delete resObject[key];
         }
       }
-
-     
-
-      
-      if (needRedirect) {
-        console.log("gg");
-        dispatch(
-          roomActions.updateSearchRoomCondition({ searchCondition: resObject })
-        );
-        history.push('/properties', { from: location.pathname });
-      } else{
-        setPageIndex(1);
-        dispatch(
-          roomActions.getRoomsSearched({ items_per_page, ...resObject })
-        );
+      if (isLogin) {
+        if (needRedirect) {
+          console.log('gg');
+          dispatch(
+            roomActions.updateSearchRoomCondition({
+              searchCondition: resObject,
+            })
+          );
+          history.push('/properties', { from: location.pathname });
+        } else {
+          setPageIndex(1);
+          dispatch(
+            roomActions.getRoomsSearched({ items_per_page, ...resObject })
+          );
+        }
+      } else {
+        setIsOpen(true);
       }
-        
     };
 
     const searchRoomCondition = useSelector(roomSelectors.searchRoomCondition);
-    const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
-
+    const searchRoomLoading = useSelector(
+      roomSelectors.searchRoomLoadingStatus
+    );
 
     useEffect(() => {
       // get room
@@ -403,6 +418,9 @@ export const SearchRoom = React.memo(
 
     return (
       <Container>
+        <CNSnackBar severity="info" isOpen={isOpen} onClose={handleClose}>
+          Bạn phải login mới có thể tìm kiếm!!!
+        </CNSnackBar>
         <Title type={type}>Find Your Dream Home</Title>
         <Description type={type}>
           From as low as $10 per day with limited time offer discounts
@@ -568,7 +586,9 @@ export const SearchRoom = React.memo(
               type="submit"
               className={searchFromStyles.searchButton}
               buttonType="main"
-              loading={searchRoomLoading=="idle" || searchRoomLoading=="pending"}
+              loading={
+                searchRoomLoading == 'idle' || searchRoomLoading == 'pending'
+              }
             >
               Search
             </CNButton>
