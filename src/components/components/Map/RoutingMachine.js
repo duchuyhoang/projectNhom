@@ -10,15 +10,15 @@ import "./Routing.css"
 
 
 
-export default function Routing({ currentLocation, targetLocation, setLocation }) {
-    const map = useMap();
-
+export default function Routing({ currentLocation, targetLocation, setLocation,map }) {
+    // const map = useMap()
     const currentLocationName = useLocationNameByCoordinate({ ...currentLocation, open: true })
     const targetLocationName = useLocationNameByCoordinate({ ...targetLocation, open: true });
 
     useEffect(() => {
         if (!map) return;
 
+        
         const routingControl = L.Routing.control({
             waypoints:[L.latLng(currentLocation.latitude, currentLocation.longtitude),L.latLng(targetLocation.latitude, targetLocation.longtitude)],
 
@@ -48,7 +48,7 @@ export default function Routing({ currentLocation, targetLocation, setLocation }
 
 
         return () => map.removeControl(routingControl);
-    }, [targetLocation, map, currentLocationName, targetLocationName]);
+    }, [targetLocation, map]);
 
     return null;
 }

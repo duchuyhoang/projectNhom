@@ -4,7 +4,7 @@ import {authSelectors,authActions} from "@Core/redux/auth"
 import {currentUserActions,currentUserSelectors} from "@Core/redux/user";
 
 
-export const useAuth=()=>{
+export const useAuth=(canRelogin=false)=>{
 
 const isLogin=useSelector(authSelectors.selectIsLogin);
 const userId=useSelector(authSelectors.selectCurrentUserId);
@@ -15,7 +15,7 @@ const user=useSelector(currentUserSelectors.selectUserInfo);
 const dispatch=useDispatch();
 
 useEffect(() => {
-    if(isLogin && !user){
+    if(isLogin && !user&&canRelogin){
         dispatch(currentUserActions.getCurrentUser({id:userId}))
     }
 
@@ -23,7 +23,7 @@ useEffect(() => {
 
 useEffect(() =>{
     // For relogin need cookie for keep signin
-    if(!isLogin && user===null){
+    if(!isLogin && user===null&&canRelogin){
 dispatch(authActions.reLogin())
     }
 },[])

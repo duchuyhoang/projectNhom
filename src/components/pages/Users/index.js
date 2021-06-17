@@ -16,6 +16,13 @@ const HomeListPage = loadable(() => import('../Property/list/index'), {
   fallback: <CNLoading />,
 });
 
+const UserProfilePage = loadable(
+  () => import('./UserProfilePage/UserProfilePage'),
+  {
+    fallback: <CNLoading />,
+  }
+);
+
 const Users = (props) => {
   const { path } = useRouteMatch();
   console.log('🚀 ~ path', path);
@@ -24,9 +31,12 @@ const Users = (props) => {
     <>
       <Suspense fallback={<CNLoading />}>
         <Switch>
-          <Route path={`${path}/add-room`} component={FormAddRoom} />
-          <Route path={`${path}`} component={HomeListPage} />
-          {/* <Route path="/" /> */}
+          <Route path={`${path}/add-room`} exact component={FormAddRoom} />
+          <Route
+            path={`${path}/profile/:id_user`}
+            exact
+            component={UserProfilePage}
+          />
         </Switch>
       </Suspense>
     </>
