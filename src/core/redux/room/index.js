@@ -8,6 +8,7 @@ import homeRoomReducer, {
 import searchRoomReducer, {
   searchRoomAdapter,
   getRoomsSearched,
+  updateSearchRoomCondition
 } from './searchRoom';
 import currentRoomReducer, { setSelectedRoomByNameRouter } from './currentRoom';
 import pendingRoomReducer, {
@@ -120,6 +121,7 @@ export const roomActions = {
   getLatestHomeRoom,
   getRoomsSearched,
   setSelectedRoomByNameRouter,
+  updateSearchRoomCondition,
 
   // pending room
   getPendingRoom,

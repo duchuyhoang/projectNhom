@@ -25,7 +25,7 @@ export const FindHomeComponent = (props) => {
   return (
     <>
       <Container>
-        <SearchRoom />
+        <SearchRoom needRedirect={true}/>
       </Container>
     </>
   );

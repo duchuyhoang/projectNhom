@@ -4,8 +4,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
-  useLocation,
   useRouteMatch,
 } from 'react-router-dom';
 import loadable from '@loadable/component';

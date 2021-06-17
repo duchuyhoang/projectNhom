@@ -216,7 +216,7 @@ function RoomInfo(props) {
     name_router
   );
 
-console.log(currentRoom);
+  console.log(currentRoom);
 
   if (!name_router) {
     history.push('/home');
@@ -386,7 +386,7 @@ console.log(currentRoom);
                       <Title>Location</Title>
                       <RightTitle>
                         <Icon>
-                          <SVGIcon name="location" style={{marginTop:5}}/>
+                          <SVGIcon name="location" style={{ marginTop: 5 }} />
                         </Icon>
                         <RoomAddress>
                           <a href="#">{address}</a>
@@ -437,7 +437,7 @@ console.log(currentRoom);
                   </WrapperInfo>
                 </ContentWrapper>
                 <SideBar>
-                  <SearchRoom type="properties" />
+                  <SearchRoom type="properties" needRedirect={true}/>
                 </SideBar>
               </Flex>
             </Container>
