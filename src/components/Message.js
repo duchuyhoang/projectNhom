@@ -17,10 +17,10 @@ import { PromotionRequest } from './pages/Users/PromotionRequest';
 
 const Message = ({ message }) => {
 const dispatch = useDispatch();
+
 useEffect(()=>{
   dispatch(roomActions.getPendingRoom());
 },[])
-
 
  const pendingRoom= useSelector(roomSelectors.pendingRoomSelectAll)
 

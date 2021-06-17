@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
 
 const useButtonStyles = makeStyles((theme) => ({
   root: (props) => ({
@@ -27,8 +28,22 @@ const useButtonStyles = makeStyles((theme) => ({
 
 )
 
-export const CNButton = ({ buttonType,children ,...rest }) => {
+
+const useLoadingStyles=makeStyles((theme)=>({
+  root:{
+    marginRight:10,
+    marginLeft:-10
+  },
+  colorPrimary:{
+    color:"blue"
+  }
+
+}))
+
+
+export const CNButton = ({ buttonType,children, loading,...rest }) => {
   const buttonStyle = useButtonStyles({ buttonType })
+  const loadingStyles=useLoadingStyles();
   const [variant, setVariant] = useState("contained")
   function setHoverIn() {
     setVariant("outlined")
@@ -42,9 +57,11 @@ export const CNButton = ({ buttonType,children ,...rest }) => {
       variant={variant}
       onMouseOver={() => setHoverIn()}
       onMouseOut={() => setHoverOut()}
+      disabled={loading}
       {...rest}
 
     >
+      {loading && <CircularProgress size={14} color="primary" classes={loadingStyles}/>}
       {children}
     </Button>
   );

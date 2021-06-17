@@ -5,7 +5,6 @@ import { SearchRoom } from '@Components/components/SearchRoom/SearchRoom';
 import { SVGIcon } from '@Components/shared/SvgIcon/Icon';
 import { roomSelectors } from '@Core/redux/room';
 import { makeStyles } from '@material-ui/core';
-import { CNLoading } from '@Components/shared/CNLoading/CNLoading';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { usePagination } from '@Core/hooks/usePagination';

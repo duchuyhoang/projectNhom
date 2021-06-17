@@ -33,7 +33,6 @@ const homeRoom = createSlice({
             state.loading = "pending";
         })
             .addCase(getLatestHomeRoom.fulfilled, (state, action) => {
-                console.log(action);
                 state.loading = "fulfilled";
                 homeRoomAdapter.setAll(state, action.payload.data)
             })
