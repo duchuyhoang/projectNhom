@@ -71,7 +71,7 @@ const UserName = styled.p`
 
 export const UserInfo = React.memo(
   ({ setSelectedHomeModal, setHomeModalOpen, pathname }) => {
-    const userInfo = useAuth();
+    const userInfo = useAuth(true);
     return (
       <Container pathname={pathname}>
         {userInfo.isLogin ? (

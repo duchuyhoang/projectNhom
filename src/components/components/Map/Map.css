@@ -57,7 +57,7 @@
 }
 .currentLocationIcon {
   position: absolute;
-  z-index: 1000;
+  z-index: 4000;
   bottom: 20px;
   padding: 7px 7px 4px 7px;
   border-radius: 5px;

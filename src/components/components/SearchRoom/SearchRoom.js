@@ -353,8 +353,6 @@ export const SearchRoom = React.memo(
     };
 
     const handleSearchSubmit = (values) => {
-      console.log('hello');
-      console.log(needRedirect);
       let uitilitiesArray = [];
 
       uitilitiesList.forEach((utility) => {
@@ -382,7 +380,6 @@ export const SearchRoom = React.memo(
       }
       if (isLogin) {
         if (needRedirect) {
-          console.log('gg');
           dispatch(
             roomActions.updateSearchRoomCondition({
               searchCondition: resObject,
