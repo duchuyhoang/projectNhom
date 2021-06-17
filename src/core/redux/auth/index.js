@@ -3,6 +3,9 @@ import { axiosApi } from "@Core/api/axiosApi";
 import { getCookie, setCookie } from "../../cookies/cookie";
 import { parseJwt } from "@Ultis/jwt";
 import { createSelector } from "reselect"
+import {clearUserInfo} from "../user";
+
+
 
 const userLogin = createAsyncThunk("auth/login", async (payload, { rejectWithValue, dispatch }) => {
     try {
@@ -34,15 +37,16 @@ const reLogin = createAsyncThunk("auth/re_login", async (payload, { rejectWithVa
 })
 
 
-const logOut = createAsyncThunk("auth/log_out", async (payload, { rejectWithValue }) => {
+const logOut = createAsyncThunk("auth/log_out", async (payload,  {rejectWithValue,dispatch} ) => {
     try {
         // Can api here
         setCookie("cn11_refresh_token", null, 0);
         setCookie("cn11_access_token", null, 0);
+        dispatch(clearUserInfo())
         return null;
     }
     catch (err) {
-        return rejectWithValue({ message: "Error while signout" })
+        return rejectWithValue.rejectWithValue({ message: "Error while signout" })
     }
 })
 
