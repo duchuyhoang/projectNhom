@@ -26,6 +26,7 @@ import { CNAvatar } from '@Components/shared/CNAvatar/CNAvatar';
 import { Link } from 'react-router-dom';
 import CNConfirm from '@Components/shared/CNConfirm/CNConfirm';
 import {CNPagination} from '@Components/shared/CNPagination/CNPagination';
+import Moment from 'react-moment';
 const usePromotionRequestStyles = makeStyles((theme) => ({
   mainForm: {
     display: 'flex',
@@ -121,6 +122,11 @@ const RoomName = styled(Link)`
   text-decoration: none;
   font-weight: 700;
   margin-bottom: 4px;
+  transition: all 0.2s;
+  color: ${props => props.theme.palette.text.primary};
+  &:hover {
+    color: ${props => props.theme.palette.primary.main};
+  }
 `;
 const RoomInfoItem = styled.p`
   margin-bottom: 4px;
@@ -147,6 +153,14 @@ const UserInfo = styled.div`
   }
   margin-bottom: 4px;
 `;
+const PaginationWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+ 
+`
 const RoomInfomation = ({ roomData }) => {
   return (
     <ContainerRoomInfo>
@@ -228,12 +242,7 @@ export const PromotionRequest = ({roomData}) => {
     itemPerPage,
     setItemPerPage,
   } = usePagination(true, 1, 5);
-  const [paginationState,setPaginationState]=useState({
-        
-    total: Math.ceil(roomData.length/itemPerPage),
-    currentValue: 1
 
-})
   const promotionRequestStyles = usePromotionRequestStyles();
   const defaultValues = {
     name: '',
@@ -337,12 +346,7 @@ export const PromotionRequest = ({roomData}) => {
             <Table>
               <TableHead>
                 <TableRow className={promotionRequestStyles.tableHead}>
-                  {/* <TableCell
-                    className={promotionRequestStyles.tableCell}
-                    align="center"
-                  >
-                    STT
-                  </TableCell> */}
+                
                   <TableCell
                     className={promotionRequestStyles.tableCell}
                     align="center"
@@ -367,12 +371,6 @@ export const PromotionRequest = ({roomData}) => {
               <TableBody>
                 {roomData.slice((pageIndex-1)*itemPerPage,(pageIndex-1)*itemPerPage + itemPerPage ).map((roomData, index) => (
                   <TableRow>
-                    {/* <TableCell
-                      className={promotionRequestStyles.tableCell}
-                      align="center"
-                    >
-                      {index + 1}
-                    </TableCell> */}
                     <TableCell>
                       <RoomInfomation roomData={roomData} />
                     </TableCell>
@@ -380,7 +378,11 @@ export const PromotionRequest = ({roomData}) => {
                       className={promotionRequestStyles.tableCell}
                       align="center"
                     >
-                      {new Date(roomData?.createTime).toLocaleString()}
+                      {Date.now() - new Date(roomData.dateSubmited) > 604800000 ? (<Moment format="DD/MM/YYYY">
+                            {roomData.dateSubmited}
+                      </Moment>) : (
+                        <Moment toNow >{roomData.dateSubmited}</Moment>
+                      )}
                     </TableCell>
                     <TableCell
                       className={promotionRequestStyles.actions}
@@ -410,7 +412,10 @@ export const PromotionRequest = ({roomData}) => {
         ) : (
           <h1 style={{ margin: '0 auto' }}>List pending rooms is empty</h1>
         )}
-        <CNPagination page = {paginationState.currentValue} total={paginationState.total} />
+        <PaginationWrapper>
+        {roomData.length > 0 && <CNPagination page = {pageIndex} total={Math.ceil(roomData.length/itemPerPage)} setPaginationIndex={setPageIndex} />}
+        </PaginationWrapper>
+       
       </Container>
     </Wrapper>
   );
