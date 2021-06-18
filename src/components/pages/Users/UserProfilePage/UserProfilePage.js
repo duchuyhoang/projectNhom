@@ -11,7 +11,7 @@ import { ContactForm } from '@Components/components/ContactForm/ContactForm';
 import { ReviewForm } from '@Components/components/ReviewForm/ReviewForm';
 import { Map } from '@Components/components/Map/Map';
 import { useUserProfile } from './useUserProfile';
-import { PageNotFoundComponent } from '@Components/components/PageNotFoundComponent/PageNotFoundComponent';
+import  PageNotFoundComponent  from '@Components/components/PageNotFoundComponent/PageNotFoundComponent';
 // styled components
 const Wrapper = styled.div`
   overflow: hidden;
