@@ -10,7 +10,7 @@ import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 import {Map} from "@Components/components/Map/Map";
 import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/ForgetPasswordForm'
 import { PromotionRequest } from './pages/Users/PromotionRequest';
-import { ListUserRequest } from './pages/Users/ListUserRequest';
+import { ListUserRequest } from './pages/Users/UserRequest/ListUserRequest';
 
 const userDataList = [{
   user_name: 'Hoang Duc Duy',

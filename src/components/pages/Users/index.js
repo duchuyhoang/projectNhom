@@ -8,16 +8,21 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
+import { PrivateRoute } from '@Components/PrivateRoute';
 
 const FormAddRoom = loadable(() => import('./form/AddRoom'), {
-  fallback: <CNLoading />,
-});
-const HomeListPage = loadable(() => import('../Property/list/index'), {
   fallback: <CNLoading />,
 });
 
 const UserProfilePage = loadable(
   () => import('./UserProfilePage/UserProfilePage'),
+  {
+    fallback: <CNLoading />,
+  }
+);
+
+const UserPromotionRequest = loadable(
+  () => import('./UserRequest/ListUserRequest'),
   {
     fallback: <CNLoading />,
   }
@@ -37,6 +42,14 @@ const Users = (props) => {
             exact
             component={UserProfilePage}
           />
+
+          <PrivateRoute accessRule="CO_ADMIN">
+            <Route
+              path={`${path}/pending`}
+              exact
+              component={UserPromotionRequest}
+            />
+          </PrivateRoute>
         </Switch>
       </Suspense>
     </>
