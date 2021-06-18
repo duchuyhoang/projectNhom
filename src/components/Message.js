@@ -10,9 +10,43 @@ import {SearchRoom} from '../components/components/SearchRoom/SearchRoom'
 import {Map} from "@Components/components/Map/Map";
 import {ForgetPasswordForm} from '@Components/components/ForgetPasswordForm/ForgetPasswordForm'
 import { PromotionRequest } from './pages/Users/PromotionRequest';
+import { ListUserRequest } from './pages/Users/ListUserRequest';
 
-
-
+const userDataList = [{
+  user_name: 'Hoang Duc Duy',
+  user_avatar: 'https://bloganh.net/wp-content/uploads/2021/03/chup-anh-dep-anh-sang-min.jpg',
+  user_phone: '0394567123',
+  user_email: 'xxx@gmail.com',
+  dateSubmited: '20210430'
+},
+{
+  user_name: 'Hoang Duc Duy',
+  user_avatar: 'https://bloganh.net/wp-content/uploads/2021/03/chup-anh-dep-anh-sang-min.jpg',
+  user_phone: '0394567123',
+  user_email: 'xxx@gmail.com',
+  dateSubmited: '20210615'
+},
+{
+  user_name: 'Hoang Duc Duy',
+  user_avatar: 'https://bloganh.net/wp-content/uploads/2021/03/chup-anh-dep-anh-sang-min.jpg',
+  user_phone: '0394567123',
+  user_email: 'xxx@gmail.com',
+  dateSubmited: '20210320'
+},
+{
+  user_name: 'Hoang Duc Duy',
+  user_avatar: 'https://bloganh.net/wp-content/uploads/2021/03/chup-anh-dep-anh-sang-min.jpg',
+  user_phone: '0394567123',
+  user_email: 'xxx@gmail.com',
+  dateSubmited: '20210617'
+},
+{
+  user_name: 'Hoang Duc Duy',
+  user_avatar: 'https://bloganh.net/wp-content/uploads/2021/03/chup-anh-dep-anh-sang-min.jpg',
+  user_phone: '0394567123',
+  user_email: 'xxx@gmail.com',
+  dateSubmited: '20210618'
+}]
 
 
 const Message = ({ message }) => {
@@ -29,7 +63,7 @@ console.log(pendingRoom);
   return (
     <>
    
-    <PromotionRequest />
+    <ListUserRequest userDataList={userDataList}/>
     </>
 
   );
