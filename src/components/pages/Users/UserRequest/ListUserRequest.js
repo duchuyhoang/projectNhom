@@ -19,9 +19,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import moment from 'moment';
 import { CNTextField } from '@Components/shared/CNTextField/CNTextField';
-
+import { useListUserRequest } from './useListUserRequest';
 import { Link } from 'react-router-dom';
-
+import { userPermissionWithNumber } from '@Core/const';
+import Moment from 'react-moment';
+import CNConfirm from '@Components/shared/CNConfirm/CNConfirm';
 const useListUserRequestStyles = makeStyles((theme) => ({
   mainForm: {
     display: 'flex',
@@ -60,9 +62,9 @@ const useListUserRequestStyles = makeStyles((theme) => ({
     position: 'absolute',
     bottom: -20,
   },
-  link:{
-    textDecoration: 'none', 
-  }
+  link: {
+    textDecoration: 'none',
+  },
 }));
 // styled components
 const Wrapper = styled.div`
@@ -106,8 +108,8 @@ const LeftContainerRoomInfo = styled.div`
   width: 200px;
   margin-right: 10px;
   & > img {
-    width: 100%;
-    height: 200px;
+    width: 100;
+    height: 200;
     border-radius: 6px;
   }
 `;
@@ -121,7 +123,7 @@ const UserName = styled(Link)`
   font-weight: 700;
   margin-bottom: 10px;
   display: inline-block;
-  color: ${props => props.theme.palette.primary.main};
+  color: ${(props) => props.theme.palette.primary.main};
 `;
 const UserItemInfo = styled.p`
   margin-bottom: 10px;
@@ -130,40 +132,44 @@ const UserItemInfo = styled.p`
 
 const UserItemLink = styled.a`
   text-decoration: none;
-  color: ${props => props.theme.palette.text.primary};
+  color: ${(props) => props.theme.palette.text.primary};
   transition: all 0.2s;
-  &:hover{
-    color: ${props => props.theme.palette.primary.main};
+  &:hover {
+    color: ${(props) => props.theme.palette.primary.main};
   }
-
-`
+`;
 const RoomInfomation = ({ userData }) => {
   return (
     <ContainerRoomInfo>
       <LeftContainerRoomInfo>
-        <img src={userData?.user_avatar|| noImage} />
+        <img src={userData?.avatar || noImage} height="100" width="100" />
       </LeftContainerRoomInfo>
       <RightContainerRoomInfo>
-        <UserName >
-          {userData?.user_name}
-        </UserName>
-       
+        <UserName>{userData?.user_name}</UserName>
+
         <UserItemInfo>
-          Phone : <UserItemLink href={`tel:${userData?.user_phone}`}><strong>{userData?.user_phone}</strong></UserItemLink>
+          Phone :{' '}
+          <UserItemLink href={`tel:${userData?.phone}`}>
+            <strong>{userData?.phone}</strong>
+          </UserItemLink>
         </UserItemInfo>
         <UserItemInfo>
-          Email : <UserItemLink  href={`mailto:${userData?.user_email}?subject=From%20Dinh%20Van%20Do%20with%20Love!&body=Xin%20Chao`}><strong>{userData?.user_email}</strong></UserItemLink>
+          Email :{' '}
+          <UserItemLink
+            href={`mailto:${userData?.email}?subject=From%20Dinh%20Van%20Do%20with%20Love!&body=Xin%20Chao`}
+          >
+            <strong>{userData?.email}</strong>
+          </UserItemLink>
         </UserItemInfo>
       </RightContainerRoomInfo>
     </ContainerRoomInfo>
   );
 };
 
-
-export const ListUserRequest = ({userDataList}) => {
-
-
-
+const ListUserRequest = () => {
+  const { userDataList, selectedInfo, setSelectedInfo,handleConfirm,handleReject } = useListUserRequest();
+  const [confirmApprove, setConfirmApprove] = useState(false);
+  const [rejectApprove, setRejectApprove] = useState(false);
   const listUserRequest = useListUserRequestStyles();
   const defaultValues = {
     name: '',
@@ -180,49 +186,41 @@ export const ListUserRequest = ({userDataList}) => {
   const searchHandler = (values) => {
     console.log(values);
   };
+
   return (
     <Wrapper>
-      {/* <CNConfirm
-        showConfirm={showConfirm}
-        messenger="Bạn chắc chắn thêm chứ?"
+      {/* Approve */}
+      <CNConfirm
+        showConfirm={confirmApprove}
+        messenger="Approve ?"
+        setShowConfirm={setConfirmApprove}
         onAccept={() => {
-          if (selectedRoomId !== -1) {
-            dispatch(
-              roomActions.acceptPendingRoom({ id_room: selectedRoomId })
-            );
-            dispatch(
-              roomActions.clearNotPendingRoom({ id_room: selectedRoomId })
-            );
-            setSelectedRoomId(-1);
-            setShowConfirm(false);
+          if (selectedInfo.id_user && selectedInfo.id) {
+            handleConfirm()
           }
+          setConfirmApprove(false);
         }}
         onCancel={() => {
-          setSelectedRoomId(-1);
-          setShowConfirm(false);
+          setSelectedInfo({ id_user: null, id: null });
+          setConfirmApprove(false);
         }}
       />
 
       <CNConfirm
-        showConfirm={showConfirmDelete}
-        messenger="Bạn chắc chắn xóa chứ?"
+        showConfirm={rejectApprove}
+        messenger="Reject ?"
+        setShowConfirm={setRejectApprove}
         onAccept={() => {
-          if (selectedRoomId !== -1) {
-            dispatch(
-              roomActions.rejectPendingRoom({ id_room: selectedRoomId })
-            );
-            dispatch(
-              roomActions.clearNotPendingRoom({ id_room: selectedRoomId })
-            );
-            setSelectedRoomId(-1);
-            setShowConfirmDelete(false);
+          if (selectedInfo.id_user && selectedInfo.id) {
+            handleReject()
           }
+          setRejectApprove(false);
         }}
         onCancel={() => {
-          setSelectedRoomId(-1);
-          setShowConfirmDelete(false);
+          setSelectedInfo({ id_user: null, id: null });
+          setRejectApprove(false);
         }}
-      /> */}
+      />
 
       <Container>
         <Header>
@@ -312,22 +310,25 @@ export const ListUserRequest = ({userDataList}) => {
                     <TableCell>
                       <RoomInfomation userData={userData} />
                     </TableCell>
-                    <TableCell 
-                    align="center"
-                     className={listUserRequest.tableCell}>
-                      {'CO_ADMIN'}
+                    <TableCell
+                      align="center"
+                      className={listUserRequest.tableCell}
+                    >
+                      {/* {'CO_ADMIN'} */}
+                      {userPermissionWithNumber[userData.permission || -1]}
                     </TableCell>
                     <TableCell
                       className={listUserRequest.tableCell}
                       align="center"
                     >
-                      {moment.duration(moment(userData?.dateSubmited, "YYYYMMDD").diff(moment().startOf('day'))).asDays() === 0 ? 
-                      'Today' : 
-                      moment.duration(moment(userData?.dateSubmited, "YYYYMMDD").diff(moment().startOf('day'))).asDays() < -7 ? 
-                      moment(userData?.dateSubmited).format("DD/MM/YYYY") : 
-                      moment(userData?.dateSubmited, "YYYYMMDD").fromNow()}
-                   
-                   
+                      {Date.now() - new Date(userData.action_time).getTime() >
+                      604800000 ? (
+                        <Moment format="DD/MM/YYYY">
+                          {userData.action_time}
+                        </Moment>
+                      ) : (
+                        <Moment toNow>{userData.action_time}</Moment>
+                      )}
                     </TableCell>
                     <TableCell
                       className={listUserRequest.actions}
@@ -336,7 +337,13 @@ export const ListUserRequest = ({userDataList}) => {
                       <CNButton
                         buttonType="main"
                         fullWidth
-                        
+                        onClick={() => {
+                          setSelectedInfo({
+                            id_user: userData.id_user,
+                            id: userData.id,
+                          });
+                          setConfirmApprove(true);
+                        }}
                       >
                         Approve
                       </CNButton>
@@ -344,7 +351,13 @@ export const ListUserRequest = ({userDataList}) => {
                         className={listUserRequest.declineButton}
                         buttonType="main"
                         fullWidth
-                       
+                        onClick={() => {
+                          setSelectedInfo({
+                            id_user: userData.id_user,
+                            id: userData.id,
+                          });
+                          setRejectApprove(true);
+                        }}
                       >
                         Decline
                       </CNButton>
@@ -359,6 +372,8 @@ export const ListUserRequest = ({userDataList}) => {
         )}
       </Container>
     </Wrapper>
+    // <div>dada</div>
   );
 };
 
+export default ListUserRequest;
