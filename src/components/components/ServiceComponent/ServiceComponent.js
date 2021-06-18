@@ -126,19 +126,7 @@ export const ServiceComponent = (props) => {
       title: 'Financing Made Easy',
       description:
         'Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis.',
-    },
-    {
-      SVGIcon: 'home',
-      title: 'Wide Renge Of Properties',
-      description:
-        'Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis.',
-    },
-    {
-      SVGIcon: 'profitcalculator',
-      title: 'Financing Made Easy',
-      description:
-        'Aliquam dictum elit vitae mauris facilisis at dictum vitae mauris  urna dignissim donec vel lectus vel felis.',
-    },
+    }
   ]);
 
   return (
