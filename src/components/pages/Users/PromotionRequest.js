@@ -25,7 +25,7 @@ import { usePagination } from '@Core/hooks/usePagination';
 import { CNAvatar } from '@Components/shared/CNAvatar/CNAvatar';
 import { Link } from 'react-router-dom';
 import CNConfirm from '@Components/shared/CNConfirm/CNConfirm';
-
+import {CNPagination} from '@Components/shared/CNPagination/CNPagination';
 const usePromotionRequestStyles = makeStyles((theme) => ({
   mainForm: {
     display: 'flex',
@@ -151,7 +151,7 @@ const RoomInfomation = ({ roomData }) => {
   return (
     <ContainerRoomInfo>
       <LeftContainerRoomInfo>
-        <img src={roomData?.images[0]?.imagesLinks || noImage} />
+        <img src={roomData.image || noImage} />
       </LeftContainerRoomInfo>
       <RightContainerRoomInfo>
         <RoomName to={`/property/${roomData?.name_router}`}>
@@ -197,38 +197,43 @@ const RoomInfomation = ({ roomData }) => {
   );
 };
 
-export const PromotionRequest = () => {
-  const listRoomRequest = useSelector(roomSelectors.pendingRoomSelectAll) || [];
-  const dispatch = useDispatch();
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState(-1);
+export const PromotionRequest = ({roomData}) => {
+  // const listRoomRequest = useSelector(roomSelectors.pendingRoomSelectAll) || [];
+  // const dispatch = useDispatch();
+  // const [showConfirm, setShowConfirm] = useState(false);
+  // const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  // const [selectedRoomId, setSelectedRoomId] = useState(-1);
 
-  useEffect(() => {
-    dispatch(roomActions.getPendingRoom());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(roomActions.getPendingRoom());
+  // }, []);
 
-  const openConfirm = useCallback((id) => {
-    return () => {
-      setShowConfirm(true);
-      setSelectedRoomId(id);
-    };
-  }, []);
+  // const openConfirm = useCallback((id) => {
+  //   return () => {
+  //     setShowConfirm(true);
+  //     setSelectedRoomId(id);
+  //   };
+  // }, []);
 
-  const openConfirmDelete = useCallback((id) => {
-    return () => {
-      setShowConfirmDelete(true);
-      setSelectedRoomId(id);
-    };
-  });
+  // const openConfirmDelete = useCallback((id) => {
+  //   return () => {
+  //     setShowConfirmDelete(true);
+  //     setSelectedRoomId(id);
+  //   };
+  // });
 
   const {
     pageIndex,
     setPageIndex,
     itemPerPage,
     setItemPerPage,
-  } = usePagination(false, 1, 5);
+  } = usePagination(true, 1, 5);
+  const [paginationState,setPaginationState]=useState({
+        
+    total: Math.ceil(roomData.length/itemPerPage),
+    currentValue: 1
 
+})
   const promotionRequestStyles = usePromotionRequestStyles();
   const defaultValues = {
     name: '',
@@ -247,7 +252,7 @@ export const PromotionRequest = () => {
   };
   return (
     <Wrapper>
-      <CNConfirm
+      {/* <CNConfirm
         showConfirm={showConfirm}
         messenger="Bạn chắc chắn thêm chứ?"
         onAccept={() => {
@@ -287,7 +292,7 @@ export const PromotionRequest = () => {
           setSelectedRoomId(-1);
           setShowConfirmDelete(false);
         }}
-      />
+      /> */}
 
       <Container>
         <Header>
@@ -324,7 +329,7 @@ export const PromotionRequest = () => {
             </CNButton>
           </form>
         </Header>
-        {listRoomRequest.length > 0 ? (
+        {roomData.length > 0 ? (
           <TableContainer
             className={promotionRequestStyles.tableContainer}
             component={Paper}
@@ -332,12 +337,12 @@ export const PromotionRequest = () => {
             <Table>
               <TableHead>
                 <TableRow className={promotionRequestStyles.tableHead}>
-                  <TableCell
+                  {/* <TableCell
                     className={promotionRequestStyles.tableCell}
                     align="center"
                   >
                     STT
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     className={promotionRequestStyles.tableCell}
                     align="center"
@@ -360,14 +365,14 @@ export const PromotionRequest = () => {
               </TableHead>
               {/* Table Boday */}
               <TableBody>
-                {listRoomRequest.map((roomData, index) => (
+                {roomData.slice((pageIndex-1)*itemPerPage,(pageIndex-1)*itemPerPage + itemPerPage ).map((roomData, index) => (
                   <TableRow>
-                    <TableCell
+                    {/* <TableCell
                       className={promotionRequestStyles.tableCell}
                       align="center"
                     >
                       {index + 1}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       <RoomInfomation roomData={roomData} />
                     </TableCell>
@@ -384,7 +389,7 @@ export const PromotionRequest = () => {
                       <CNButton
                         buttonType="main"
                         fullWidth
-                        onClick={openConfirm(roomData.id)}
+                        // onClick={openConfirm(roomData.id)}
                       >
                         Approve
                       </CNButton>
@@ -392,7 +397,7 @@ export const PromotionRequest = () => {
                         className={promotionRequestStyles.declineButton}
                         buttonType="main"
                         fullWidth
-                        onClick={openConfirmDelete(roomData.id)}
+                        // onClick={openConfirmDelete(roomData.id)}
                       >
                         Decline
                       </CNButton>
@@ -405,6 +410,7 @@ export const PromotionRequest = () => {
         ) : (
           <h1 style={{ margin: '0 auto' }}>List pending rooms is empty</h1>
         )}
+        <CNPagination page = {paginationState.currentValue} total={paginationState.total} />
       </Container>
     </Wrapper>
   );
