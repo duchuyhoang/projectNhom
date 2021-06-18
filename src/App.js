@@ -47,8 +47,8 @@ export const App = ({ title }) => {
                 }}
               />
             </Route>
-            <Route path="/404Error" component={PageNotFoundComponent}/>
-            <Redirect to="/404Error"/>
+            <Route path="/notfound" component={PageNotFoundComponent}/>
+            <Redirect to="/notfound"/>
           </Switch>
         </Suspense>
         {/* </Content> */}
