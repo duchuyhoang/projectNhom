@@ -151,11 +151,9 @@ const tabList = [
   { label: 'Reviews', component: <ReviewComponent /> },
 ];
 const UserProfilePage = () => {
-  const { isLogin } = useAuth();
+  const { isLogin ,userId,permission} = useAuth();
   const { id_user, userInfo, loading } = useUserProfile();
-
-  console.log(userInfo);
-
+console.log("âda");
   return (
     <>
       {loading == 'pending' ? (
@@ -173,7 +171,7 @@ const UserProfilePage = () => {
                 <BreadCrumbTitle>{name}</BreadCrumbTitle>
               </BreadCrumbContainer>
               <UserProfileWrapper>
-                {name && (
+                {
                   <UserProfile
                     avatar={userInfo?.avatar}
                     name={userInfo?.name}
@@ -184,7 +182,7 @@ const UserProfilePage = () => {
                     website={'unavailable'}
                     quantityProperty={2}
                   />
-                )}
+                }
               </UserProfileWrapper>
               <TabWrapper>
                 <CNTab tabList={tabList} />

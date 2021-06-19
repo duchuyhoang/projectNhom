@@ -25,8 +25,8 @@ import { usePagination } from '@Core/hooks/usePagination';
 import { CNAvatar } from '@Components/shared/CNAvatar/CNAvatar';
 import { Link } from 'react-router-dom';
 import CNConfirm from '@Components/shared/CNConfirm/CNConfirm';
-import {CNPagination} from '@Components/shared/CNPagination/CNPagination';
-import Moment from 'react-moment';
+import { CNPagination } from '@Components/shared/CNPagination/CNPagination';
+
 const usePromotionRequestStyles = makeStyles((theme) => ({
   mainForm: {
     display: 'flex',
@@ -71,6 +71,8 @@ const Wrapper = styled.div`
   background-color: #f7f7f7;
   font-family: ${(props) => props.theme.typography.fontFamily};
   min-height: 100vh;
+  overflow: hidden;
+  padding:30px;
 `;
 const Container = styled.div`
   padding-top: 100px;
@@ -122,11 +124,6 @@ const RoomName = styled(Link)`
   text-decoration: none;
   font-weight: 700;
   margin-bottom: 4px;
-  transition: all 0.2s;
-  color: ${props => props.theme.palette.text.primary};
-  &:hover {
-    color: ${props => props.theme.palette.primary.main};
-  }
 `;
 const RoomInfoItem = styled.p`
   margin-bottom: 4px;
@@ -153,19 +150,18 @@ const UserInfo = styled.div`
   }
   margin-bottom: 4px;
 `;
+
 const PaginationWrapper = styled.div`
+  margin-top: 20px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  align-items: center;
-  margin: 20px 0;
- 
-`
+`;
+
 const RoomInfomation = ({ roomData }) => {
   return (
     <ContainerRoomInfo>
       <LeftContainerRoomInfo>
-        <img src={roomData.image || noImage} />
+        <img src={roomData?.images[0]?.imagesLinks || noImage} />
       </LeftContainerRoomInfo>
       <RightContainerRoomInfo>
         <RoomName to={`/property/${roomData?.name_router}`}>
@@ -211,37 +207,43 @@ const RoomInfomation = ({ roomData }) => {
   );
 };
 
-export const PromotionRequest = ({roomData}) => {
-  // const listRoomRequest = useSelector(roomSelectors.pendingRoomSelectAll) || [];
-  // const dispatch = useDispatch();
-  // const [showConfirm, setShowConfirm] = useState(false);
-  // const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  // const [selectedRoomId, setSelectedRoomId] = useState(-1);
+ const PromotionRequest = () => {
+  const listRoomRequest = useSelector(roomSelectors.pendingRoomSelectAll) || [];
+  const dispatch = useDispatch();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(-1);
 
-  // useEffect(() => {
-  //   dispatch(roomActions.getPendingRoom());
-  // }, []);
+  useEffect(() => {
+    dispatch(roomActions.getPendingRoom());
+  }, []);
 
-  // const openConfirm = useCallback((id) => {
-  //   return () => {
-  //     setShowConfirm(true);
-  //     setSelectedRoomId(id);
-  //   };
-  // }, []);
+  const openConfirm = useCallback((id) => {
+    return () => {
+      setShowConfirm(true);
+      setSelectedRoomId(id);
+    };
+  }, []);
 
-  // const openConfirmDelete = useCallback((id) => {
-  //   return () => {
-  //     setShowConfirmDelete(true);
-  //     setSelectedRoomId(id);
-  //   };
-  // });
+  const openConfirmDelete = useCallback((id) => {
+    return () => {
+      setShowConfirmDelete(true);
+      setSelectedRoomId(id);
+    };
+  });
 
   const {
     pageIndex,
     setPageIndex,
     itemPerPage,
     setItemPerPage,
-  } = usePagination(true, 1, 5);
+  } = usePagination(false, 1, 2);
+
+  useEffect(() => {
+    if (pageIndex > Math.ceil(listRoomRequest.length / itemPerPage)) {
+      setPageIndex(1);
+    }
+  }, [listRoomRequest.length, itemPerPage]);
 
   const promotionRequestStyles = usePromotionRequestStyles();
   const defaultValues = {
@@ -261,7 +263,7 @@ export const PromotionRequest = ({roomData}) => {
   };
   return (
     <Wrapper>
-      {/* <CNConfirm
+      <CNConfirm
         showConfirm={showConfirm}
         messenger="Bạn chắc chắn thêm chứ?"
         onAccept={() => {
@@ -301,7 +303,7 @@ export const PromotionRequest = ({roomData}) => {
           setSelectedRoomId(-1);
           setShowConfirmDelete(false);
         }}
-      /> */}
+      />
 
       <Container>
         <Header>
@@ -338,85 +340,110 @@ export const PromotionRequest = ({roomData}) => {
             </CNButton>
           </form>
         </Header>
-        {roomData.length > 0 ? (
-          <TableContainer
-            className={promotionRequestStyles.tableContainer}
-            component={Paper}
-          >
-            <Table>
-              <TableHead>
-                <TableRow className={promotionRequestStyles.tableHead}>
-                
-                  <TableCell
-                    className={promotionRequestStyles.tableCell}
-                    align="center"
-                  >
-                    Room Infomation
-                  </TableCell>
-                  <TableCell
-                    className={promotionRequestStyles.tableCell}
-                    align="center"
-                  >
-                    Date Summited
-                  </TableCell>
-                  <TableCell
-                    className={promotionRequestStyles.tableCell}
-                    align="center"
-                  >
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              {/* Table Boday */}
-              <TableBody>
-                {roomData.slice((pageIndex-1)*itemPerPage,(pageIndex-1)*itemPerPage + itemPerPage ).map((roomData, index) => (
-                  <TableRow>
-                    <TableCell>
-                      <RoomInfomation roomData={roomData} />
+        {listRoomRequest.length > 0 ? (
+          <>
+            <TableContainer
+              className={promotionRequestStyles.tableContainer}
+              component={Paper}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow className={promotionRequestStyles.tableHead}>
+                    <TableCell
+                      className={promotionRequestStyles.tableCell}
+                      align="center"
+                    >
+                      STT
                     </TableCell>
                     <TableCell
                       className={promotionRequestStyles.tableCell}
                       align="center"
                     >
-                      {Date.now() - new Date(roomData.dateSubmited) > 604800000 ? (<Moment format="DD/MM/YYYY">
-                            {roomData.dateSubmited}
-                      </Moment>) : (
-                        <Moment toNow >{roomData.dateSubmited}</Moment>
-                      )}
+                      Room Infomation
                     </TableCell>
                     <TableCell
-                      className={promotionRequestStyles.actions}
+                      className={promotionRequestStyles.tableCell}
                       align="center"
                     >
-                      <CNButton
-                        buttonType="main"
-                        fullWidth
-                        // onClick={openConfirm(roomData.id)}
-                      >
-                        Approve
-                      </CNButton>
-                      <CNButton
-                        className={promotionRequestStyles.declineButton}
-                        buttonType="main"
-                        fullWidth
-                        // onClick={openConfirmDelete(roomData.id)}
-                      >
-                        Decline
-                      </CNButton>
+                      Date Summited
+                    </TableCell>
+                    <TableCell
+                      className={promotionRequestStyles.tableCell}
+                      align="center"
+                    >
+                      Actions
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                {/* Table Boday */}
+                <TableBody>
+                  {listRoomRequest
+                    .slice(
+                      (pageIndex - 1) * itemPerPage,
+                      pageIndex * itemPerPage
+                    )
+                    .map((roomData, index) => (
+                      <TableRow>
+                        <TableCell
+                          className={promotionRequestStyles.tableCell}
+                          align="center"
+                        >
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>
+                          <RoomInfomation roomData={roomData} />
+                        </TableCell>
+                        <TableCell
+                          className={promotionRequestStyles.tableCell}
+                          align="center"
+                        >
+                          {roomData?.dateCreated}
+                        </TableCell>
+                        <TableCell
+                          className={promotionRequestStyles.actions}
+                          align="center"
+                        >
+                          <CNButton
+                            buttonType="main"
+                            fullWidth
+                            onClick={openConfirm(roomData.id)}
+                          >
+                            Approve
+                          </CNButton>
+                          <CNButton
+                            className={promotionRequestStyles.declineButton}
+                            buttonType="main"
+                            fullWidth
+                            onClick={openConfirmDelete(roomData.id)}
+                          >
+                            Decline
+                          </CNButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <PaginationWrapper>
+              <CNPagination
+                total={
+                  listRoomRequest.length === 0
+                    ? 1
+                    : Math.ceil(listRoomRequest.length / itemPerPage)
+                }
+                page={pageIndex}
+                setPaginationIndex={(page) => {
+                  setPageIndex(page);
+                }}
+              />
+            </PaginationWrapper>
+          </>
         ) : (
           <h1 style={{ margin: '0 auto' }}>List pending rooms is empty</h1>
         )}
-        <PaginationWrapper>
-        {roomData.length > 0 && <CNPagination page = {pageIndex} total={Math.ceil(roomData.length/itemPerPage)} setPaginationIndex={setPageIndex} />}
-        </PaginationWrapper>
-       
       </Container>
     </Wrapper>
   );
 };
+
+export default PromotionRequest
