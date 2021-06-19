@@ -175,6 +175,7 @@ const AvatarAuthor = styled.div`
 `;
 
 function RoomCard({
+  id_user,
   name,
   city,
   district,
@@ -286,7 +287,7 @@ function RoomCard({
             </a>
           </AvatarImg>
           <AvatarAuthor>
-            <a href="#">{user_name}</a>
+            <Link to={`users/profile/${id_user}`}>{user_name}</Link>
           </AvatarAuthor>
         </AvatarWrapper>
         <TimeRight>

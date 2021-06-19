@@ -34,10 +34,10 @@ export const App = ({ title }) => {
             <Route path="/properties" component={Property} />
 
             <Route path="/users">
-              <PrivateRoute accessRule="MEMBER">
-                {' '}
+              {/* <PrivateRoute accessRule="MEMBER">
+                {' '} */}
                 <UserPageRoute />{' '}
-              </PrivateRoute>
+              {/* </PrivateRoute> */}
             </Route>
 
             <Route path="/" exact>

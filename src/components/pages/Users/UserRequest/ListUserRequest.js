@@ -24,6 +24,9 @@ import { Link } from 'react-router-dom';
 import { userPermissionWithNumber } from '@Core/const';
 import Moment from 'react-moment';
 import CNConfirm from '@Components/shared/CNConfirm/CNConfirm';
+import { usePagination } from '@Core/hooks/usePagination';
+import { CNPagination } from '@Components/shared/CNPagination/CNPagination';
+
 const useListUserRequestStyles = makeStyles((theme) => ({
   mainForm: {
     display: 'flex',
@@ -71,6 +74,7 @@ const Wrapper = styled.div`
   background-color: #f7f7f7;
   font-family: ${(props) => props.theme.typography.fontFamily};
   min-height: 100vh;
+  overflow: hidden;
 `;
 const Container = styled.div`
   padding-top: 100px;
@@ -138,6 +142,13 @@ const UserItemLink = styled.a`
     color: ${(props) => props.theme.palette.primary.main};
   }
 `;
+
+const PaginationWrapper = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+`;
+
 const RoomInfomation = ({ userData }) => {
   return (
     <ContainerRoomInfo>
@@ -167,7 +178,13 @@ const RoomInfomation = ({ userData }) => {
 };
 
 const ListUserRequest = () => {
-  const { userDataList, selectedInfo, setSelectedInfo,handleConfirm,handleReject } = useListUserRequest();
+  const {
+    userDataList,
+    selectedInfo,
+    setSelectedInfo,
+    handleConfirm,
+    handleReject,
+  } = useListUserRequest();
   const [confirmApprove, setConfirmApprove] = useState(false);
   const [rejectApprove, setRejectApprove] = useState(false);
   const listUserRequest = useListUserRequestStyles();
@@ -187,6 +204,19 @@ const ListUserRequest = () => {
     console.log(values);
   };
 
+  const {
+    pageIndex,
+    setPageIndex,
+    itemPerPage,
+    setItemPerPage,
+  } = usePagination(false, 1, 2);
+
+  useEffect(() => {
+    if (pageIndex > Math.ceil(userDataList.length / itemPerPage)) {
+      setPageIndex(1);
+    }
+  }, [userDataList.length, itemPerPage]);
+
   return (
     <Wrapper>
       {/* Approve */}
@@ -196,7 +226,7 @@ const ListUserRequest = () => {
         setShowConfirm={setConfirmApprove}
         onAccept={() => {
           if (selectedInfo.id_user && selectedInfo.id) {
-            handleConfirm()
+            handleConfirm();
           }
           setConfirmApprove(false);
         }}
@@ -212,7 +242,7 @@ const ListUserRequest = () => {
         setShowConfirm={setRejectApprove}
         onAccept={() => {
           if (selectedInfo.id_user && selectedInfo.id) {
-            handleReject()
+            handleReject();
           }
           setRejectApprove(false);
         }}
@@ -258,115 +288,130 @@ const ListUserRequest = () => {
           </form>
         </Header>
         {userDataList.length > 0 ? (
-          <TableContainer
-            className={listUserRequest.tableContainer}
-            component={Paper}
-          >
-            <Table>
-              <TableHead>
-                <TableRow className={listUserRequest.tableHead}>
-                  <TableCell
-                    className={listUserRequest.tableCell}
-                    align="center"
-                  >
-                    STT
-                  </TableCell>
-                  <TableCell
-                    className={listUserRequest.tableCell}
-                    align="center"
-                  >
-                    User Infomation
-                  </TableCell>
-                  <TableCell
-                    className={listUserRequest.tableCell}
-                    align="center"
-                  >
-                    User Permission
-                  </TableCell>
-                  <TableCell
-                    className={listUserRequest.tableCell}
-                    align="center"
-                  >
-                    Date Summited
-                  </TableCell>
-                  <TableCell
-                    className={listUserRequest.tableCell}
-                    align="center"
-                  >
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              {/* Table Boday */}
-              <TableBody>
-                {userDataList.map((userData, index) => (
-                  <TableRow>
+          <>
+            <TableContainer
+              className={listUserRequest.tableContainer}
+              component={Paper}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow className={listUserRequest.tableHead}>
                     <TableCell
                       className={listUserRequest.tableCell}
                       align="center"
                     >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell>
-                      <RoomInfomation userData={userData} />
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className={listUserRequest.tableCell}
-                    >
-                      {/* {'CO_ADMIN'} */}
-                      {userPermissionWithNumber[userData.permission || -1]}
+                      STT
                     </TableCell>
                     <TableCell
                       className={listUserRequest.tableCell}
                       align="center"
                     >
-                      {Date.now() - new Date(userData.action_time).getTime() >
-                      604800000 ? (
-                        <Moment format="DD/MM/YYYY">
-                          {userData.action_time}
-                        </Moment>
-                      ) : (
-                        <Moment toNow>{userData.action_time}</Moment>
-                      )}
+                      User Infomation
                     </TableCell>
                     <TableCell
-                      className={listUserRequest.actions}
+                      className={listUserRequest.tableCell}
                       align="center"
                     >
-                      <CNButton
-                        buttonType="main"
-                        fullWidth
-                        onClick={() => {
-                          setSelectedInfo({
-                            id_user: userData.id_user,
-                            id: userData.id,
-                          });
-                          setConfirmApprove(true);
-                        }}
-                      >
-                        Approve
-                      </CNButton>
-                      <CNButton
-                        className={listUserRequest.declineButton}
-                        buttonType="main"
-                        fullWidth
-                        onClick={() => {
-                          setSelectedInfo({
-                            id_user: userData.id_user,
-                            id: userData.id,
-                          });
-                          setRejectApprove(true);
-                        }}
-                      >
-                        Decline
-                      </CNButton>
+                      User Permission
+                    </TableCell>
+                    <TableCell
+                      className={listUserRequest.tableCell}
+                      align="center"
+                    >
+                      Date Summited
+                    </TableCell>
+                    <TableCell
+                      className={listUserRequest.tableCell}
+                      align="center"
+                    >
+                      Actions
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                {/* Table Boday */}
+                <TableBody>
+                  {userDataList.slice((pageIndex-1)*itemPerPage,pageIndex*itemPerPage).map((userData, index) => (
+                    <TableRow>
+                      <TableCell
+                        className={listUserRequest.tableCell}
+                        align="center"
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell>
+                        <RoomInfomation userData={userData} />
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className={listUserRequest.tableCell}
+                      >
+                        {/* {'CO_ADMIN'} */}
+                        {userPermissionWithNumber[userData.permission || -1]}
+                      </TableCell>
+                      <TableCell
+                        className={listUserRequest.tableCell}
+                        align="center"
+                      >
+                        {Date.now() - new Date(userData.action_time).getTime() >
+                        604800000 ? (
+                          <Moment format="DD/MM/YYYY">
+                            {userData.action_time}
+                          </Moment>
+                        ) : (
+                          <Moment toNow>{userData.action_time}</Moment>
+                        )}
+                      </TableCell>
+                      <TableCell
+                        className={listUserRequest.actions}
+                        align="center"
+                      >
+                        <CNButton
+                          buttonType="main"
+                          fullWidth
+                          onClick={() => {
+                            setSelectedInfo({
+                              id_user: userData.id_user,
+                              id: userData.id,
+                            });
+                            setConfirmApprove(true);
+                          }}
+                        >
+                          Approve
+                        </CNButton>
+                        <CNButton
+                          className={listUserRequest.declineButton}
+                          buttonType="main"
+                          fullWidth
+                          onClick={() => {
+                            setSelectedInfo({
+                              id_user: userData.id_user,
+                              id: userData.id,
+                            });
+                            setRejectApprove(true);
+                          }}
+                        >
+                          Decline
+                        </CNButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <PaginationWrapper>
+              <CNPagination
+                total={
+                  userDataList.length === 0
+                    ? 1
+                    : Math.ceil(userDataList.length / itemPerPage)
+                }
+                page={pageIndex}
+                setPaginationIndex={(page) => {
+                  setPageIndex(page);
+                }}
+              />
+            </PaginationWrapper>
+          </>
         ) : (
           <h1 style={{ margin: '0 auto' }}>List user requests is empty</h1>
         )}

@@ -112,11 +112,13 @@ const ListRoom = styled.div`
   }
 `;
 
-function listRoom(props) {
+function ListRoomComponent(props) {
   const classes = useStyles();
   const listRoom = useSelector(roomSelectors.searchRoomSelectorAll) || [];
   const totalPages = useSelector(roomSelectors.searchRoomTotalPages);
   const isLogin = useSelector(authSelectors.selectIsLogin);
+
+  console.log(listRoom);
 
   // loading here
   // const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
@@ -174,6 +176,7 @@ function listRoom(props) {
                     {listRoom.map((room, index) => {
                       return (
                         <RoomCard
+                          id_user={room.belongTo}
                           key={index}
                           name={room.name}
                           city={room.cityName}
@@ -220,4 +223,4 @@ function listRoom(props) {
   );
 }
 
-export default listRoom;
+export default ListRoomComponent;

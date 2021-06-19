@@ -7,6 +7,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
+import { PrivateRoute } from '@Components/PrivateRoute';
 
 const HomeListPage = loadable(() => import('./listRoom/index'), {
   fallback: <CNLoading />,
@@ -17,13 +18,20 @@ const RoomInfo = loadable(() => import('./roomInfo/index'), {
 
 const Property = (props) => {
   const { path } = useRouteMatch();
-
+console.log(path);
   return (
     <>
       <Suspense fallback={<CNLoading />}>
         <Switch>
-          <Route path={`${path}/:name_router`} exact component={RoomInfo} />
-          <Route path={`${path}`} exact component={HomeListPage} />
+
+        <Route path={`${path}`} exact component={HomeListPage} />
+
+          <PrivateRoute accessRule="GUEST" path={`${path}/:name_router`} exact>
+          <RoomInfo/>
+          </PrivateRoute>
+        
+
+          
           {/* <Route path="/" /> */}
         </Switch>
       </Suspense>

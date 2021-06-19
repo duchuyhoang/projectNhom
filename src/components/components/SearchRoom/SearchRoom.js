@@ -358,7 +358,7 @@ export const SearchRoom = React.memo(
       uitilitiesList.forEach((utility) => {
         if (utility.isChecked) uitilitiesArray.push(utility.value);
       });
-
+console.log(priceRange);
       const resObject = {
         name: values.name,
         city: values.city,
@@ -370,11 +370,11 @@ export const SearchRoom = React.memo(
         min_price: priceRange[0],
         max_price: priceRange[1],
       };
+
+      console.log(resObject);
+
       for (const key in resObject) {
-        if (
-          (!resObject[key] && resObject[key] !== 0) ||
-          resObject[key] === ''
-        ) {
+        if (resObject[key]==null ||resObject[key] === '' || resObject[key] ===undefined) {
           delete resObject[key];
         }
       }

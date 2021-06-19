@@ -28,6 +28,10 @@ const UserPromotionRequest = loadable(
   }
 );
 
+const RoomRequest = loadable(() => import('./PromotionRequest'), {
+  fallback: <CNLoading />,
+});
+
 const Users = (props) => {
   const { path } = useRouteMatch();
   console.log('🚀 ~ path', path);
@@ -36,20 +40,25 @@ const Users = (props) => {
     <>
       <Suspense fallback={<CNLoading />}>
         <Switch>
-          <Route path={`${path}/add-room`} exact component={FormAddRoom} />
           <Route
             path={`${path}/profile/:id_user`}
             exact
             component={UserProfilePage}
           />
 
-          <PrivateRoute accessRule="CO_ADMIN">
-            <Route
-              path={`${path}/pending`}
-              exact
-              component={UserPromotionRequest}
-            />
+          <PrivateRoute accessRule="MEMBER" path={`${path}/add-room`} exact>
+            <FormAddRoom />
           </PrivateRoute>
+
+          <PrivateRoute accessRule="CO_ADMIN" path={`${path}/pending`} exact>
+            <UserPromotionRequest />
+          </PrivateRoute>
+
+          <PrivateRoute accessRule="CO_ADMIN" path={`${path}/promotion`} exact>
+            <RoomRequest />
+          </PrivateRoute>
+
+          <Redirect to={'/home'} />
         </Switch>
       </Suspense>
     </>

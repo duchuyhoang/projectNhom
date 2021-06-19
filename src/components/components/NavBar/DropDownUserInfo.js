@@ -68,17 +68,30 @@ export const DropDownUserInfo = ({ signOutHandle }) => {
           ''
         )}
         {userPermission[permission] === 1 ? (
-          <Link style={{ textDecoration: 'none' }} to="/test">
-            <DropDownItem>
-              <ModifiedIcon
-                name="tick"
-                width="18"
-                height="18"
-                style={{ fill: 'black' }}
-              />
-              Approve Room
-            </DropDownItem>
-          </Link>
+          <>
+            <Link style={{ textDecoration: 'none' }} to="/users/promotion">
+              <DropDownItem>
+                <ModifiedIcon
+                  name="tick"
+                  width="18"
+                  height="18"
+                  style={{ fill: 'black' }}
+                />
+                Approve Room
+              </DropDownItem>
+            </Link>
+            <Link style={{ textDecoration: 'none' }} to="/users/pending">
+              <DropDownItem>
+                <ModifiedIcon
+                  name="tick"
+                  width="18"
+                  height="18"
+                  style={{ fill: 'black' }}
+                />
+                Approve Promotion
+              </DropDownItem>
+            </Link>
+          </>
         ) : (
           ''
         )}

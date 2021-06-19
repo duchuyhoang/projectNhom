@@ -68,7 +68,7 @@ export const HomeListRoom = () => {
   const handleOpen = () => {
     setIsOpen(true);
   };
-  console.log(listRoom);
+
 
   return (
     <>
@@ -78,8 +78,10 @@ export const HomeListRoom = () => {
       {listRoom && listRoom?.length > 0 ? (
         <Slider {...settings} className={classes.slider}>
           {listRoom.map((room, index) => {
+            console.log("d",room);
             return (
               <RoomCard
+                id_user={room.belongTo}
                 key={index}
                 name={room.name}
                 city={room.cityName}
