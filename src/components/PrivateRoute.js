@@ -11,7 +11,6 @@ import {
 } from 'react-router-dom';
 
 export const PrivateRoute = ({ accessRule = "GUEST", children,...rest }) => {
-    console.log(children);
     const { permission, authLoading,isLogin } = useAuth(true);
     const history = useHistory()
     useEffect(() => {

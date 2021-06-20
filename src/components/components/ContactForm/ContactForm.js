@@ -59,7 +59,6 @@ export const ContactForm = ({ name }) => {
         resolver: yupResolver(schema)
     })
     const sendMessageHandler = (values) => {
-        console.log(values)
     }
     return (
         <Container>

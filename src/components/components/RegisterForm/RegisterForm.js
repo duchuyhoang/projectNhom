@@ -221,7 +221,6 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
     },
     resolver: yupResolver(schema),
   });
-  console.log(formState.errors);
 
   // Disable modal
   useEffect(() => {
@@ -396,7 +395,6 @@ function RegisterForm({ setSelectedHomeModal, setShowModal, showModal }) {
                 customComponents={{ DropdownIndicator }}
                 onChange={(e) => {
                   // Log to view what is in here
-                  console.log(e);
                   onChange(e ? e.value : null);
                 }}
                 className={RegisterStyle.selectStyle}

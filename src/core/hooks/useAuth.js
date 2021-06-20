@@ -42,11 +42,11 @@ const signIn=useCallback((data)=>{
 
 
 return {
+    ...user,
     isLogin,
     userId,
     permission,
     authLoading,
-    ...user,
     signOut,
     signIn
 }
