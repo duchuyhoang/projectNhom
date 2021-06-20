@@ -153,7 +153,6 @@ const tabList = [
 const UserProfilePage = () => {
   const { isLogin ,userId,permission} = useAuth();
   const { id_user, userInfo, loading } = useUserProfile();
-console.log("âda");
   return (
     <>
       {loading == 'pending' ? (

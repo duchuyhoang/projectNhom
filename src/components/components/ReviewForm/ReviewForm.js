@@ -65,8 +65,6 @@ export const ReviewForm = () => {
         resolver: yupResolver(schema)
     })
     const addReviewHandler = (values) => {
-        console.log(values)
-        console.log(starRating)
     }
     return (
         <Container>

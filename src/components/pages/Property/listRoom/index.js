@@ -118,8 +118,6 @@ function ListRoomComponent(props) {
   const totalPages = useSelector(roomSelectors.searchRoomTotalPages);
   const isLogin = useSelector(authSelectors.selectIsLogin);
 
-  console.log(listRoom);
-
   // loading here
   // const searchRoomLoading = useSelector(roomSelectors.searchRoomLoadingStatus);
 

@@ -18,7 +18,6 @@ const RoomInfo = loadable(() => import('./roomInfo/index'), {
 
 const Property = (props) => {
   const { path } = useRouteMatch();
-console.log(path);
   return (
     <>
       <Suspense fallback={<CNLoading />}>

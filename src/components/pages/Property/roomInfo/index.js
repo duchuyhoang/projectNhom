@@ -216,7 +216,6 @@ function RoomInfo(props) {
     name_router
   );
 
-  console.log(currentRoom);
 
   if (!name_router) {
     history.push('/home');

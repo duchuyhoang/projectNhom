@@ -10,7 +10,8 @@ import { useListUltilities } from '@Core/hooks/useListUltilities';
 import { useListImages } from '@Core/hooks/useListImages';
 import { useAuth } from '@Core/hooks/useAuth';
 import { axiosApi } from '@Core/api/axiosApi';
-
+import { CNPreviewImage } from '@Components/shared/CNPreviewImage/CNPreviewImage';
+import NumberFormat from 'react-number-format';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   FormControl,
@@ -109,6 +110,10 @@ const Linear = styled.div`
   margin: 25px 0;
 `;
 
+const ImageList = styled.div`
+  display: flex;
+`;
+
 function AddRoom(props) {
   const classes = useStyled();
 
@@ -132,6 +137,7 @@ function AddRoom(props) {
   const { listUltility } = useListUltilities();
 
   const { listImages, setAddListImages, deleteAnImage } = useListImages();
+
   const [checkboxData, setCheckboxState] = useState([]);
 
   useEffect(() => {
@@ -214,9 +220,8 @@ function AddRoom(props) {
     setIsOpen(false);
   };
   const handleAddSubmit = (values) => {
-    console.log('submit');
-    var roomForm = new FormData();
 
+    var roomForm = new FormData();
     roomForm.append('belongTo', userId);
 
     // For data
@@ -370,15 +375,24 @@ function AddRoom(props) {
                   </FormControl>
                 )}
               />
-              <section>
+              {/* <section> */}
+              <ImageList>
                 {listImages.map((image) => (
-                  <img
+                  <CNPreviewImage
                     src={image.previewSrc}
-                    style={{ height: 100, width: 100 }}
                     key={image.id}
+                    handleClose={() => {
+                      deleteAnImage(image.id);
+                    }}
                   />
+                  // <img
+                  //   src={image.previewSrc}
+                  //   style={{ height: 100, width: 100 }}
+                  //   key={image.id}
+                  // />
                 ))}
-              </section>
+              </ImageList>
+              {/* </section> */}
               <Controller
                 name="overview"
                 control={control}
@@ -571,14 +585,19 @@ function AddRoom(props) {
                         {`Giá thuê nhà(theo tháng)`}
                         <span> *</span>
                       </Label>
-                      <CNTextField
+
+                      <NumberFormat
                         id="form-add-house-number"
                         type="text"
                         error={!!formState.errors['price']}
                         fullWidth
                         value={value ? value : ''}
-                        inputChange={(e) => {
-                          onChange(e);
+                        
+                        customInput={CNTextField}
+                        value={value}
+                        thousandSeparator={","}
+                        onValueChange={({value}) => {
+                          onChange(value);
                         }}
                       />
                       <FormHelperText className={classes.helperTextStyles}>
@@ -596,15 +615,18 @@ function AddRoom(props) {
                         {`Giá điện(kWh)`}
                         <span> *</span>
                       </Label>
-                      <CNTextField
-                        id="price-electric"
-                        type="text"
-                        error={!!formState.errors['utility_bill']}
-                        fullWidth
-                        value={value ? value : ''}
-                        inputChange={(e) => {
-                          onChange(e);
-                        }}
+
+                      <NumberFormat 
+                       id="price-electric"
+                       type="text"
+                       error={!!formState.errors['utility_bill']}
+                       fullWidth
+                       customInput={CNTextField}
+                       value={value}
+                       thousandSeparator={","}
+                       onValueChange={({value}) => {
+                         onChange(value);
+                       }}
                       />
                       <FormHelperText className={classes.helperTextStyles}>
                         {formState.errors['utility_bill']?.message}
@@ -621,15 +643,17 @@ function AddRoom(props) {
                         {'Giá nước sinh hoạt'}
                         <span> *</span>
                       </Label>
-                      <CNTextField
-                        id="price-water"
-                        type="text"
-                        error={!!formState.errors['water_bill']}
-                        fullWidth
-                        value={value ? value : ''}
-                        inputChange={(e) => {
-                          onChange(e);
-                        }}
+                      <NumberFormat 
+                      id="price-water"
+                      type="text"
+                      error={!!formState.errors['water_bill']}
+                      fullWidth
+                       customInput={CNTextField}
+                       value={value}
+                       thousandSeparator={","}
+                       onValueChange={({value}) => {
+                         onChange(value);
+                       }}
                       />
                       <FormHelperText className={classes.helperTextStyles}>
                         {formState.errors['water_bill']?.message}

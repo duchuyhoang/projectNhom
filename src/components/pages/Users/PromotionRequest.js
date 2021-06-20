@@ -164,7 +164,7 @@ const RoomInfomation = ({ roomData }) => {
         <img src={roomData?.images[0]?.imagesLinks || noImage} />
       </LeftContainerRoomInfo>
       <RightContainerRoomInfo>
-        <RoomName to={`/property/${roomData?.name_router}`}>
+        <RoomName to={`/properties/${roomData?.name_router}`}>
           {roomData?.name}
         </RoomName>
         <RoomInfoItem>
